@@ -9,10 +9,13 @@ import android.widget.TextView;
 
 public class RegisterActivity extends AppCompatActivity {
     private TextView userLogin;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        userLogin = findViewById(R.id.tvUserLogIn);
 
         userLogin.setOnClickListener(new View.OnClickListener() {
             @Override
