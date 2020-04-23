@@ -1,4 +1,5 @@
 <resources>
+    <string name="API">http://API/DEL/BACK.END</string>
     <string name="app_name">Carol Shaw</string>
     <string name="albumes_string">Albumes</string>
     <string name="podcasts_string">Podcasts</string>

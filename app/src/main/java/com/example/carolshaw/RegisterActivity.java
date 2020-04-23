@@ -9,14 +9,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+
 public class RegisterActivity extends AppCompatActivity {
-    private TextView userLogin;
+    public TextView userLogin;
     private TextView alias;
     private TextView nombre;
     private TextView apellidos;
     private TextView password;
     private TextView fecha;
     private Button registrar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
