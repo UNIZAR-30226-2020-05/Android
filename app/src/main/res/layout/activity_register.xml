@@ -81,7 +81,6 @@
         android:layout_height="wrap_content"
         android:text="¿Ya estás registrado? Inicia sesión"
         android:textSize="22dp"
-        android:onClick="cambiar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

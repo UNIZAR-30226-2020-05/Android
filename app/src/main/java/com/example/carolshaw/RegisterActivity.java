@@ -1,13 +1,11 @@
 package com.example.carolshaw;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 
 public class RegisterActivity extends AppCompatActivity {
@@ -18,7 +16,7 @@ public class RegisterActivity extends AppCompatActivity {
     private TextView password;
     private TextView fecha;
     private Button registrar;
-
+    private String URL_API = "http://192.168.1.121:8080";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,12 +31,16 @@ public class RegisterActivity extends AppCompatActivity {
         apellidos = findViewById(R.id.apellidos);
         password = findViewById(R.id.password);
         fecha = findViewById(R.id.fecha);
+        
+        userLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Usuario user = new Usuario("nombre", "apellios", "alias",
+                        "contra", true, "12/06/1997");
 
-    }
+            }
+        });
 
-    public void cambiar(View v) {
-        String kk = alias.getText().toString();
-        Log.d("alias", kk);
-        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+
     }
 }
