@@ -12,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 
 public class LoginActivity extends AppCompatActivity {
     private TextView userRegistration;
+    private Button loginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +20,14 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         userRegistration = findViewById(R.id.tvRegister);
+        loginButton = findViewById(R.id.btnLogin);
+
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this, MainLogged.class));
+            }
+        });
 
         userRegistration.setOnClickListener(new View.OnClickListener() {
             @Override
