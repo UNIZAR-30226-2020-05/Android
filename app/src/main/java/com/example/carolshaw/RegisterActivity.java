@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -22,6 +24,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -53,51 +61,32 @@ public class RegisterActivity extends AppCompatActivity {
         fecha = findViewById(R.id.fecha);
 
         final RequestQueue rq = Volley.newRequestQueue(getApplicationContext());
-        UserRequest user = new UserRequest("sergio","martinez","smm",
-                "1234","12/06/1997");
 
-        JSONObject params = new JSONObject();
-        // Adding parameters to request
-        try {
-            params.put("nuevo", user);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        // Creating a JSON Object request
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, URL_API + "/user/create", params,
-                new Response.Listener<JSONObject>()
-                {
-                    @Override
-                    public void onResponse(JSONObject response)
-                    {
-                        Log.d("response", "exito: " + response.toString());
-                        // other stuff ...
-                    }
-                },
-                new Response.ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError error)
-                    {
-                        Log.d("response", "error: " + error.toString());
-                    }
-                });
-
-        // Adding the string request to the queue
-        rq.add(jsonObjectRequest);
-
+        //Boton registrar
         registrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 UserRequest user = new UserRequest(nombre.getText().toString(), apellidos.getText().toString(),
                         nick.getText().toString(), contrasena.getText().toString(), fecha.getText().toString());
 
+
+
                 JSONObject params = new JSONObject();
                 // Adding parameters to request
                 try {
-                    params.put("nuevo", user);
-                } catch (JSONException e) {
+                    //params.put("nuevo", user);
+                    params.put("nombre", user.getNombre());
+                    params.put("apellidos", user.getApellidos());
+                    params.put("nick", user.getNick());
+                    params.put("contrasena", user.getContrasena());
+                    params.put("tipo_user", user.getTipo_user());
+
+                    //Hay que pasar la fecha parseada y en formato long
+                    DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+                    Date date;
+                    date = df.parse(fecha.getText().toString());
+                    params.put("fecha_nacimiento", date.getTime());
+                } catch (JSONException | ParseException e) {
                     e.printStackTrace();
                 }
 
@@ -125,6 +114,5 @@ public class RegisterActivity extends AppCompatActivity {
                 rq.add(jsonObjectRequest);
             }
         });
-
     }
 }
