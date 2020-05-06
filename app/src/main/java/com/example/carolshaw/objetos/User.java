@@ -1,18 +1,26 @@
-package com.example.carolshaw;
+package com.example.carolshaw.objetos;
 
-public class Usuario {
+import java.util.ArrayList;
+
+public class User {
+    private int id;
     private String nombre;
     private String apellidos;
-    private String alias;
-    private String pass;
+    private String nick;
+    private String contrasena;
     private Boolean tipo_user; //false = usuario; true = admin
     private String fecha_nacimiento;
+    private int id_ultima_reproduccion;
+    private int minuto_ultima_reproduccion;
+    private int tipo_ultima_reproduccion;
+    private ArrayList<ListaCancion> lista_cancion;
+    private ArrayList<Amigo> amigos;
 
-    public Usuario(String nombre, String apellidos, String alias, String pass, String fecha_nacimiento) {
+    public User(String nombre, String apellidos, String nick, String contrasena, String fecha_nacimiento) {
         this.nombre = nombre;
         this.apellidos = apellidos;
-        this.alias = alias;
-        this.pass = pass;
+        this.nick = nick;
+        this.contrasena = contrasena;
         this.tipo_user = false;
         this.fecha_nacimiento = fecha_nacimiento;
     }
@@ -33,20 +41,20 @@ public class Usuario {
         this.apellidos = apellidos;
     }
 
-    public String getAlias() {
-        return alias;
+    public String getNick() {
+        return nick;
     }
 
-    public void setAlias(String alias) {
-        this.alias = alias;
+    public void setNick(String nick) {
+        this.nick = nick;
     }
 
-    public String getPass() {
-        return pass;
+    public String getContrasena() {
+        return contrasena;
     }
 
-    public void setPass(String pass) {
-        this.pass = pass;
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
     }
 
     public Boolean getTipo_user() {
