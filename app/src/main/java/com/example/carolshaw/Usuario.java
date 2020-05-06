@@ -8,12 +8,12 @@ public class Usuario {
     private Boolean tipo_user; //false = usuario; true = admin
     private String fecha_nacimiento;
 
-    public Usuario(String nombre, String apellidos, String alias, String pass, Boolean tipo_user, String fecha_nacimiento) {
+    public Usuario(String nombre, String apellidos, String alias, String pass, String fecha_nacimiento) {
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.alias = alias;
         this.pass = pass;
-        this.tipo_user = tipo_user;
+        this.tipo_user = false;
         this.fecha_nacimiento = fecha_nacimiento;
     }
 

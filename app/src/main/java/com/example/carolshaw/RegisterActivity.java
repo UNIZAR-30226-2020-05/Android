@@ -31,12 +31,12 @@ public class RegisterActivity extends AppCompatActivity {
         apellidos = findViewById(R.id.apellidos);
         password = findViewById(R.id.password);
         fecha = findViewById(R.id.fecha);
-        
+
         userLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Usuario user = new Usuario("nombre", "apellios", "alias",
-                        "contra", true, "12/06/1997");
+                        "contra", "12/06/1997");
 
             }
         });
