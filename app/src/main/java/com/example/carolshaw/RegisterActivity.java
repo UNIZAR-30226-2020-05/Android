@@ -21,6 +21,7 @@ import com.example.carolshaw.objetos.UserRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URL;
 import java.util.Map;
 
 
@@ -32,7 +33,7 @@ public class RegisterActivity extends AppCompatActivity {
     private TextView contrasena;
     private TextView fecha;
     private Button registrar;
-    private String URL_API = "http://3.22.247.114:8080";
+    private String URL_API;
 
 
 
@@ -40,6 +41,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        URL_API =  getString(R.string.API);
 
         userLogin = findViewById(R.id.tvUserLogIn);
         registrar = findViewById(R.id.btnRegister);
@@ -51,6 +53,39 @@ public class RegisterActivity extends AppCompatActivity {
         fecha = findViewById(R.id.fecha);
 
         final RequestQueue rq = Volley.newRequestQueue(getApplicationContext());
+        UserRequest user = new UserRequest("sergio","martinez","smm",
+                "1234","12/06/1997");
+
+        JSONObject params = new JSONObject();
+        // Adding parameters to request
+        try {
+            params.put("nuevo", user);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // Creating a JSON Object request
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, URL_API + "/user/create", params,
+                new Response.Listener<JSONObject>()
+                {
+                    @Override
+                    public void onResponse(JSONObject response)
+                    {
+                        Log.d("response", "exito: " + response.toString());
+                        // other stuff ...
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error)
+                    {
+                        Log.d("response", "error: " + error.toString());
+                    }
+                });
+
+        // Adding the string request to the queue
+        rq.add(jsonObjectRequest);
 
         registrar.setOnClickListener(new View.OnClickListener() {
             @Override
