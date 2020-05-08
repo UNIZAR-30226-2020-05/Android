@@ -1,10 +1,7 @@
 package com.example.carolshaw;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.ArrayMap;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -14,20 +11,17 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.carolshaw.objetos.UserRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -117,59 +111,40 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
-    private boolean validar(){
+    private boolean validar() {
         Boolean valido = false;
-
-        //validating inputs
-        /*if (TextUtils.isEmpty(username)) {
-            editTextUsername.setError("Please enter your username");
-            editTextUsername.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(password)) {
-            editTextPassword.setError("Please enter your password");
-            editTextPassword.requestFocus();
-            return;
-        }*/
-
         final RequestQueue rq = Volley.newRequestQueue(getApplicationContext());
-        /*JSONObject params = new JSONObject();
+
+        JSONObject params = new JSONObject();
         // Adding parameters to request
         try {
-            params.put("nick", nick.getText().toString());
+            params.put("nick", "sam10");
+            params.put("pass", "123");
         } catch (JSONException e) {
             e.printStackTrace();
-        }*/
+        }
 
-        StringRequest sr = new StringRequest(Request.Method.GET, URL_API + "/user/get",
-                new Response.Listener<String>() {
+        // Creating a JSON Object request
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, URL_API + "/user/get?nick=smm", null,
+                new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(String response) {
+                    public void onResponse(JSONObject response) {
                         Log.d("response", "exito validar: " + response.toString());
+                        // other stuff ...
+                        Toast.makeText(RegisterActivity.this, "get correcto", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(RegisterActivity.this, MainLogged.class));
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e("response", "error validar: " + error.toString());
+                        Log.d("response", "error validar: " + error.toString());
                     }
-                })
-        {
-            @Override
-            protected Map<String,String> getParams(){
-                Map<String,String> params = new HashMap<String, String>();
-                params.put("nick","smm");
-                return params;
-            }
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("Content-Type", "application/json");
-                return params;
-            }
-        };
-        rq.add(sr);
+                });
+
+        // Adding the string request to the queue
+        rq.add(jsonObjectRequest);
+
         return valido;
     }
 }

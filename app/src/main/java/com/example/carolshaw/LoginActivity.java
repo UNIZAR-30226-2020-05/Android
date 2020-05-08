@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.springframework.web.client.RestTemplate;
 
 public class LoginActivity extends AppCompatActivity {
     private TextView userRegistration;
