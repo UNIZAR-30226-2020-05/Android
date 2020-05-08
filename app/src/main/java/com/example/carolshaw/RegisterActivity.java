@@ -38,6 +38,7 @@ public class RegisterActivity extends AppCompatActivity {
     private TextView contrasena;
     private TextView fecha;
     private Button registrar;
+    private TextView volverLogin;
     private String URL_API;
 
     Boolean valido;
@@ -63,6 +64,15 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String urlGet = URL_API + "/user/get?nick=" + nick.getText().toString();
                 validar(urlGet);
+            }
+        });
+
+        volverLogin = findViewById(R.id.tvUserLogIn);
+
+        volverLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
             }
         });
     }
