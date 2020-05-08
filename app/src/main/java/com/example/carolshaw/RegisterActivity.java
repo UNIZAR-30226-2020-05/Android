@@ -1,6 +1,8 @@
 package com.example.carolshaw;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,7 +12,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -26,9 +27,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 
 public class RegisterActivity extends AppCompatActivity {
@@ -41,7 +40,7 @@ public class RegisterActivity extends AppCompatActivity {
     private Button registrar;
     private String URL_API;
 
-
+    Boolean valido;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,93 +57,99 @@ public class RegisterActivity extends AppCompatActivity {
         contrasena = findViewById(R.id.password);
         fecha = findViewById(R.id.fecha);
 
-        final RequestQueue rq = Volley.newRequestQueue(getApplicationContext());
-
         //Boton registrar
         registrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UserRequest user = new UserRequest(nombre.getText().toString(), apellidos.getText().toString(),
-                        nick.getText().toString(), contrasena.getText().toString(), fecha.getText().toString());
-
-                if (validar() && false) {
-                    JSONObject params = new JSONObject();
-                    // Adding parameters to request
-                    try {
-                        //params.put("nuevo", user);
-                        params.put("nombre", user.getNombre());
-                        params.put("apellidos", user.getApellidos());
-                        params.put("nick", user.getNick());
-                        params.put("contrasena", user.getContrasena());
-                        params.put("tipo_user", user.getTipo_user());
-
-                        //Hay que pasar la fecha parseada y en formato long
-                        DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-                        Date date;
-                        date = df.parse(fecha.getText().toString());
-                        params.put("fecha_nacimiento", date.getTime());
-                    } catch (JSONException | ParseException e) {
-                        e.printStackTrace();
-                    }
-
-                    // Creating a JSON Object request
-                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, URL_API + "/user/create", params,
-                            new Response.Listener<JSONObject>() {
-                                @Override
-                                public void onResponse(JSONObject response) {
-                                    Log.d("response", "exito: " + response.toString());
-                                    // other stuff ...
-                                    Toast.makeText(RegisterActivity.this, "Registro realizado correctamente", Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(RegisterActivity.this, MainLogged.class));
-                                }
-                            },
-                            new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    Log.d("response", "error: " + error.toString());
-                                }
-                            });
-
-                    // Adding the string request to the queue
-                    rq.add(jsonObjectRequest);
-                }
+                String urlGet = URL_API + "/user/get?nick=" + nick.getText().toString();
+                validar(urlGet);
             }
         });
     }
-    private boolean validar() {
-        Boolean valido = false;
+
+    /* Comprueba que el usuario no existe en la bbdd, en caso de existir, informa mediante un toast
+     * y si no existe, procede a registrar al usuario
+     */
+    private void validar(String urlGet) {
         final RequestQueue rq = Volley.newRequestQueue(getApplicationContext());
 
-        JSONObject params = new JSONObject();
-        // Adding parameters to request
-        try {
-            params.put("nick", "sam10");
-            params.put("pass", "123");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
         // Creating a JSON Object request
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, URL_API + "/user/get?nick=smm", null,
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urlGet, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d("response", "exito validar: " + response.toString());
-                        // other stuff ...
-                        Toast.makeText(RegisterActivity.this, "get correcto", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(RegisterActivity.this, MainLogged.class));
+                        //Exito aquí significa que el usuario existía, por tanto no se debe permitir el registro
+                        informarUsuarioExistente();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("response", "error validar: " + error.toString());
+                        registrarUsuario();
                     }
                 });
 
         // Adding the string request to the queue
         rq.add(jsonObjectRequest);
+    }
 
-        return valido;
+    /* informa mediante un TOAST de que el usuario ya existe en la bbdd
+     */
+    private void informarUsuarioExistente() {
+        Toast toast = Toast.makeText(getApplicationContext(), "Ese nick no está disponible", Toast.LENGTH_SHORT);
+        View view = toast.getView();
+
+        //Cambiar color del fonto
+        view.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN);
+        toast.show();
+    }
+
+    /* Registra al usuario con los campos de la interfaz
+     */
+    private void registrarUsuario() {
+        UserRequest user = new UserRequest(nombre.getText().toString(), apellidos.getText().toString(),
+                nick.getText().toString(), contrasena.getText().toString(), fecha.getText().toString());
+
+        final RequestQueue rq = Volley.newRequestQueue(getApplicationContext());
+        JSONObject params = new JSONObject();
+        // Adding parameters to request
+        try {
+            params.put("nombre", user.getNombre());
+            params.put("apellidos", user.getApellidos());
+            params.put("nick", user.getNick());
+            params.put("contrasena", user.getContrasena());
+            params.put("tipo_user", user.getTipo_user());
+
+            //Hay que pasar la fecha parseada y en formato long
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+            Date date;
+            date = df.parse(fecha.getText().toString());
+            params.put("fecha_nacimiento", date.getTime());
+        } catch (JSONException | ParseException e) {
+            e.printStackTrace();
+        }
+
+        // Creating a JSON Object request
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, URL_API + "/user/create", params,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("response", "exito: " + response.toString());
+                        Toast.makeText(RegisterActivity.this, "Registro realizado correctamente", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(RegisterActivity.this, MainLogged.class));
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("response", "error: " + error.toString());
+                        Toast.makeText(RegisterActivity.this, "Error desconocido al registrar", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        // Adding the string request to the queue
+        rq.add(jsonObjectRequest);
     }
 }
