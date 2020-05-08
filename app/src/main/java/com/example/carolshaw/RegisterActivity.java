@@ -47,7 +47,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        URL_API =  getString(R.string.API);
+        URL_API = getString(R.string.API);
 
         userLogin = findViewById(R.id.tvUserLogIn);
         registrar = findViewById(R.id.btnRegister);
@@ -88,7 +88,7 @@ public class RegisterActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("response", "exito validar: " + response.toString());
+                        Log.d("RegisterActivity", "exito validar (usuario repetido): " + response.toString());
                         //Exito aquí significa que el usuario existía, por tanto no se debe permitir el registro
                         informarUsuarioExistente();
                     }
@@ -96,7 +96,7 @@ public class RegisterActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d("response", "error validar: " + error.toString());
+                        Log.d("RegisterActivity", "error validar (usuario no repetido): " + error.toString());
                         registrarUsuario();
                     }
                 });
@@ -146,7 +146,7 @@ public class RegisterActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("response", "exito: " + response.toString());
+                        Log.d("RegisterActivity", "exito: " + response.toString());
                         Toast.makeText(RegisterActivity.this, "Registro realizado correctamente", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(RegisterActivity.this, MainLogged.class));
                     }
@@ -154,7 +154,7 @@ public class RegisterActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d("response", "error: " + error.toString());
+                        Log.d("RegisterActivity", "error: " + error.toString());
                         Toast.makeText(RegisterActivity.this, "Error desconocido al registrar", Toast.LENGTH_SHORT).show();
                     }
                 });
