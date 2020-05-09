@@ -45,7 +45,12 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String urlGet = URL_API + "/user/logIn?nick=" + nick.getText().toString() +
                     "&pass=" + contrasena.getText().toString();
-                comprobarUsuario(urlGet);
+                if(comprobarCamposRellenos()){
+                    comprobarUsuario(urlGet);
+                } else {
+                    informarRellenarDatos();
+                }
+
             }
         });
 
@@ -92,6 +97,30 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void informarUsuarioDesconocido() {
         Toast toast = Toast.makeText(getApplicationContext(), "Usuario o contraseña incorrecto", Toast.LENGTH_SHORT);
+        View view = toast.getView();
+
+        //Cambiar color del fonto
+        view.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN);
+        toast.show();
+    }
+
+    /* Comprueba que todos los campos de la interfaz han sido rellenados
+     */
+    private Boolean comprobarCamposRellenos() {
+        Boolean valido;
+
+        if(nick.getText().toString().isEmpty() || contrasena.getText().toString().isEmpty()){
+            valido = false;
+        } else {
+            valido = true;
+        }
+        return valido;
+    }
+
+    /* informa mediante un TOAST de que falta algún campo por rellenar
+     */
+    private void informarRellenarDatos() {
+        Toast toast = Toast.makeText(getApplicationContext(), "Por favor, rellena todos los campos", Toast.LENGTH_SHORT);
         View view = toast.getView();
 
         //Cambiar color del fonto

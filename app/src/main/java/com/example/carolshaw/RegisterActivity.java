@@ -63,7 +63,11 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String urlGet = URL_API + "/user/get?nick=" + nick.getText().toString();
-                validar(urlGet);
+                if(comprobarCamposRellenos()) {
+                    validar(urlGet);
+                } else {
+                    informarRellenarDatos();
+                }
             }
         });
 
@@ -75,6 +79,21 @@ public class RegisterActivity extends AppCompatActivity {
                 startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
             }
         });
+    }
+
+    /* Comprueba que todos los campos de la interfaz han sido rellenados
+     */
+    private Boolean comprobarCamposRellenos() {
+        Boolean valido;
+
+        if(nombre.getText().toString().isEmpty() || apellidos.getText().toString().isEmpty() ||
+            nick.getText().toString().isEmpty() || contrasena.getText().toString().isEmpty() ||
+            fecha.getText().toString().isEmpty()){
+            valido = false;
+        } else {
+            valido = true;
+        }
+        return valido;
     }
 
     /* Comprueba que el usuario no existe en la bbdd, en caso de existir, informa mediante un toast
@@ -109,6 +128,17 @@ public class RegisterActivity extends AppCompatActivity {
      */
     private void informarUsuarioExistente() {
         Toast toast = Toast.makeText(getApplicationContext(), "Ese nick no está disponible", Toast.LENGTH_SHORT);
+        View view = toast.getView();
+
+        //Cambiar color del fonto
+        view.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN);
+        toast.show();
+    }
+
+    /* informa mediante un TOAST de que falta algún campo por rellenar
+     */
+    private void informarRellenarDatos() {
+        Toast toast = Toast.makeText(getApplicationContext(), "Por favor, rellena todos los campos", Toast.LENGTH_SHORT);
         View view = toast.getView();
 
         //Cambiar color del fonto
