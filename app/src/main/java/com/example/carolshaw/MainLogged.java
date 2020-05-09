@@ -46,6 +46,9 @@ public class MainLogged extends AppCompatActivity {
                                 selectedFragment = new PrincipalFragment();
                                 break;
                             case R.id.nav_profile:
+                                selectedFragment = new ModificarPerfilFragment().newInstance("hola","sergio");
+                                break;
+                            case R.id.nav_social:
                                 selectedFragment = new SocialFragment();
                                 break;
                             default:
