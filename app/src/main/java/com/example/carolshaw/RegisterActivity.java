@@ -19,6 +19,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.carolshaw.objetos.UserRequest;
+import com.example.carolshaw.objetos.UsuarioDto;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,6 +39,7 @@ public class RegisterActivity extends AppCompatActivity {
     private TextView contrasena;
     private TextView fecha;
     private Button registrar;
+    private TextView volverLogin;
     private String URL_API;
 
     Boolean valido;
@@ -46,7 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        URL_API =  getString(R.string.API);
+        URL_API = getString(R.string.API);
 
         userLogin = findViewById(R.id.tvUserLogIn);
         registrar = findViewById(R.id.btnRegister);
@@ -62,9 +64,37 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String urlGet = URL_API + "/user/get?nick=" + nick.getText().toString();
-                validar(urlGet);
+                if(comprobarCamposRellenos()) {
+                    validar(urlGet);
+                } else {
+                    informarRellenarDatos();
+                }
             }
         });
+
+        volverLogin = findViewById(R.id.tvUserLogIn);
+
+        volverLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+            }
+        });
+    }
+
+    /* Comprueba que todos los campos de la interfaz han sido rellenados
+     */
+    private Boolean comprobarCamposRellenos() {
+        Boolean valido;
+
+        if(nombre.getText().toString().isEmpty() || apellidos.getText().toString().isEmpty() ||
+            nick.getText().toString().isEmpty() || contrasena.getText().toString().isEmpty() ||
+            fecha.getText().toString().isEmpty()){
+            valido = false;
+        } else {
+            valido = true;
+        }
+        return valido;
     }
 
     /* Comprueba que el usuario no existe en la bbdd, en caso de existir, informa mediante un toast
@@ -78,7 +108,7 @@ public class RegisterActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("response", "exito validar: " + response.toString());
+                        Log.d("RegisterActivity", "exito validar (usuario repetido): " + response.toString());
                         //Exito aquí significa que el usuario existía, por tanto no se debe permitir el registro
                         informarUsuarioExistente();
                     }
@@ -86,7 +116,7 @@ public class RegisterActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d("response", "error validar: " + error.toString());
+                        Log.d("RegisterActivity", "error validar (usuario no repetido): " + error.toString());
                         registrarUsuario();
                     }
                 });
@@ -106,11 +136,23 @@ public class RegisterActivity extends AppCompatActivity {
         toast.show();
     }
 
+    /* informa mediante un TOAST de que falta algún campo por rellenar
+     */
+    private void informarRellenarDatos() {
+        Toast toast = Toast.makeText(getApplicationContext(), "Por favor, rellena todos los campos", Toast.LENGTH_SHORT);
+        View view = toast.getView();
+
+        //Cambiar color del fonto
+        view.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN);
+        toast.show();
+    }
+
     /* Registra al usuario con los campos de la interfaz
      */
     private void registrarUsuario() {
         UserRequest user = new UserRequest(nombre.getText().toString(), apellidos.getText().toString(),
                 nick.getText().toString(), contrasena.getText().toString(), fecha.getText().toString());
+
 
         final RequestQueue rq = Volley.newRequestQueue(getApplicationContext());
         JSONObject params = new JSONObject();
@@ -136,15 +178,37 @@ public class RegisterActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("response", "exito: " + response.toString());
+                        Log.d("RegisterActivity", "exito: " + response.toString());
                         Toast.makeText(RegisterActivity.this, "Registro realizado correctamente", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(RegisterActivity.this, MainLogged.class));
+                        try {
+                            UsuarioDto usuarioLog = (UsuarioDto) getApplicationContext();
+                            usuarioLog.setId(response.getInt("id"));
+                            usuarioLog.setNombre(response.getString("nombre"));
+                            usuarioLog.setApellidos(response.getString("apellidos"));
+                            usuarioLog.setNick(response.getString("nick"));
+                            usuarioLog.setContrasena(response.getString("contrasena"));
+                            usuarioLog.setTipo_user(response.getBoolean("tipo_user"));
+                            usuarioLog.setFecha_nacimiento(response.getString("fecha_nacimiento"));
+                            if(!response.isNull("id_ultima_reproduccion")){
+                                usuarioLog.setId_ultima_reproduccion(Integer.parseInt(response.getString("id_ultima_reproduccion")));
+                            }
+                            if(!response.isNull("minuto_ultima_reproduccion")) {
+                                usuarioLog.setMinuto_ultima_reproduccion(response.getInt("minuto_ultima_reproduccion"));
+                            }
+                            if(!response.isNull("tipo_ultima_reproduccion")){
+                                usuarioLog.setTipo_ultima_reproduccion(response.getInt("tipo_ultima_reproduccion"));
+                            }
+                            //FALTA POR AÑADIR LISTA_CANCION Y AMIGOS
+                            startActivity(new Intent(RegisterActivity.this, MainLogged.class));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d("response", "error: " + error.toString());
+                        Log.d("RegisterActivity", "error: " + error.toString());
                         Toast.makeText(RegisterActivity.this, "Error desconocido al registrar", Toast.LENGTH_SHORT).show();
                     }
                 });
