@@ -1,8 +1,10 @@
 package com.example.carolshaw.objetos;
 
+import android.app.Application;
+
 import java.util.ArrayList;
 
-public class UsuarioDto {
+public class UsuarioDto extends Application {
     private int id;
     private String nombre;
     private String apellidos;
@@ -16,6 +18,9 @@ public class UsuarioDto {
     private ArrayList<ListaCancion> lista_cancion;
     private ArrayList<Amigo> amigos;
 
+    public UsuarioDto(){
+        //Constructor por defecto
+    }
     public UsuarioDto(String nombre, String apellidos, String nick, String contrasena, String fecha_nacimiento) {
         this.nombre = nombre;
         this.apellidos = apellidos;
