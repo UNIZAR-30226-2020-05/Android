@@ -58,7 +58,7 @@
         android:layout_width="237dp"
         android:layout_height="50dp"
         android:ems="10"
-        android:hint="Nacimiento (YYY-MM-DD)"
+        android:hint="Nacimiento (YYYY-MM-DD)"
         android:inputType="date"
         app:layout_constraintBottom_toTopOf="@+id/password"
         app:layout_constraintEnd_toEndOf="parent"
