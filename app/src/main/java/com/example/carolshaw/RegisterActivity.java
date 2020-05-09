@@ -19,6 +19,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.carolshaw.objetos.UserRequest;
+import com.example.carolshaw.objetos.UsuarioDto;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -152,6 +153,7 @@ public class RegisterActivity extends AppCompatActivity {
         UserRequest user = new UserRequest(nombre.getText().toString(), apellidos.getText().toString(),
                 nick.getText().toString(), contrasena.getText().toString(), fecha.getText().toString());
 
+
         final RequestQueue rq = Volley.newRequestQueue(getApplicationContext());
         JSONObject params = new JSONObject();
         // Adding parameters to request
@@ -178,7 +180,29 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         Log.d("RegisterActivity", "exito: " + response.toString());
                         Toast.makeText(RegisterActivity.this, "Registro realizado correctamente", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(RegisterActivity.this, MainLogged.class));
+                        try {
+                            UsuarioDto usuarioLog = (UsuarioDto) getApplicationContext();
+                            usuarioLog.setId(response.getInt("id"));
+                            usuarioLog.setNombre(response.getString("nombre"));
+                            usuarioLog.setApellidos(response.getString("apellidos"));
+                            usuarioLog.setNick(response.getString("nick"));
+                            usuarioLog.setContrasena(response.getString("contrasena"));
+                            usuarioLog.setTipo_user(response.getBoolean("tipo_user"));
+                            usuarioLog.setFecha_nacimiento(response.getString("fecha_nacimiento"));
+                            if(!response.isNull("id_ultima_reproduccion")){
+                                usuarioLog.setId_ultima_reproduccion(Integer.parseInt(response.getString("id_ultima_reproduccion")));
+                            }
+                            if(!response.isNull("minuto_ultima_reproduccion")) {
+                                usuarioLog.setMinuto_ultima_reproduccion(response.getInt("minuto_ultima_reproduccion"));
+                            }
+                            if(!response.isNull("tipo_ultima_reproduccion")){
+                                usuarioLog.setTipo_ultima_reproduccion(response.getInt("tipo_ultima_reproduccion"));
+                            }
+                            //FALTA POR AÑADIR LISTA_CANCION Y AMIGOS
+                            startActivity(new Intent(RegisterActivity.this, MainLogged.class));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 },
                 new Response.ErrorListener() {
