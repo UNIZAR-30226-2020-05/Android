@@ -5,13 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 
-import com.example.carolshaw.objetos.UsuarioDto;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.security.Principal;
 
 public class MainLogged extends AppCompatActivity {
 
@@ -51,7 +47,7 @@ public class MainLogged extends AppCompatActivity {
                                 selectedFragment = new ModificarPerfilFragment();
                                 break;
                             case R.id.nav_social:
-                                selectedFragment = new SocialFragment();
+                                selectedFragment = new PanelSocialFragment();
                                 break;
                             default:
                                 selectedFragment = new PrincipalFragment();

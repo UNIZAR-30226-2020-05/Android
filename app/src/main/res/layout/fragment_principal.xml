@@ -36,11 +36,10 @@
                     app:layout_constraintEnd_toStartOf="@+id/album2"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView"
-                    app:srcCompat="@drawable/ic_launcher_background" />
+                    app:layout_constraintTop_toBottomOf="@+id/textView" />
 
                 <ImageView
-                    android:id="@+id/imageView3"
+                    android:id="@+id/album3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="48dp"
@@ -52,7 +51,7 @@
                     app:srcCompat="@drawable/ic_launcher_background" />
 
                 <ImageView
-                    android:id="@+id/imageView6"
+                    android:id="@+id/podcast1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="48dp"
@@ -64,7 +63,7 @@
                     app:srcCompat="@drawable/ic_launcher_background" />
 
                 <ImageView
-                    android:id="@+id/imageView9"
+                    android:id="@+id/podcast3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="48dp"
@@ -72,7 +71,7 @@
                     app:layout_constraintEnd_toStartOf="@+id/album2"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView6"
+                    app:layout_constraintTop_toBottomOf="@+id/podcast1"
                     app:srcCompat="@drawable/ic_launcher_background" />
 
                 <ImageView
@@ -86,29 +85,29 @@
                     app:srcCompat="@drawable/ic_launcher_background" />
 
                 <ImageView
-                    android:id="@+id/imageView7"
+                    android:id="@+id/podcast2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="48dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/imageView6"
+                    app:layout_constraintBottom_toBottomOf="@+id/podcast1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:srcCompat="@drawable/ic_launcher_background" />
 
                 <ImageView
-                    android:id="@+id/imageView10"
+                    android:id="@+id/podcast4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="56dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/imageView9"
+                    app:layout_constraintBottom_toBottomOf="@+id/podcast3"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:srcCompat="@drawable/ic_launcher_background" />
 
                 <ImageView
-                    android:id="@+id/imageView5"
+                    android:id="@+id/album4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="48dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/imageView3"
+                    app:layout_constraintBottom_toBottomOf="@+id/album3"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:srcCompat="@drawable/ic_launcher_background" />
 
@@ -138,7 +137,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.108"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+                    app:layout_constraintTop_toBottomOf="@+id/album3" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

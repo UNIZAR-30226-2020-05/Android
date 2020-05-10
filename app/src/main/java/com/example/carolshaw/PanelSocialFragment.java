@@ -10,10 +10,10 @@ import android.view.ViewGroup;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link SocialFragment#newInstance} factory method to
+ * Use the {@link PanelSocialFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SocialFragment extends Fragment {
+public class PanelSocialFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -23,7 +23,7 @@ public class SocialFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public SocialFragment() {
+    public PanelSocialFragment() {
         // Required empty public constructor
     }
 
@@ -36,8 +36,8 @@ public class SocialFragment extends Fragment {
      * @return A new instance of fragment SocialFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static SocialFragment newInstance(String param1, String param2) {
-        SocialFragment fragment = new SocialFragment();
+    public static PanelSocialFragment newInstance(String param1, String param2) {
+        PanelSocialFragment fragment = new PanelSocialFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
