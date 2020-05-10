@@ -1,63 +1,115 @@
 package com.example.carolshaw;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link PanelSocialFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.carolshaw.objetos.Amigo;
+import com.example.carolshaw.objetos.UsuarioDto;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.*;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+
 public class PanelSocialFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    ArrayList<Amigo> listAmigos;
+    RecyclerView recycler;
+    private String URL_API;
+
+    private FloatingActionButton amigo;
 
     public PanelSocialFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SocialFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static PanelSocialFragment newInstance(String param1, String param2) {
-        PanelSocialFragment fragment = new PanelSocialFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+
+
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        amigo= getView().findViewById(R.id.btnAmigo);
+        URL_API = getString(R.string.API);
+        amigo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarAmigos();
+            }
+        });
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_social, container, false);
+
+        View vista = inflater.inflate(R.layout.fragment_social, container, false);
+        listAmigos = new ArrayList<>();
+        recycler = vista.findViewById(R.id.recyclerView2);
+        recycler.setLayoutManager(new LinearLayoutManager(getContext(),
+                LinearLayoutManager.VERTICAL,false));
+        listAmigos = new ArrayList<>();
+        Amigo a = new Amigo();
+        a.setNick("Nick objeto amigo");
+        a.setNombre("Nombre"); a.setApellidos("Apellidos");
+        listAmigos.add(a); listAmigos.add(a); listAmigos.add(a); listAmigos.add(a);
+        PanelSocialAdapter adapter = new PanelSocialAdapter(listAmigos);
+        recycler.setAdapter(adapter);
+        //Picasso.get().load("http://i.imgur.com/DvpvklR.png").into(R.id.fotoPerfil);
+        return vista;
     }
+
+    private void cargarAmigos() {
+        final RequestQueue rq = Volley.newRequestQueue(getActivity().getApplicationContext());
+        final UsuarioDto userLogeado = (UsuarioDto) getActivity().getApplicationContext();
+        String peticion = URL_API +"/user/get?nick=" + userLogeado.getNick();
+
+        // Creating a JSON Object request
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, peticion, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Gson gson = new Gson();
+                        UsuarioDto obj = gson.fromJson(response.toString(), UsuarioDto.class);
+                        //Llega lista correcta.
+                        listAmigos = obj.getAmigos();
+                        userLogeado.setAmigos(obj.getAmigos());
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) { }
+                });
+
+        // Adding the string request to the queue
+        rq.add(jsonObjectRequest);
+    }
+
 }
