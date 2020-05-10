@@ -57,6 +57,7 @@ public class RegisterActivity extends AppCompatActivity {
         nombre = findViewById(R.id.nombre);
         apellidos = findViewById(R.id.apellidos);
         contrasena = findViewById(R.id.password);
+
         fecha = findViewById(R.id.fecha);
 
         //Boton registrar
@@ -158,11 +159,13 @@ public class RegisterActivity extends AppCompatActivity {
         JSONObject params = new JSONObject();
         // Adding parameters to request
         try {
+            String contrasenaCifr = (android.util.Base64.encodeToString(user.getContrasena().getBytes(),
+                    android.util.Base64.DEFAULT));
             params.put("nombre", user.getNombre());
             params.put("apellidos", user.getApellidos());
             params.put("nick", user.getNick());
-            params.put("contrasena", user.getContrasena());
-            params.put("tipo_user", user.getTipo_user());
+            params.put("contrasena", contrasenaCifr.substring(0, contrasenaCifr.length()-1));
+            params.put("tipo_user", true);
 
             //Hay que pasar la fecha parseada y en formato long
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);

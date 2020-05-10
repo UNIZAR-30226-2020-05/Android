@@ -23,6 +23,8 @@ import com.example.carolshaw.objetos.UsuarioDto;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Base64; // Para cifrados de pass.
+
 
 public class LoginActivity extends AppCompatActivity {
     private TextView userRegistration;
@@ -45,8 +47,10 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String urlGet = URL_API + "/user/logIn?nick=" + nick.getText().toString() +
-                    "&pass=" + contrasena.getText().toString();
+
+
+                String urlGet = URL_API + "/user/logIn?nick=" + nick.getText().toString() + "&pass=" +
+                        android.util.Base64.encodeToString(contrasena.getText().toString().getBytes(), android.util.Base64.DEFAULT);
                 if(comprobarCamposRellenos()){
                     comprobarUsuario(urlGet);
                 } else {

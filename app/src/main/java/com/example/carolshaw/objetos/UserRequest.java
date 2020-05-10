@@ -14,7 +14,7 @@ public class UserRequest {
         this.nick = nick;
         this.contrasena = contrasena;
         this.fecha_nacimiento = fecha_nacimiento;
-        this.tipo_user = false;
+        this.tipo_user = true; // True: usuario. False: admin.
     }
 
     public String getNombre() {

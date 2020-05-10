@@ -95,7 +95,9 @@ public class ModificarPerfilFragment extends Fragment {
             if (!nuevaContrasenaString.equals(confirmarContrasenaString)) {
                 informarContrasenasNoCoinciden();
             } else {
-                guardarCambios(confirmarContrasenaString);
+                String aux = (android.util.Base64.encodeToString(confirmarContrasenaString.getBytes(),
+                        android.util.Base64.DEFAULT));
+                guardarCambios(aux.substring(0, aux.length()-1));
             }
         } else {
             informarRellenarDatos();
