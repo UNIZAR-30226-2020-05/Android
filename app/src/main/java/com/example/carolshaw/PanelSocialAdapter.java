@@ -37,7 +37,10 @@ public class PanelSocialAdapter extends RecyclerView.Adapter<PanelSocialAdapter.
 
     @Override
     public int getItemCount() {
-        return listAmigos.size();
+        if (listAmigos != null) {
+            return listAmigos.size();
+        }
+        else return 0;
     }
 
     public class Datos extends RecyclerView.ViewHolder {

@@ -12,6 +12,7 @@ public class UsuarioDto extends Application {
     private String contrasena;
     private Boolean tipo_user; //false = usuario; true = admin
     private String fecha_nacimiento;
+    private String nombre_avatar;
     private int id_ultima_reproduccion;
     private int minuto_ultima_reproduccion;
     private int tipo_ultima_reproduccion;
@@ -84,6 +85,14 @@ public class UsuarioDto extends Application {
 
     public void setFecha_nacimiento(String fecha_nacimiento) {
         this.fecha_nacimiento = fecha_nacimiento;
+    }
+
+    public String getNombre_avatar() {
+        return nombre_avatar;
+    }
+
+    public void setNombre_avatar(String nombre_avatar) {
+        this.nombre_avatar = nombre_avatar;
     }
 
     public int getId_ultima_reproduccion() {

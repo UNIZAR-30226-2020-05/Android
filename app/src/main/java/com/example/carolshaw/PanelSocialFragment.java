@@ -31,14 +31,12 @@ import java.util.ArrayList;
 
 
 public class PanelSocialFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 
 
-    // TODO: Rename and change types of parameters
-    ArrayList<Amigo> listAmigos;
+
+    public ArrayList<Amigo> listAmigos = new ArrayList<>();
     RecyclerView recycler;
-    private String URL_API;
+    private String URL_API= "http://3.22.247.114:8080";
 
     private FloatingActionButton amigo;
 
@@ -51,11 +49,10 @@ public class PanelSocialFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         amigo= getView().findViewById(R.id.btnAmigo);
-        URL_API = getString(R.string.API);
         amigo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cargarAmigos();
+                //cargarAmigos();
             }
         });
     }
@@ -71,24 +68,11 @@ public class PanelSocialFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View vista = inflater.inflate(R.layout.fragment_social, container, false);
-        listAmigos = new ArrayList<>();
-        recycler = vista.findViewById(R.id.recyclerView2);
-        recycler.setLayoutManager(new LinearLayoutManager(getContext(),
-                LinearLayoutManager.VERTICAL,false));
-        listAmigos = new ArrayList<>();
-        Amigo a = new Amigo();
-        a.setNick("Nick objeto amigo");
-        a.setNombre("Nombre"); a.setApellidos("Apellidos");
-        listAmigos.add(a); listAmigos.add(a); listAmigos.add(a); listAmigos.add(a);
-        PanelSocialAdapter adapter = new PanelSocialAdapter(listAmigos);
-        recycler.setAdapter(adapter);
-        //Picasso.get().load("http://i.imgur.com/DvpvklR.png").into(R.id.fotoPerfil);
-        return vista;
-    }
+       // listAmigos = new ArrayList<Amigo>();
 
-    private void cargarAmigos() {
+
         final RequestQueue rq = Volley.newRequestQueue(getActivity().getApplicationContext());
-        final UsuarioDto userLogeado = (UsuarioDto) getActivity().getApplicationContext();
+        UsuarioDto userLogeado = (UsuarioDto) getActivity().getApplicationContext();
         String peticion = URL_API +"/user/get?nick=" + userLogeado.getNick();
 
         // Creating a JSON Object request
@@ -96,20 +80,43 @@ public class PanelSocialFragment extends Fragment {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        //Cuando llega la respuesta de objeto usuario
                         Gson gson = new Gson();
                         UsuarioDto obj = gson.fromJson(response.toString(), UsuarioDto.class);
-                        //Llega lista correcta.
-                        listAmigos = obj.getAmigos();
-                        userLogeado.setAmigos(obj.getAmigos());
+
+                        //Deserializa
+
+                        cargarLista(obj.getAmigos());
+
+                        Log.d("EEEEE","EEEEE");
+                      /*  Log.d("ggg", String.valueOf(listAmigos.size())+listAmigos.get(0).getNick()+"---"+listAmigos.get(0).getNombre());
+                        Log.d("ggg", String.valueOf(listAmigos.size())+listAmigos.get(1).getNick()+"---"+listAmigos.get(0).getNombre());*/
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) { }
+                    public void onErrorResponse(VolleyError error) { Log.d("EEEEE","EEEEE"); }
                 });
 
         // Adding the string request to the queue
         rq.add(jsonObjectRequest);
+
+        recycler = vista.findViewById(R.id.recyclerView2);
+        recycler.setLayoutManager(new LinearLayoutManager(getContext(),
+                LinearLayoutManager.VERTICAL,false));
+      //  a.setNick("Nick objeto amigo");
+      //  a.setNombre("Nombre"); a.setApellidos("Apellidos");
+        //Log.d("ASDF", String.valueOf(listAmigos.size())+listAmigos.get(0).getNick()+"---"+listAmigos.get(0).getNombre());
+        PanelSocialAdapter adapter = new PanelSocialAdapter(listAmigos);
+        Log.d("AAAAAAA", String.valueOf(listAmigos.size()));
+        recycler.setAdapter(adapter);
+        //Picasso.get().load("http://i.imgur.com/DvpvklR.png").into(R.id.fotoPerfil);
+        return vista;
     }
 
+    private void cargarLista(ArrayList<Amigo> lst) {
+        listAmigos.addAll(lst);
+        Log.d("OOOOOO", String.valueOf(listAmigos.size()));
+    }
+    
 }
