@@ -1,6 +1,5 @@
 package com.example.carolshaw;
 
-import android.media.Image;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -16,16 +15,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.carolshaw.objetos.UsuarioDto;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.net.URL;
 import java.util.ArrayList;
 
 
@@ -114,7 +109,7 @@ public class PrincipalFragment extends Fragment {
      */
     private void iniciarImageviews() {
         albumes = new ArrayList<ImageView>();
-        albumes.add((ImageView) getView().findViewById(R.id.album1));
+        albumes.add((ImageView) getView().findViewById(R.id.caratulaAlbum));
         albumes.add((ImageView) getView().findViewById(R.id.album2));
         albumes.add((ImageView) getView().findViewById(R.id.album3));
         albumes.add((ImageView) getView().findViewById(R.id.album4));
