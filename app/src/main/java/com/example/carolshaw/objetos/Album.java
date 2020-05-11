@@ -1,8 +1,9 @@
 package com.example.carolshaw.objetos;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Album {
+public class Album implements Serializable {
     int id;
     String titulo;
     String caratula;
@@ -10,6 +11,7 @@ public class Album {
     ArrayList<Cancion> canciones;
 
     public Album() {
+        this.canciones = new ArrayList<Cancion>();
     }
 
 

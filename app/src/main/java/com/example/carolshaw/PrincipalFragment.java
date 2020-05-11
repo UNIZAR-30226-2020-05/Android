@@ -32,8 +32,6 @@ import java.util.ArrayList;
 
 public class PrincipalFragment extends Fragment {
     private ArrayList<ImageView> imagesAlbum;
-    private ArrayList<String> albumesId = new ArrayList<String>();
-    private ArrayList<String> albumesTitulo = new ArrayList<String>();
     private ArrayList<Album> albumes = new ArrayList<Album>();
     private ArrayList<ImageView> podcasts;
     private String URL_API;
@@ -48,25 +46,25 @@ public class PrincipalFragment extends Fragment {
         imagesAlbum.get(0).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clickAlbum(albumesId.get(0),albumesTitulo.get(0));
+                clickAlbum(albumes.get(0));
             }
         });
         imagesAlbum.get(1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clickAlbum(albumesId.get(1),albumesTitulo.get(1));
+                clickAlbum(albumes.get(1));
             }
         });
         imagesAlbum.get(2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clickAlbum(albumesId.get(2),albumesTitulo.get(2));
+                clickAlbum(albumes.get(2));
             }
         });
         imagesAlbum.get(3).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clickAlbum(albumesId.get(3),albumesTitulo.get(3));
+                clickAlbum(albumes.get(3));
             }
         });
 
@@ -83,7 +81,7 @@ public class PrincipalFragment extends Fragment {
                     @Override
                     public void onResponse(JSONArray response) {
                         JSONArray cancionesArrayJSON;
-                        for(int i=0; i<response.length() && i<4; i++){
+                        for(int i=0; i<response.length(); i++){
                             try {
                                 Album album = new Album();
                                 ArrayList<Cancion> canciones = new ArrayList<Cancion>();
@@ -95,24 +93,26 @@ public class PrincipalFragment extends Fragment {
                                 artista.setName(response.getJSONObject(i).getString("artista"));
                                 album.setArtista(artista);
 
-                                Cancion cancion = new Cancion();
                                 cancionesArrayJSON = response.getJSONObject(i).getJSONArray("canciones"); //Obtiene las canciones del album
                                 for(int j=0; j<cancionesArrayJSON.length(); j++){
+                                    Cancion cancion = new Cancion();
                                     cancion.setId(cancionesArrayJSON.getJSONObject(j).getInt("id"));
                                     cancion.setName(cancionesArrayJSON.getJSONObject(j).getString("name"));
                                     cancion.setFecha_subida(cancionesArrayJSON.getJSONObject(j).getString("fecha_subida"));
                                     cancion.setDuracion(cancionesArrayJSON.getJSONObject(j).getInt("duracion"));
                                     cancion.setAlbum(cancionesArrayJSON.getJSONObject(j).getString("album"));
                                     cancion.setArtistas(cancionesArrayJSON.getJSONObject(j).getString("artistas"));
+                                    canciones.add(cancion);
                                 }
-                                canciones.add(cancion);
                                 album.setCanciones(canciones);
-                                Picasso.get()
-                                        .load(album.getCaratula())
-                                        .resize(250, 250)
-                                        .centerCrop()
-                                        .into(imagesAlbum.get(i));
-                                albumesId.add(String.valueOf(album.getId()));
+
+                                if (i < 4) {
+                                    Picasso.get()
+                                            .load(album.getCaratula())
+                                            .resize(250, 250)
+                                            .centerCrop()
+                                            .into(imagesAlbum.get(i));
+                                }
                                 albumes.add(album);
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -150,9 +150,9 @@ public class PrincipalFragment extends Fragment {
     }
 
 
-    public void clickAlbum(String id, String titulo){
+    public void clickAlbum(Album album){
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new CancionesAlbumFragment().newInstance(id,titulo)).commit();
+                new CancionesAlbumFragment().newInstance(album)).commit();
     }
 
     public void clickPodcast(){
