@@ -55,20 +55,6 @@ public class PanelSocialFragment extends Fragment {
                 //cargarAmigos();
             }
         });
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        View vista = inflater.inflate(R.layout.fragment_social, container, false);
-       // listAmigos = new ArrayList<Amigo>();
 
 
         final RequestQueue rq = Volley.newRequestQueue(getActivity().getApplicationContext());
@@ -86,37 +72,52 @@ public class PanelSocialFragment extends Fragment {
 
                         //Deserializa
 
+                        Log.d("PanelSocialFragment",response.toString());
+                        Log.d("PanelSocialFragment", String.valueOf(obj.getAmigos().size()));
+                        Log.d("PanelSocialFragment", String.valueOf(obj.getAmigos().get(0).getNick()));
+
                         cargarLista(obj.getAmigos());
 
-                        Log.d("EEEEE","EEEEE");
-                      /*  Log.d("ggg", String.valueOf(listAmigos.size())+listAmigos.get(0).getNick()+"---"+listAmigos.get(0).getNombre());
-                        Log.d("ggg", String.valueOf(listAmigos.size())+listAmigos.get(1).getNick()+"---"+listAmigos.get(0).getNombre());*/
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) { Log.d("EEEEE","EEEEE"); }
+                    public void onErrorResponse(VolleyError error) { Log.d("PanelSocialFragment","error"); }
                 });
 
         // Adding the string request to the queue
         rq.add(jsonObjectRequest);
+    }
 
-        recycler = vista.findViewById(R.id.recyclerView2);
-        recycler.setLayoutManager(new LinearLayoutManager(getContext(),
-                LinearLayoutManager.VERTICAL,false));
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View vista = inflater.inflate(R.layout.fragment_social, container, false);
+       // listAmigos = new ArrayList<Amigo>();
       //  a.setNick("Nick objeto amigo");
       //  a.setNombre("Nombre"); a.setApellidos("Apellidos");
         //Log.d("ASDF", String.valueOf(listAmigos.size())+listAmigos.get(0).getNick()+"---"+listAmigos.get(0).getNombre());
-        PanelSocialAdapter adapter = new PanelSocialAdapter(listAmigos);
+
         Log.d("AAAAAAA", String.valueOf(listAmigos.size()));
-        recycler.setAdapter(adapter);
+
         //Picasso.get().load("http://i.imgur.com/DvpvklR.png").into(R.id.fotoPerfil);
         return vista;
     }
 
     private void cargarLista(ArrayList<Amigo> lst) {
+        PanelSocialAdapter adapter = new PanelSocialAdapter(listAmigos);
+        recycler = getView().findViewById(R.id.recyclerView2);
+        recycler.setLayoutManager(new LinearLayoutManager(getContext(),
+                LinearLayoutManager.VERTICAL,false));
+        recycler.setAdapter(adapter);
         listAmigos.addAll(lst);
-        Log.d("OOOOOO", String.valueOf(listAmigos.size()));
+        Log.d("PanelSocialFragment", "tamaño lista: " + String.valueOf(listAmigos.size()));
     }
     
 }
