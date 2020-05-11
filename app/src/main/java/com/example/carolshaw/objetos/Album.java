@@ -1,4 +1,55 @@
 package com.example.carolshaw.objetos;
 
+import java.util.ArrayList;
+
 public class Album {
+    int id;
+    String titulo;
+    String caratula;
+    Artista artista;
+    ArrayList<Cancion> canciones;
+
+    public Album() {
+    }
+
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public String getCaratula() {
+        return caratula;
+    }
+
+    public void setCaratula(String caratula) {
+        this.caratula = caratula;
+    }
+
+    public Artista getArtista() {
+        return artista;
+    }
+
+    public void setArtista(Artista artista) {
+        this.artista = artista;
+    }
+
+    public ArrayList<Cancion> getCanciones() {
+        return canciones;
+    }
+
+    public void setCanciones(ArrayList<Cancion> canciones) {
+        this.canciones = canciones;
+    }
 }

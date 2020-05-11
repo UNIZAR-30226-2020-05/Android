@@ -16,17 +16,25 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.carolshaw.objetos.Album;
+import com.example.carolshaw.objetos.Artista;
+import com.example.carolshaw.objetos.Cancion;
+import com.example.carolshaw.objetos.UsuarioDto;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 
 public class PrincipalFragment extends Fragment {
-    private ArrayList<ImageView> albumes;
+    private ArrayList<ImageView> imagesAlbum;
     private ArrayList<String> albumesId = new ArrayList<String>();
+    private ArrayList<String> albumesTitulo = new ArrayList<String>();
+    private ArrayList<Album> albumes = new ArrayList<Album>();
     private ArrayList<ImageView> podcasts;
     private String URL_API;
 
@@ -37,28 +45,28 @@ public class PrincipalFragment extends Fragment {
         iniciarImageviews();
         obtenerAlbumes();
 
-        albumes.get(0).setOnClickListener(new View.OnClickListener() {
+        imagesAlbum.get(0).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clickAlbum(albumesId.get(0));
+                clickAlbum(albumesId.get(0),albumesTitulo.get(0));
             }
         });
-        albumes.get(1).setOnClickListener(new View.OnClickListener() {
+        imagesAlbum.get(1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clickAlbum(albumesId.get(1));
+                clickAlbum(albumesId.get(1),albumesTitulo.get(1));
             }
         });
-        albumes.get(2).setOnClickListener(new View.OnClickListener() {
+        imagesAlbum.get(2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clickAlbum(albumesId.get(2));
+                clickAlbum(albumesId.get(2),albumesTitulo.get(2));
             }
         });
-        albumes.get(3).setOnClickListener(new View.OnClickListener() {
+        imagesAlbum.get(3).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clickAlbum(albumesId.get(3));
+                clickAlbum(albumesId.get(3),albumesTitulo.get(3));
             }
         });
 
@@ -74,17 +82,38 @@ public class PrincipalFragment extends Fragment {
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        String urlCaratula;
+                        JSONArray cancionesArrayJSON;
                         for(int i=0; i<response.length() && i<4; i++){
                             try {
-                                urlCaratula = response.getJSONObject(i).getString("caratula");
-                                Log.d("PrincipalFragment", "urlCaratula: " + urlCaratula);
+                                Album album = new Album();
+                                ArrayList<Cancion> canciones = new ArrayList<Cancion>();
+                                //Meter toda la informacion de un album en la lista
+                                album.setId(Integer.parseInt(response.getJSONObject(i).getString("id")));
+                                album.setTitulo(response.getJSONObject(i).getString("titulo"));
+                                album.setCaratula(response.getJSONObject(i).getString("caratula"));
+                                Artista artista = new Artista();
+                                artista.setName(response.getJSONObject(i).getString("artista"));
+                                album.setArtista(artista);
+
+                                Cancion cancion = new Cancion();
+                                cancionesArrayJSON = response.getJSONObject(i).getJSONArray("canciones"); //Obtiene las canciones del album
+                                for(int j=0; j<cancionesArrayJSON.length(); j++){
+                                    cancion.setId(cancionesArrayJSON.getJSONObject(j).getInt("id"));
+                                    cancion.setName(cancionesArrayJSON.getJSONObject(j).getString("name"));
+                                    cancion.setFecha_subida(cancionesArrayJSON.getJSONObject(j).getString("fecha_subida"));
+                                    cancion.setDuracion(cancionesArrayJSON.getJSONObject(j).getInt("duracion"));
+                                    cancion.setAlbum(cancionesArrayJSON.getJSONObject(j).getString("album"));
+                                    cancion.setArtistas(cancionesArrayJSON.getJSONObject(j).getString("artistas"));
+                                }
+                                canciones.add(cancion);
+                                album.setCanciones(canciones);
                                 Picasso.get()
-                                        .load(urlCaratula)
+                                        .load(album.getCaratula())
                                         .resize(250, 250)
                                         .centerCrop()
-                                        .into(albumes.get(i));
-                                albumesId.add(response.getJSONObject(i).getString("id"));
+                                        .into(imagesAlbum.get(i));
+                                albumesId.add(String.valueOf(album.getId()));
+                                albumes.add(album);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -108,11 +137,11 @@ public class PrincipalFragment extends Fragment {
     /* Inicia las variables de Imageviews
      */
     private void iniciarImageviews() {
-        albumes = new ArrayList<ImageView>();
-        albumes.add((ImageView) getView().findViewById(R.id.caratulaAlbum));
-        albumes.add((ImageView) getView().findViewById(R.id.album2));
-        albumes.add((ImageView) getView().findViewById(R.id.album3));
-        albumes.add((ImageView) getView().findViewById(R.id.album4));
+        imagesAlbum = new ArrayList<ImageView>();
+        imagesAlbum.add((ImageView) getView().findViewById(R.id.caratulaAlbum));
+        imagesAlbum.add((ImageView) getView().findViewById(R.id.album2));
+        imagesAlbum.add((ImageView) getView().findViewById(R.id.album3));
+        imagesAlbum.add((ImageView) getView().findViewById(R.id.album4));
         podcasts = new ArrayList<ImageView>();
         podcasts.add((ImageView) getView().findViewById(R.id.podcast1));
         podcasts.add((ImageView) getView().findViewById(R.id.podcast2));
@@ -121,7 +150,9 @@ public class PrincipalFragment extends Fragment {
     }
 
 
-    public void clickAlbum(String id){
+    public void clickAlbum(String id, String titulo){
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                new CancionesAlbumFragment().newInstance(id,titulo)).commit();
     }
 
     public void clickPodcast(){
