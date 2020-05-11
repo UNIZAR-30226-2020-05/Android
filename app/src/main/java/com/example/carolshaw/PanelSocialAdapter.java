@@ -26,7 +26,7 @@ public class PanelSocialAdapter extends RecyclerView.Adapter<PanelSocialAdapter.
     @Override
     public Datos onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.recycler_view_item,null,false);
+                .inflate(R.layout.recycler_view_item_amigo,null,false);
         return new Datos(view);
     }
 
