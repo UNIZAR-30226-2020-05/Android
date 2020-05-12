@@ -74,14 +74,11 @@ public class MainLogged extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected (MenuItem item){
+        Toast toast;
+        View view;
         switch (item.getItemId()){
             case R.id.lista_musica:
-                Toast toast = Toast.makeText(getApplicationContext(), "funcion aun no disponible de musica", Toast.LENGTH_SHORT);
-                View view = toast.getView();
-
-                //Cambiar color del fonto
-                view.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN);
-                toast.show();
+                startActivity(new Intent(MainLogged.this, ListaCancionesActivity.class));
                 return true;
             case R.id.lista_podcast:
                 toast = Toast.makeText(getApplicationContext(), "funcion aun no disponible de podcast", Toast.LENGTH_SHORT);

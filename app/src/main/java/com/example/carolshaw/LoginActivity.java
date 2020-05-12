@@ -18,12 +18,18 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.carolshaw.objetos.Cancion;
+import com.example.carolshaw.objetos.ListaCancion;
 import com.example.carolshaw.objetos.UsuarioDto;
+import com.google.gson.Gson;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Base64; // Para cifrados de pass.
+import java.util.List;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -87,6 +93,22 @@ public class LoginActivity extends AppCompatActivity {
                             usuarioLog.setContrasena(response.getString("contrasena"));
                             usuarioLog.setTipo_user(response.getBoolean("tipo_user"));
                             usuarioLog.setFecha_nacimiento(response.getString("fecha_nacimiento"));
+                            JSONArray JSONListaCanciones = response.getJSONArray("lista_cancion");
+                            ArrayList<ListaCancion> arrayListaCancion = new ArrayList<ListaCancion>();
+                            for (int i = 0; i < JSONListaCanciones.length(); i++) {
+                                ListaCancion listaCanciones = new ListaCancion();
+                                listaCanciones.setId(JSONListaCanciones.getJSONObject(i).getInt("id"));
+                                listaCanciones.setId_usuario(JSONListaCanciones.getJSONObject(i).getInt("id_usuario"));
+                                listaCanciones.setNombre(JSONListaCanciones.getJSONObject(i).getString("nombre"));
+                                JSONArray JSONcanciones = JSONListaCanciones.getJSONObject(i).getJSONArray("canciones");
+                                for (int j = 0; i < JSONcanciones.length(); i++) {
+                                    Gson gson = new Gson();
+                                    Cancion obj = gson.fromJson(JSONcanciones.getJSONObject(j).toString(), Cancion.class);
+                                    listaCanciones.addCancion(obj);
+                                }
+                                arrayListaCancion.add(listaCanciones);
+                            }
+                            usuarioLog.setLista_cancion(arrayListaCancion);
                             if(!response.isNull("id_ultima_reproduccion")){
                                 usuarioLog.setId_ultima_reproduccion(Integer.parseInt(response.getString("id_ultima_reproduccion")));
                             }
