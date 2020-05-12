@@ -9,4 +9,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="lista_de_podcast">Lista de podcast</string>
+    <string name="lista_de_musica">Lista de musica</string>
+    <string name="cerrar_sesi_n">Cerrar sesión</string>
 </resources>

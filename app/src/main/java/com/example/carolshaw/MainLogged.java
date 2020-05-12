@@ -4,8 +4,15 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -57,5 +64,45 @@ public class MainLogged extends AppCompatActivity {
                     return true;
                 }
             };
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_lateral,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected (MenuItem item){
+        switch (item.getItemId()){
+            case R.id.lista_musica:
+                Toast toast = Toast.makeText(getApplicationContext(), "funcion aun no disponible de musica", Toast.LENGTH_SHORT);
+                View view = toast.getView();
+
+                //Cambiar color del fonto
+                view.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN);
+                toast.show();
+                return true;
+            case R.id.lista_podcast:
+                toast = Toast.makeText(getApplicationContext(), "funcion aun no disponible de podcast", Toast.LENGTH_SHORT);
+                view = toast.getView();
+
+                //Cambiar color del fonto
+                view.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN);
+                toast.show();
+                return true;
+            case R.id.cerrar_sesion:
+                toast = Toast.makeText(getApplicationContext(), "Adios!", Toast.LENGTH_SHORT);
+                view = toast.getView();
+
+                //Cambiar color del fonto
+                view.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN);
+                toast.show();
+                startActivity(new Intent(MainLogged.this, LoginActivity.class));
+                return true;
+            default:
+                return true;
+        }
+    }
 
 }

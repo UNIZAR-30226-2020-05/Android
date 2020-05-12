@@ -21,4 +21,5 @@
         app:layout_constraintBottom_toBottomOf="@+id/fragment_container"
         app:menu="@menu/bottom_navigation_menu" />
 
+
 </RelativeLayout>
