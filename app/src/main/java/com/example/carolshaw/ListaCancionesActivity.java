@@ -63,9 +63,6 @@ public class ListaCancionesActivity extends AppCompatActivity {
         recycler.setLayoutManager(new LinearLayoutManager(ListaCancionesActivity.this,
                 LinearLayoutManager.VERTICAL,false));
         recycler.setAdapter(adapter);
-        Log.d("ListaCancionesActivity", "lista: " + usuarioLog.getLista_cancion().get(0).getNombre());
-        Log.d("ListaCancionesActivity", "lista: " + usuarioLog.getLista_cancion().get(1).getNombre());
-        Log.d("ListaCancionesActivity", "lista: " + usuarioLog.getLista_cancion().get(2).getNombre());
     }
 
     //Función del botón añadir nueva lista

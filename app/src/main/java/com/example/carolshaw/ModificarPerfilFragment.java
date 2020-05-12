@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -26,6 +27,7 @@ import com.example.carolshaw.objetos.UsuarioDto;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
 
 import java.util.Map;
 
@@ -78,15 +80,14 @@ public class ModificarPerfilFragment extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d("ModificarPerfil","Fallo en usuario eliminado");
-                        informarFalloDesconocido();
+                        informarUsuarioBorrado();
+                        startActivity(new Intent(getActivity(), LoginActivity.class));
                     }
                 });
 
         // Adding the string request to the queue
         rq.add(jsonObjectRequest);
     }
-
 
     private void compararContrasenas() {
         String nuevaContrasenaString = nuevaContrasena.getText().toString();
@@ -142,6 +143,18 @@ public class ModificarPerfilFragment extends Fragment {
 
         // Adding the string request to the queue
         rq.add(jsonObjectRequest);
+    }
+
+    /* informa mediante un TOAST de que se ha borrado el usuario correctamente
+     */
+    private void informarUsuarioBorrado() {
+        Toast toast = Toast.makeText(getActivity().getApplicationContext(),
+                "Usuario borrado correctamente", Toast.LENGTH_SHORT);
+        View view = toast.getView();
+
+        //Cambiar color del fonto
+        view.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN);
+        toast.show();
     }
 
     /* informa mediante un TOAST de que se ha actualizado la contraseña correctamente

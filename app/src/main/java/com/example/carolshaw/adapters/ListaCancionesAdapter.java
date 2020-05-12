@@ -30,6 +30,7 @@ public class ListaCancionesAdapter extends RecyclerView.Adapter<ListaCancionesAd
 
     @Override
     public void onBindViewHolder(@NonNull ListaCancionesAdapter.Datos holder, int position) {
+        holder.itemView.setLongClickable(true);
         holder.establecer(listasCanciones.get(position));
     }
 
