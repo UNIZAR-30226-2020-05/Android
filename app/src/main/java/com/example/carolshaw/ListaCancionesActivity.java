@@ -46,6 +46,7 @@ public class ListaCancionesActivity extends AppCompatActivity {
     private String URL_API ;
     private String nombreLista = "";
     private RecyclerView recycler;
+    private ListaCancionesAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,13 +54,14 @@ public class ListaCancionesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lista_canciones);
         usuarioLog = (UsuarioDto) getApplicationContext();
         URL_API = getString(R.string.API);
+        recycler = findViewById(R.id.recyclerViewCanciones);
+        adapter = new ListaCancionesAdapter(usuarioLog.getLista_cancion());
+
         cargarListas();
     }
 
     //Carga las listas del usuario
     private void cargarListas() {
-        ListaCancionesAdapter adapter = new ListaCancionesAdapter(usuarioLog.getLista_cancion());
-        recycler = findViewById(R.id.recyclerViewCanciones);
         recycler.setLayoutManager(new LinearLayoutManager(ListaCancionesActivity.this,
                 LinearLayoutManager.VERTICAL,false));
         recycler.setAdapter(adapter);

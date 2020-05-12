@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,7 +31,6 @@ public class ListaCancionesAdapter extends RecyclerView.Adapter<ListaCancionesAd
 
     @Override
     public void onBindViewHolder(@NonNull ListaCancionesAdapter.Datos holder, int position) {
-        holder.itemView.setLongClickable(true);
         holder.establecer(listasCanciones.get(position));
     }
 
