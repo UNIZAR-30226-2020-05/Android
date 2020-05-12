@@ -2,6 +2,8 @@ package com.example.carolshaw;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,6 +22,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.carolshaw.adapters.ListaCancionesAdapter;
+import com.example.carolshaw.adapters.PanelSocialAdapter;
+import com.example.carolshaw.objetos.ListaCancion;
 import com.example.carolshaw.objetos.UsuarioDto;
 
 import org.json.JSONException;
@@ -30,6 +35,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import static java.security.AccessController.getContext;
@@ -39,6 +45,7 @@ public class ListaCancionesActivity extends AppCompatActivity {
     private UsuarioDto usuarioLog;
     private String URL_API ;
     private String nombreLista = "";
+    private RecyclerView recycler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +58,11 @@ public class ListaCancionesActivity extends AppCompatActivity {
 
     //Carga las listas del usuario
     private void cargarListas() {
-
+        ListaCancionesAdapter adapter = new ListaCancionesAdapter(usuarioLog.getLista_cancion());
+        recycler = findViewById(R.id.recyclerViewCanciones);
+        recycler.setLayoutManager(new LinearLayoutManager(ListaCancionesActivity.this,
+                LinearLayoutManager.VERTICAL,false));
+        recycler.setAdapter(adapter);
         Log.d("ListaCancionesActivity", "lista: " + usuarioLog.getLista_cancion().get(0).getNombre());
         Log.d("ListaCancionesActivity", "lista: " + usuarioLog.getLista_cancion().get(1).getNombre());
         Log.d("ListaCancionesActivity", "lista: " + usuarioLog.getLista_cancion().get(2).getNombre());
@@ -103,6 +114,14 @@ public class ListaCancionesActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d("ListaCancionesActivity", "response: " + response.toString());
+                        try {
+                            ListaCancion listaCancion = new ListaCancion(response.getInt("id"),
+                                    response.getInt("id_usuario"),response.getString("nombre"));
+                            usuarioLog.addLista_cancion(listaCancion);
+                            cargarListas();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 },
                 new Response.ErrorListener() {
@@ -116,5 +135,4 @@ public class ListaCancionesActivity extends AppCompatActivity {
         // Adding the string request to the queue
         rq.add(jsonObjectRequest);
     }
-
 }

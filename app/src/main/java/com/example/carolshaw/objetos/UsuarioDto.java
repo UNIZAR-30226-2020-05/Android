@@ -127,6 +127,10 @@ public class UsuarioDto extends Application {
         this.lista_cancion = lista_cancion;
     }
 
+    public void addLista_cancion(ListaCancion lista_cancion) {
+        this.lista_cancion.add(lista_cancion);
+    }
+
     public ArrayList<Amigo> getAmigos() {
         return amigos;
     }

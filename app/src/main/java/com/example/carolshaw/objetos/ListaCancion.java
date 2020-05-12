@@ -12,6 +12,13 @@ public class ListaCancion {
     public ListaCancion() {
     }
 
+    public ListaCancion(int id, int id_usuario, String nombre) {
+        this.id = id;
+        this.id_usuario = id_usuario;
+        this.nombre = nombre;
+        this.canciones = new ArrayList<Cancion>();
+    }
+
     public int getId() {
         return id;
     }
