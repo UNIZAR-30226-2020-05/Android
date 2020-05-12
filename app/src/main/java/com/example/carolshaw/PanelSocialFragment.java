@@ -1,6 +1,5 @@
 package com.example.carolshaw;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -19,11 +18,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.carolshaw.adapters.PanelSocialAdapter;
 import com.example.carolshaw.objetos.Amigo;
 import com.example.carolshaw.objetos.UsuarioDto;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.*;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 

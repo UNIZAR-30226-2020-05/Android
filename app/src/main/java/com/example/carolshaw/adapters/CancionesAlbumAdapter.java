@@ -1,4 +1,4 @@
-package com.example.carolshaw;
+package com.example.carolshaw.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.carolshaw.R;
 import com.example.carolshaw.objetos.Cancion;
 
 import java.util.ArrayList;
