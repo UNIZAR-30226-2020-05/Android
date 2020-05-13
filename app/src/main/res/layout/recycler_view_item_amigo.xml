@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="horizontal"
-              android:padding="8dp"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp">
 
   <ImageView
       android:id="@+id/fotoPerfil"
@@ -18,24 +18,40 @@
       tools:visibility="visible" />
 
   <LinearLayout
-      android:layout_width="266dp"
-      android:layout_height="58dp"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
       android:layout_gravity="center"
       android:orientation="vertical"
       android:padding="5dp">
 
     <TextView
         android:id="@+id/nickAm"
-        android:layout_width="260dp"
+        android:layout_width="215dp"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
+        android:textSize="20sp"
         tools:text="@tools:sample/lorem[3]" />
 
     <TextView
         android:id="@+id/nomAm"
-        android:layout_width="260dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
+        android:textSize="18dp"
         tools:text="@tools:sample/lorem[4]" />
+
   </LinearLayout>
+
+  <ImageView
+      android:id="@+id/btnBorrarAmigo"
+      android:layout_width="35dp"
+      android:layout_height="35dp"
+      android:layout_gravity="center"
+      android:layout_weight="1"
+      android:baselineAligned="false"
+      android:clickable="true"
+      android:visibility="visible"
+      app:srcCompat="@drawable/trash"
+      tools:src="@drawable/ic_profile"
+      tools:srcCompat="@drawable/trash"
+      tools:visibility="visible" />
+
 </LinearLayout>

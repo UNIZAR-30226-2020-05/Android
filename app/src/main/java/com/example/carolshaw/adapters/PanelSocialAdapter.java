@@ -14,9 +14,10 @@ import com.example.carolshaw.objetos.Amigo;
 
 import java.util.ArrayList;
 
-public class PanelSocialAdapter extends RecyclerView.Adapter<PanelSocialAdapter.Datos> {
+public class PanelSocialAdapter extends RecyclerView.Adapter<PanelSocialAdapter.Datos>
+implements View.OnClickListener {
 
-
+    private View.OnClickListener listener;
     ArrayList<Amigo> listAmigos;
 
     public PanelSocialAdapter(ArrayList<Amigo> listAmigos) {
@@ -28,6 +29,7 @@ public class PanelSocialAdapter extends RecyclerView.Adapter<PanelSocialAdapter.
     public Datos onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recycler_view_item_amigo,null,false);
+        view.setOnClickListener(this);
         return new Datos(view);
     }
 
@@ -36,12 +38,23 @@ public class PanelSocialAdapter extends RecyclerView.Adapter<PanelSocialAdapter.
         holder.establecer(listAmigos.get(position));
     }
 
+    public void setOnClickListener(View.OnClickListener listen) {
+        this.listener = listen;
+    }
+
     @Override
     public int getItemCount() {
         if (listAmigos != null) {
             return listAmigos.size();
         }
         else return 0;
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (listener != null) {
+            listener.onClick(v);
+        }
     }
 
     public class Datos extends RecyclerView.ViewHolder {
