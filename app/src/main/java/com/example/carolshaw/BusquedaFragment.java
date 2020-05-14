@@ -209,6 +209,8 @@ public class BusquedaFragment extends Fragment {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                                new ResultadoArtistaBusquedaFragment().newInstance(artistasEncontrados)).commit();
 
                     }
                 },
@@ -216,7 +218,8 @@ public class BusquedaFragment extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("BusquedaFragment", "error busqueda cancion: " + error.toString());
-
+                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                                new ResultadoArtistaBusquedaFragment().newInstance(artistasEncontrados)).commit();
                     }
                 });
         // Adding the string request to the queue
