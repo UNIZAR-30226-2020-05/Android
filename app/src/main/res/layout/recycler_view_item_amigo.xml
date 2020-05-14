@@ -9,17 +9,25 @@
 
   <ImageView
       android:id="@+id/fotoPerfil"
-      android:layout_width="87dp"
-      android:layout_height="57dp"
+      android:layout_width="45dp"
+      android:layout_height="67dp"
       android:visibility="visible"
-      app:srcCompat="@drawable/ic_profile"
-      tools:src="@drawable/ic_profile"
-      tools:srcCompat="@drawable/ic_profile"
+      app:srcCompat="@drawable/perfil"
+      tools:src="@drawable/perfil"
+      tools:srcCompat="@drawable/perfil"
       tools:visibility="visible" />
 
+  <ImageView
+      android:id="@+id/imageView"
+      android:layout_width="13dp"
+      android:layout_height="70dp"
+      android:layout_gravity="bottom"
+      android:layout_weight="1"
+      app:srcCompat="@android:drawable/ic_media_play" />
+
   <LinearLayout
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
+      android:layout_width="250dp"
+      android:layout_height="104dp"
       android:layout_gravity="center"
       android:orientation="vertical"
       android:padding="5dp">
@@ -29,14 +37,23 @@
         android:layout_width="215dp"
         android:layout_height="wrap_content"
         android:textSize="20sp"
+        android:textStyle="bold"
         tools:text="@tools:sample/lorem[3]" />
 
     <TextView
         android:id="@+id/nomAm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18dp"
+        android:textSize="18sp"
         tools:text="@tools:sample/lorem[4]" />
+
+    <TextView
+        android:id="@+id/ultimaRepr"
+        android:layout_width="238dp"
+        android:layout_height="47dp"
+        android:textSize="18sp"
+        android:textStyle="italic"
+        tools:text="@tools:sample/lorem[3]" />
 
   </LinearLayout>
 

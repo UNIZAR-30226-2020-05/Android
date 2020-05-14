@@ -3,6 +3,7 @@ package com.example.carolshaw.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,7 @@ public class PanelSocialAdapter extends RecyclerView.Adapter<PanelSocialAdapter.
 implements View.OnClickListener {
 
     private View.OnClickListener listener;
+    private ImageView btnBorrarAmigo;
     ArrayList<Amigo> listAmigos;
 
     public PanelSocialAdapter(ArrayList<Amigo> listAmigos) {
@@ -30,6 +32,8 @@ implements View.OnClickListener {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recycler_view_item_amigo,null,false);
         view.setOnClickListener(this);
+        //btnBorrarAmigo.findViewById(R.id.btnBorrarAmigo);
+        //btnBorrarAmigo.setOnClickListener(listener);
         return new Datos(view);
     }
 
@@ -61,16 +65,25 @@ implements View.OnClickListener {
 
         TextView dato1;
         TextView dato2;
+        TextView dato3;
 
         public Datos(@NonNull View itemView) {
             super(itemView);
             dato1 = (TextView) itemView.findViewById(R.id.nickAm);
             dato2 = (TextView) itemView.findViewById(R.id.nomAm);
+            dato3 = (TextView) itemView.findViewById(R.id.ultimaRepr);
         }
 
         public void establecer(Amigo amigo) {
             dato1.setText(amigo.getNick());
             dato2.setText(amigo.getNombre()+" "+ amigo.getApellidos());
+            if (!amigo.getUltimaCancion().equals("") && !amigo.getArtistaUltimaCancion().equals("")) {
+                dato3.setText(amigo.getUltimaCancion()+" - "+ amigo.getArtistaUltimaCancion());
+            }
+            else {
+                dato3.setText("Ultima canción -  Ultimo artista");
+            }
+
         }
     }
 }
