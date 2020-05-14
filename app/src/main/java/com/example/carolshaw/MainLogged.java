@@ -50,6 +50,9 @@ public class MainLogged extends AppCompatActivity {
                             case R.id.nav_inicio:
                                 selectedFragment = new PrincipalFragment();
                                 break;
+                            case R.id.nav_search:
+                                selectedFragment = new BusquedaFragment();
+                                break;
                             case R.id.nav_profile:
                                 selectedFragment = new ModificarPerfilFragment();
                                 break;
