@@ -86,7 +86,7 @@ public class PrincipalFragment extends Fragment {
                                 Album album = new Album();
                                 ArrayList<Cancion> canciones = new ArrayList<Cancion>();
                                 //Meter toda la informacion de un album en la lista
-                                album.setId(Integer.parseInt(response.getJSONObject(i).getString("id")));
+                                Integer.parseInt(response.getJSONObject(i).getString("id"));
                                 album.setTitulo(response.getJSONObject(i).getString("titulo"));
                                 album.setCaratula(response.getJSONObject(i).getString("caratula"));
                                 Artista artista = new Artista();
@@ -118,8 +118,6 @@ public class PrincipalFragment extends Fragment {
                                 e.printStackTrace();
                             }
                         }
-
-
                     }
                 },
                 new Response.ErrorListener() {
