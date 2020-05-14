@@ -12,28 +12,80 @@
         android:layout_height="match_parent">
 
         <EditText
-            android:id="@+id/barraBusqueda"
+            android:id="@+id/barraBusquedaCanciones"
             android:layout_width="254dp"
             android:layout_height="47dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="32dp"
             android:ems="10"
-            android:hint="Búsqueda"
+            android:hint="Búsqueda Canciones"
             android:inputType="textPersonName"
-            app:layout_constraintEnd_toStartOf="@+id/botonBusqueda"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintBottom_toTopOf="@+id/barraBusquedaAlbumes"
+            app:layout_constraintEnd_toStartOf="@+id/botonBusquedaCanciones"
+            app:layout_constraintHorizontal_bias="0.729"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.815" />
 
         <Button
-            android:id="@+id/botonBusqueda"
+            android:id="@+id/botonBusquedaCanciones"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="52dp"
-            android:text="Button"
+            android:layout_marginTop="80dp"
+            android:layout_marginEnd="16dp"
+            android:text="Buscar"
+            app:layout_constraintBottom_toTopOf="@+id/botonBusquedaAlbumes"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.707" />
+
+        <EditText
+            android:id="@+id/barraBusquedaAlbumes"
+            android:layout_width="254dp"
+            android:layout_height="47dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginBottom="24dp"
+            android:ems="10"
+            android:hint="Búsqueda Albumes"
+            android:inputType="textPersonName"
+            app:layout_constraintBottom_toTopOf="@+id/barraBusquedaArtistas"
+            app:layout_constraintEnd_toStartOf="@+id/botonBusquedaAlbumes"
+            app:layout_constraintHorizontal_bias="0.644"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/botonBusquedaAlbumes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="20dp"
+            android:text="Buscar"
+            app:layout_constraintBottom_toTopOf="@+id/botonBusquedaArtistas"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <EditText
+            android:id="@+id/barraBusquedaArtistas"
+            android:layout_width="254dp"
+            android:layout_height="47dp"
+            android:layout_marginBottom="276dp"
+            android:ems="10"
+            android:hint="Búsqueda Artistas"
+            android:inputType="textPersonName"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/botonBusquedaArtistas"
+            app:layout_constraintHorizontal_bias="0.768"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/botonBusquedaArtistas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="276dp"
+            android:text="Buscar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

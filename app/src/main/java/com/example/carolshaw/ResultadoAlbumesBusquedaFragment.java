@@ -6,34 +6,35 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.carolshaw.adapters.ResultadoCancionesBusquedaAdapter;
-import com.example.carolshaw.objetos.Cancion;
+import com.example.carolshaw.adapters.ResultadoAlbumesBusquedaAdapter;
+import com.example.carolshaw.objetos.Album;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
 
 
-public class ResultadoCancionesBusquedaFragment extends Fragment {
-    private static final String ARG_PARAM1 = "canciones";
+public class ResultadoAlbumesBusquedaFragment extends Fragment {
+    private static final String ARG_PARAM1 = "albumes";
 
-    private static ArrayList<Cancion> cancionesArray;
+    private static ArrayList<Album> albumesArray;
 
     private RecyclerView recycler;
 
-    public ResultadoCancionesBusquedaFragment() {
+    public ResultadoAlbumesBusquedaFragment() {
         // Required empty public constructor
     }
 
 
-    public static ResultadoCancionesBusquedaFragment newInstance(Serializable canciones) {
-        ResultadoCancionesBusquedaFragment fragment = new ResultadoCancionesBusquedaFragment();
+    public static ResultadoAlbumesBusquedaFragment newInstance(Serializable albumes) {
+        ResultadoAlbumesBusquedaFragment fragment = new ResultadoAlbumesBusquedaFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_PARAM1, canciones);
+        args.putSerializable(ARG_PARAM1, albumes);
         fragment.setArguments(args);
         return fragment;
     }
@@ -47,7 +48,7 @@ public class ResultadoCancionesBusquedaFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            cancionesArray = (ArrayList<Cancion>) getArguments().getSerializable(ARG_PARAM1);
+            albumesArray = (ArrayList<Album>) getArguments().getSerializable(ARG_PARAM1);
         }
 
     }
@@ -55,11 +56,11 @@ public class ResultadoCancionesBusquedaFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View vista = inflater.inflate(R.layout.fragment_resultado_canciones_busqueda, container, false);
-        recycler = vista.findViewById(R.id.recyclerViewCanciones);
+        View vista = inflater.inflate(R.layout.fragment_resultado_albumes_busqueda, container, false);
+        recycler = vista.findViewById(R.id.recyclerViewAlbumes);
         recycler.setLayoutManager(new LinearLayoutManager(getContext(),
                 LinearLayoutManager.VERTICAL,false));
-        ResultadoCancionesBusquedaAdapter adapter = new ResultadoCancionesBusquedaAdapter(cancionesArray);
+        ResultadoAlbumesBusquedaAdapter adapter = new ResultadoAlbumesBusquedaAdapter(albumesArray);
         recycler.setAdapter(adapter);
         return vista;
     }

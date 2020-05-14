@@ -31,8 +31,12 @@ import java.util.Objects;
 
 public class BusquedaFragment extends Fragment {
 
-    private EditText barraBusqueda;
-    private Button botonBusqueda;
+    private EditText barraBusquedaCanciones;
+    private Button botonBusquedaCanciones;
+    private EditText barraBusquedaAlbumes;
+    private Button botonBusquedaAlbumes;
+    private EditText barraBusquedaArtistas;
+    private Button botonBusquedaArtistas;
     private String URL_API;
     private String busqueda;
     private ArrayList<Album> albumesEncontrados = new ArrayList<Album>();
@@ -52,28 +56,40 @@ public class BusquedaFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         URL_API = getString(R.string.API);
-        barraBusqueda = getView().findViewById(R.id.barraBusqueda);
-        botonBusqueda = getView().findViewById(R.id.botonBusqueda);
+        barraBusquedaCanciones = getView().findViewById(R.id.barraBusquedaCanciones);
+        botonBusquedaCanciones = getView().findViewById(R.id.botonBusquedaCanciones);
+        barraBusquedaAlbumes = getView().findViewById(R.id.barraBusquedaAlbumes);
+        botonBusquedaAlbumes = getView().findViewById(R.id.botonBusquedaAlbumes);
+        barraBusquedaArtistas = getView().findViewById(R.id.barraBusquedaArtistas);
+        botonBusquedaArtistas = getView().findViewById(R.id.botonBusquedaArtistas);
 
-        /* Primero busca cancion, luego album y luego artista (se llama dentro de cada funcion,
-         * debido a que son llamadas asincronas y sino no funciona, tanto en resultado con exito
-         * como error por si no existe un album cancion... con esa busqueda)
-         */
-        botonBusqueda.setOnClickListener(new View.OnClickListener() {
+
+        botonBusquedaCanciones.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                busqueda = barraBusqueda.getText().toString();
+                busqueda = barraBusquedaCanciones.getText().toString();
                 buscarCancion();
+            }
+        });
+
+        botonBusquedaAlbumes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                busqueda = barraBusquedaAlbumes.getText().toString();
+                buscarAlbum();
+            }
+        });
+
+        botonBusquedaArtistas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                busqueda = barraBusquedaArtistas.getText().toString();
+                buscarArtista();
             }
         });
     }
 
 
-
-    private void mostrarResultados() {
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new ResultadoCancionesBusquedaFragment().newInstance(cancionesEncontradas)).commit();
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,7 +98,6 @@ public class BusquedaFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_busqueda, container, false);
     }
 
-    //Buscar cancion llama a buscar album
     private void buscarCancion() {
         final RequestQueue rq = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
         String urlGet = URL_API + "/song/getByName?name=" + busqueda;
@@ -106,14 +121,16 @@ public class BusquedaFragment extends Fragment {
                                 e.printStackTrace();
                             }
                         }
-                        buscarAlbum();
+                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                                new ResultadoCancionesBusquedaFragment().newInstance(cancionesEncontradas)).commit();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("BusquedaFragment", "error busqueda cancion: " + error.toString());
-                        buscarAlbum(); //por si no se encuentran canciones
+                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                                new ResultadoCancionesBusquedaFragment().newInstance(cancionesEncontradas)).commit();
                     }
                 });
         // Adding the string request to the queue
@@ -157,14 +174,16 @@ public class BusquedaFragment extends Fragment {
                                 e.printStackTrace();
                             }
                         }
-                        buscarArtista();
+                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                                new ResultadoAlbumesBusquedaFragment().newInstance(albumesEncontrados)).commit();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("BusquedaFragment", "error: " + error.toString());
-                        buscarArtista(); //Por si no se encuentra album (aunque no deberia, porque devolveria lista vacia)
+                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                                new ResultadoAlbumesBusquedaFragment().newInstance(albumesEncontrados)).commit();
                     }
                 });
         // Adding the string request to the queue
@@ -190,14 +209,14 @@ public class BusquedaFragment extends Fragment {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        mostrarResultados();
+
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("BusquedaFragment", "error busqueda cancion: " + error.toString());
-                        mostrarResultados(); //por si no se encuentran artistas
+
                     }
                 });
         // Adding the string request to the queue
