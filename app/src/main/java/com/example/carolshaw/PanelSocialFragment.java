@@ -88,10 +88,6 @@ public class PanelSocialFragment extends Fragment {
 
                         //Deserializa
 
-                        Log.d("PanelSocialFragment",response.toString());
-                        Log.d("PanelSocialFragment", String.valueOf(obj.getAmigos().size()));
-                        Log.d("PanelSocialFragment", String.valueOf(obj.getAmigos().get(0).getNick()));
-
                         cargarLista(obj.getAmigos());
 
                     }
