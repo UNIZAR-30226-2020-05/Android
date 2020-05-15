@@ -81,9 +81,10 @@ public class PrincipalFragment extends Fragment {
                     @Override
                     public void onResponse(JSONArray response) {
                         JSONArray cancionesArrayJSON;
+                        Log.d("principalFragment",response.toString());
                         for(int i=0; i<response.length(); i++){
                             try {
-                                Album album = new Album();
+                                /*Album album = new Album();
                                 ArrayList<Cancion> canciones = new ArrayList<Cancion>();
                                 //Meter toda la informacion de un album en la lista
                                 Integer.parseInt(response.getJSONObject(i).getString("id"));
@@ -104,16 +105,19 @@ public class PrincipalFragment extends Fragment {
                                     cancion.setArtistas(cancionesArrayJSON.getJSONObject(j).getString("artistas"));
                                     canciones.add(cancion);
                                 }
-                                album.setCanciones(canciones);
+                                album.setCanciones(canciones);*/
+                                Gson gson = new Gson();
+                                Album obj = gson.fromJson(response.getJSONObject(i).toString(), Album.class);
+                                albumes.add(obj);
 
                                 if (i < 4) {
                                     Picasso.get()
-                                            .load(album.getCaratula())
+                                            .load(obj.getCaratula())
                                             .resize(250, 250)
                                             .centerCrop()
                                             .into(imagesAlbum.get(i));
                                 }
-                                albumes.add(album);
+                                //albumes.add(album);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

@@ -69,7 +69,7 @@ public class CancionesAlbumFragment extends Fragment {
         artistas = vista.findViewById(R.id.artistaAlbum);
 
         titulo.setText(album.getTitulo());
-        artistas.setText(album.getArtista().getName());
+        artistas.setText(album.getArtista());
         CancionesAlbumAdapter adapter = new CancionesAlbumAdapter(album.getCanciones());
         recycler.setAdapter(adapter);
         Picasso.get().load(album.getCaratula()).into(caratula);

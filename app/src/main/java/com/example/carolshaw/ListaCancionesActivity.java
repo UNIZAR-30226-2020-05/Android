@@ -53,16 +53,23 @@ public class ListaCancionesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_canciones);
         usuarioLog = (UsuarioDto) getApplicationContext();
+        Log.d("nombreuser", usuarioLog.getNombre());
         URL_API = getString(R.string.API);
         recycler = findViewById(R.id.recyclerViewCanciones);
         adapter = new ListaCancionesAdapter(usuarioLog.getLista_cancion());
 
-        Log.d("ListaCanciones", String.valueOf(usuarioLog.getLista_cancion().size()));
         adapter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { // Que pasa cuando se toca encima del amigo
-                Toast.makeText(ListaCancionesActivity.this,usuarioLog.getLista_cancion().get(
-                        recycler.getChildLayoutPosition(v)).getNombre(),Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(ListaCancionesActivity.this, CancionesListaActivity.class);
+                Bundle b = new Bundle();
+                b.putString("nombre", usuarioLog.getLista_cancion().get(
+                        recycler.getChildAdapterPosition(v)).getNombre());
+                b.putSerializable("canciones", usuarioLog.getLista_cancion().get(
+                        recycler.getChildAdapterPosition(v)).getCanciones());
+
+                intent.putExtras(b);
+                startActivity(intent);
             }
         });
         cargarListas();

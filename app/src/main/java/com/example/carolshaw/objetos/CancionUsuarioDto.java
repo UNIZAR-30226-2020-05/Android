@@ -2,11 +2,11 @@ package com.example.carolshaw.objetos;
 
 import android.annotation.SuppressLint;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
-
-public class Cancion implements Serializable {
+/* Clase igual que Cancion pero con Arraylist de String para artistas que solo se usa en ListaCancionUsuarioDto
+ */
+public class CancionUsuarioDto {
     private int id;
     private String name;
     private String fecha_subida;
@@ -14,9 +14,9 @@ public class Cancion implements Serializable {
     private String album;
     private ArrayList<String> artistas;
 
-    public Cancion(){}
+    public CancionUsuarioDto(){}
 
-    public Cancion(int id, String name, String fecha_subida, int duracion, String album, ArrayList<String> artistas) {
+    public CancionUsuarioDto(int id, String name, String fecha_subida, int duracion, String album, ArrayList<String> artistas) {
         this.id = id;
         this.name = name;
         this.fecha_subida = fecha_subida;

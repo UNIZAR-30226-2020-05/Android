@@ -7,7 +7,7 @@ public class Album implements Serializable {
     int id;
     String titulo;
     String caratula;
-    Artista artista;
+    String artista;
     ArrayList<Cancion> canciones;
 
     public Album() {
@@ -39,11 +39,11 @@ public class Album implements Serializable {
         this.caratula = caratula;
     }
 
-    public Artista getArtista() {
+    public String getArtista() {
         return artista;
     }
 
-    public void setArtista(Artista artista) {
+    public void setArtista(String artista) {
         this.artista = artista;
     }
 

@@ -109,14 +109,17 @@ public class BusquedaFragment extends Fragment {
                     public void onResponse(JSONArray response) {
                         for (int i = 0; i < response.length(); i++) {
                             try {
-                                Cancion cancion = new Cancion();
+                                Gson gson = new Gson();
+                                Cancion obj = gson.fromJson(response.getJSONObject(i).toString(), Cancion.class);
+                                cancionesEncontradas.add(obj);
+                                /*Cancion cancion = new Cancion();
                                 cancion.setId(response.getJSONObject(i).getInt("id"));
                                 cancion.setName(response.getJSONObject(i).getString("name"));
                                 cancion.setFecha_subida(response.getJSONObject(i).getString("fecha_subida"));
                                 cancion.setDuracion(response.getJSONObject(i).getInt("duracion"));
                                 cancion.setAlbum(response.getJSONObject(i).getString("album"));
                                 cancion.setArtistas(response.getJSONObject(i).getString("artistas"));
-                                cancionesEncontradas.add(cancion);
+                                cancionesEncontradas.add(cancion);*/
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -148,7 +151,10 @@ public class BusquedaFragment extends Fragment {
                     public void onResponse(JSONArray response) {
                         for (int i = 0; i < response.length(); i++) {
                             try {
-                                Album albumBuscado = new Album();
+                                Gson gson = new Gson();
+                                Album obj = gson.fromJson(response.getJSONObject(i).toString(), Album.class);
+                                albumesEncontrados.add(obj);
+                                /*Album albumBuscado = new Album();
                                 Artista artista = new Artista();
                                 albumBuscado.setId(response.getJSONObject(i).getInt("id"));
                                 albumBuscado.setTitulo(response.getJSONObject(i).getString("titulo"));
@@ -169,7 +175,7 @@ public class BusquedaFragment extends Fragment {
                                     arrayCanciones.add(cancion);
                                 }
                                 albumBuscado.setCanciones(arrayCanciones);
-                                albumesEncontrados.add(albumBuscado);
+                                albumesEncontrados.add(albumBuscado);*/
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

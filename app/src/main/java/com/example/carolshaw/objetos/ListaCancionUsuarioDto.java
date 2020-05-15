@@ -1,23 +1,23 @@
 package com.example.carolshaw.objetos;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ListaCancion implements Serializable {
-
+/* Clase igual que Cancion pero con CancionUsuarioDto que solo se usa en UsuarioDto
+ */
+public class ListaCancionUsuarioDto {
     int id;
     int id_usuario;
     String nombre;
-    ArrayList<Cancion> canciones;
+    ArrayList<CancionUsuarioDto> canciones;
 
-    public ListaCancion() {
+    public ListaCancionUsuarioDto() {
     }
 
-    public ListaCancion(int id, int id_usuario, String nombre) {
+    public ListaCancionUsuarioDto(int id, int id_usuario, String nombre) {
         this.id = id;
         this.id_usuario = id_usuario;
         this.nombre = nombre;
-        this.canciones = new ArrayList<Cancion>();
+        this.canciones = new ArrayList<CancionUsuarioDto>();
     }
 
     public int getId() {
@@ -44,15 +44,15 @@ public class ListaCancion implements Serializable {
         this.nombre = nombre;
     }
 
-    public ArrayList<Cancion> getCanciones() {
+    public ArrayList<CancionUsuarioDto> getCanciones() {
         return canciones;
     }
 
-    public void setCanciones(ArrayList<Cancion> canciones) {
+    public void setCanciones(ArrayList<CancionUsuarioDto> canciones) {
         this.canciones = canciones;
     }
 
-    public void addCancion(Cancion cancion){
+    public void addCancion(CancionUsuarioDto cancion){
         this.canciones.add(cancion);
     }
 }

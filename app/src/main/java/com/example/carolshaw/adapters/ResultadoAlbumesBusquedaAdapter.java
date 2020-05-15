@@ -55,7 +55,7 @@ public class ResultadoAlbumesBusquedaAdapter extends RecyclerView.Adapter<Result
 
         public void establecer(Album album) {
             nombre.setText(album.getTitulo());
-            artista.setText(album.getArtista().getName());
+            artista.setText(album.getArtista());
             Picasso.get().load(album.getCaratula()).into(imagen);
         }
     }

@@ -84,9 +84,12 @@ public class LoginActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         Log.d("LoginActivity", "exito validar (usuario existente): " + response.toString());
                         //Exito aquí significa que el usuario existía, por tanto no se debe permitir el registro
-                        try {
-                            UsuarioDto usuarioLog = (UsuarioDto) getApplicationContext();
-                            usuarioLog.setId(response.getInt("id"));
+                        UsuarioDto usuarioLog = (UsuarioDto) getApplicationContext();
+                        Gson gson = new Gson();
+                        UsuarioDto obj = gson.fromJson(response.toString(), UsuarioDto.class);
+                        usuarioLog.setUsuarioDto(obj);
+                        Log.d("nombreuser", usuarioLog.getNombre());
+                            /*usuarioLog.setId(response.getInt("id"));
                             usuarioLog.setNombre(response.getString("nombre"));
                             usuarioLog.setApellidos(response.getString("apellidos"));
                             usuarioLog.setNick(response.getString("nick"));
@@ -117,12 +120,9 @@ public class LoginActivity extends AppCompatActivity {
                             }
                             if(!response.isNull("tipo_ultima_reproduccion")){
                                 usuarioLog.setTipo_ultima_reproduccion(response.getInt("tipo_ultima_reproduccion"));
-                            }
-                            //FALTA POR AÑADIR LISTA_CANCION Y AMIGOS
-                            iniciarMainLogged();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                            }*/
+                        //FALTA POR AÑADIR LISTA_CANCION Y AMIGOS
+                        iniciarMainLogged();
                     }
                 },
                 new Response.ErrorListener() {

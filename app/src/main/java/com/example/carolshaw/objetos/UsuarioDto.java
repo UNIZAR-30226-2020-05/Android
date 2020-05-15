@@ -22,6 +22,7 @@ public class UsuarioDto extends Application {
     public UsuarioDto(){
         //Constructor por defecto
     }
+
     public UsuarioDto(String nombre, String apellidos, String nick, String contrasena, String fecha_nacimiento) {
         this.nombre = nombre;
         this.apellidos = apellidos;
@@ -31,6 +32,21 @@ public class UsuarioDto extends Application {
         this.fecha_nacimiento = fecha_nacimiento;
     }
 
+    public void setUsuarioDto(UsuarioDto usuarioLog) {
+        id = usuarioLog.getId();
+        nombre = usuarioLog.getNombre();
+        apellidos = usuarioLog.getApellidos();
+        nick = usuarioLog.getNick();
+        contrasena = usuarioLog.getContrasena();
+        tipo_user = usuarioLog.getTipo_user();
+        fecha_nacimiento = usuarioLog.getFecha_nacimiento();
+        nombre_avatar = usuarioLog.getNombre_avatar();
+        id_ultima_reproduccion = usuarioLog.getId_ultima_reproduccion();
+        minuto_ultima_reproduccion = usuarioLog.getMinuto_ultima_reproduccion();
+        tipo_ultima_reproduccion = usuarioLog.getTipo_ultima_reproduccion();
+        lista_cancion = usuarioLog.getLista_cancion();
+        amigos = usuarioLog.getAmigos();
+    }
     public int getId() {
         return id;
     }
