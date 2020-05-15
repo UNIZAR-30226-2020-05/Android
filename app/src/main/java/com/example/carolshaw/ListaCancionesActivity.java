@@ -30,7 +30,7 @@ import org.json.JSONObject;
 public class ListaCancionesActivity extends AppCompatActivity {
 
     private UsuarioDto usuarioLog;
-    private String URL_API ;
+    private String URL_API;
     private String nombreLista = "";
     private RecyclerView recycler;
     private ListaCancionesAdapter adapter;
@@ -40,7 +40,6 @@ public class ListaCancionesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_canciones);
         usuarioLog = (UsuarioDto) getApplicationContext();
-        Log.d("nombreuser", usuarioLog.getNombre());
         URL_API = getString(R.string.API);
         recycler = findViewById(R.id.recyclerViewListas);
         adapter = new ListaCancionesAdapter(usuarioLog.getLista_cancion());
@@ -52,10 +51,14 @@ public class ListaCancionesActivity extends AppCompatActivity {
                 Bundle b = new Bundle();
                 b.putString("nombre", usuarioLog.getLista_cancion().get(
                         recycler.getChildAdapterPosition(v)).getNombre());
+                b.putInt("idLista", usuarioLog.getLista_cancion().get(
+                        recycler.getChildAdapterPosition(v)).getId());
+                b.putInt("indiceLista", recycler.getChildAdapterPosition(v));
                 b.putSerializable("canciones", usuarioLog.getLista_cancion().get(
                         recycler.getChildAdapterPosition(v)).getCanciones());
 
                 intent.putExtras(b);
+                finish();
                 startActivity(intent);
             }
         });

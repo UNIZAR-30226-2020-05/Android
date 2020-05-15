@@ -142,6 +142,9 @@ public class UsuarioDto extends Application {
     public void setLista_cancion(ArrayList<ListaCancion> lista_cancion) {
         this.lista_cancion = lista_cancion;
     }
+    public void deleteLista_cancion(int indice) {
+        this.lista_cancion.remove(indice);
+    }
 
     public void addLista_cancion(ListaCancion lista_cancion) {
         this.lista_cancion.add(lista_cancion);
