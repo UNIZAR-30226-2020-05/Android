@@ -12,9 +12,9 @@
       android:layout_width="45dp"
       android:layout_height="67dp"
       android:visibility="visible"
-      app:srcCompat="@drawable/perfil"
-      tools:src="@drawable/perfil"
-      tools:srcCompat="@drawable/perfil"
+      app:srcCompat="@drawable/perfil1"
+      tools:src="@drawable/perfil1"
+      tools:srcCompat="@drawable/perfil1"
       tools:visibility="visible" />
 
   <ImageView

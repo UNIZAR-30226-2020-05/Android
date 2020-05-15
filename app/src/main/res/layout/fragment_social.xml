@@ -19,15 +19,14 @@
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.72" />
+        app:layout_constraintVertical_bias="0.484" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView2"
         android:layout_width="371dp"
         android:layout_height="432dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="68dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.478"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/recycler_view_item_amigo" />
@@ -39,6 +38,7 @@
         android:layout_marginEnd="28dp"
         android:layout_marginBottom="32dp"
         android:clickable="true"
+        android:contentDescription="Añadir Amigos"
         android:tint="#FDFDFD"
         app:backgroundTint="#8568B8"
         app:layout_constraintBottom_toBottomOf="parent"

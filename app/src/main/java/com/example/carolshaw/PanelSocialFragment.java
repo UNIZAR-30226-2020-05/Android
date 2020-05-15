@@ -4,6 +4,8 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -37,6 +39,7 @@ public class PanelSocialFragment extends Fragment {
 
 
     public ArrayList<Amigo> listAmigos = new ArrayList<>();
+    public UsuarioDto userLogeado;
     RecyclerView recycler;
     private String URL_API= "http://3.22.247.114:8080";
 
@@ -68,13 +71,14 @@ public class PanelSocialFragment extends Fragment {
         amigo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //cargarAmigos();
+                Log.d("PULSA","BOTONTILLO");
+                cambiarAbusquedaAmig();
             }
         });
 
 
         final RequestQueue rq = Volley.newRequestQueue(getActivity().getApplicationContext());
-        UsuarioDto userLogeado = (UsuarioDto) getActivity().getApplicationContext();
+        userLogeado = (UsuarioDto) getActivity().getApplicationContext();
         String peticion = URL_API +"/user/get?nick=" + userLogeado.getNick();
 
         // Creating a JSON Object request
@@ -140,6 +144,22 @@ public class PanelSocialFragment extends Fragment {
         Log.d("PanelSocialFragment", "tamaño lista: " + String.valueOf(listAmigos.size()));
     }
 
+    private void cambiarAbusquedaAmig() {
+        Bundle datos = new Bundle();
+        datos.putInt("idUsu",userLogeado.getId());
+        Fragment frag = new PanelSocialBusqFragment();
+        frag.setArguments(datos);
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, frag);
+        fragmentTransaction.addToBackStack(null);
+        // Terminar transición.
+        fragmentTransaction.commit();
+
+       /* getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                new PanelSocialBusqFragment().newInstance(userLogeado.getId())).commit();
+                // LLamar al Fragment secundario pasandole el id de usuario logeado.*/
+    }
 
     private void eliminarAmigo(Integer id) throws JSONException {
 
