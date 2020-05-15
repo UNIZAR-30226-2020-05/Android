@@ -11,21 +11,21 @@
         android:id="@+id/tituloLista"
         android:layout_width="292dp"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="tituloLista"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:gravity="center"
         app:layout_constraintBottom_toTopOf="@+id/recyclerViewCanciones"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.42"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.736"
-        tools:text="tituloLista" />
+        app:layout_constraintVertical_bias="0.282" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewCanciones"
-        android:layout_width="388dp"
-        android:layout_height="366dp"
+        android:layout_width="414dp"
+        android:layout_height="478dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.058"

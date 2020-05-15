@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -43,6 +42,7 @@ public class ListaCancionesAdapter extends RecyclerView.Adapter<ListaCancionesAd
         this.listener = listen;
     }
 
+
     @Override
     public void onClick(View v) {
         if (listener != null) {
@@ -58,6 +58,7 @@ public class ListaCancionesAdapter extends RecyclerView.Adapter<ListaCancionesAd
         else return 0;
     }
 
+
     public class Datos extends RecyclerView.ViewHolder {
 
         TextView nombreLista;
@@ -70,5 +71,7 @@ public class ListaCancionesAdapter extends RecyclerView.Adapter<ListaCancionesAd
         public void establecer(ListaCancion listaCancion) {
             nombreLista.setText(listaCancion.getNombre());
         }
+
+
     }
 }

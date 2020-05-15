@@ -56,7 +56,7 @@ public class ResultadoCancionesBusquedaFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View vista = inflater.inflate(R.layout.fragment_resultado_canciones_busqueda, container, false);
-        recycler = vista.findViewById(R.id.recyclerViewCanciones);
+        recycler = vista.findViewById(R.id.recyclerViewListas);
         recycler.setLayoutManager(new LinearLayoutManager(getContext(),
                 LinearLayoutManager.VERTICAL,false));
         ResultadoCancionesBusquedaAdapter adapter = new ResultadoCancionesBusquedaAdapter(cancionesArray);

@@ -61,7 +61,7 @@ public class CancionesAlbumFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View vista = inflater.inflate(R.layout.fragment_canciones_album, container, false);
-        recycler = vista.findViewById(R.id.recyclerViewCanciones);
+        recycler = vista.findViewById(R.id.recyclerViewListas);
         recycler.setLayoutManager(new LinearLayoutManager(getContext(),
                 LinearLayoutManager.VERTICAL,false));
         caratula = vista.findViewById(R.id.caratulaAlbum);

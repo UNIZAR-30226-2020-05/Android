@@ -10,9 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -23,22 +21,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.carolshaw.adapters.ListaCancionesAdapter;
-import com.example.carolshaw.adapters.PanelSocialAdapter;
 import com.example.carolshaw.objetos.ListaCancion;
 import com.example.carolshaw.objetos.UsuarioDto;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.net.URL;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
-import static java.security.AccessController.getContext;
 
 public class ListaCancionesActivity extends AppCompatActivity {
 
@@ -55,7 +42,7 @@ public class ListaCancionesActivity extends AppCompatActivity {
         usuarioLog = (UsuarioDto) getApplicationContext();
         Log.d("nombreuser", usuarioLog.getNombre());
         URL_API = getString(R.string.API);
-        recycler = findViewById(R.id.recyclerViewCanciones);
+        recycler = findViewById(R.id.recyclerViewListas);
         adapter = new ListaCancionesAdapter(usuarioLog.getLista_cancion());
 
         adapter.setOnClickListener(new View.OnClickListener() {
