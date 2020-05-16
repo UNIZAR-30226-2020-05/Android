@@ -13,8 +13,10 @@ import com.example.carolshaw.objetos.Cancion;
 
 import java.util.ArrayList;
 
-public class CancionesAlbumAdapter extends RecyclerView.Adapter<CancionesAlbumAdapter.Datos> {
+public class CancionesAlbumAdapter extends RecyclerView.Adapter<CancionesAlbumAdapter.Datos>
+        implements View.OnClickListener{
 
+    private View.OnClickListener listener;
     ArrayList<Cancion> listaCanciones;
 
     public CancionesAlbumAdapter(ArrayList<Cancion> listaCanciones) {
@@ -26,12 +28,24 @@ public class CancionesAlbumAdapter extends RecyclerView.Adapter<CancionesAlbumAd
     public Datos onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recycler_view_item_cancion,null,false);
+        view.setOnClickListener(this);
         return new CancionesAlbumAdapter.Datos(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull Datos holder, int position) {
         holder.establecer(listaCanciones.get(position));
+    }
+
+    public void setOnClickListener(View.OnClickListener listen) {
+        this.listener = listen;
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (listener != null) {
+            listener.onClick(v);
+        }
     }
 
     @Override

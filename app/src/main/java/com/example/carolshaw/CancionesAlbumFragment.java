@@ -1,7 +1,10 @@
 package com.example.carolshaw;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,11 +30,11 @@ public class CancionesAlbumFragment extends Fragment {
     private Album album;
     private String URL_API;
     RecyclerView recycler;
+    CancionesAlbumAdapter adapter;
+
     ImageView caratula;
     TextView titulo;
     TextView artistas;
-    private ArrayList<Cancion> lisaCanciones;
-
 
     private ImageView anadirALista;
     private ImageView reproducirAlbum;
@@ -43,6 +46,14 @@ public class CancionesAlbumFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         URL_API = getString(R.string.API);
+
+
+        adapter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                opcionesClick(album.getCanciones().get(recycler.getChildAdapterPosition(v)).getId());
+            }
+        });
 
         anadirALista.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,9 +103,34 @@ public class CancionesAlbumFragment extends Fragment {
 
         titulo.setText(album.getTitulo());
         artistas.setText(album.getArtista());
-        CancionesAlbumAdapter adapter = new CancionesAlbumAdapter(album.getCanciones());
+        adapter = new CancionesAlbumAdapter(album.getCanciones());
         recycler.setAdapter(adapter);
         Picasso.get().load(album.getCaratula()).into(caratula);
         return vista;
     }
-}
+
+    private void opcionesClick(final int idCancion){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Elige una opción");
+
+        // Set up the buttons
+        builder.setPositiveButton("Reproducir", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(getContext(), "Falta reproducir cancion", Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.setNegativeButton("Añadir a lista", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                elegirLista(idCancion);
+                //anadirCancion(idCancion);
+            }
+        });
+        builder.show();
+    }
+
+    private void elegirLista(int idCancion) {
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                new AnadirCancionesALista().newInstance(idCancion, AnadirCancionesALista.TIPO_CANCION)).commit();
+    }}
