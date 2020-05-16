@@ -37,18 +37,20 @@ import org.json.JSONObject;
  */
 public class AnadirCancionesALista extends Fragment {
 
-    private UsuarioDto usuarioLog;
+    public static final int TIPO_CANCION = 0;
+    public static final int TIPO_ALBUM = 1;
     private static final String ID_CANCION = "id_cancion";
     private static final String TIPO = "tipo";
+
+    private UsuarioDto usuarioLog;
     private int idElemento;
     private int tipo;
     private String URL_API;
     private RecyclerView recycler;
     private ListaCancionesAdapter adapter;
-    public static final int TIPO_CANCION = 0;
-    public static final int TIPO_ALBUM = 1;
     private String nombreLista;
     private FloatingActionButton crearNuevaLista;
+
 
     public AnadirCancionesALista() {
         // Required empty public constructor

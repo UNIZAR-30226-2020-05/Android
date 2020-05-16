@@ -70,11 +70,11 @@
             android:layout_width="254dp"
             android:layout_height="47dp"
             android:layout_marginStart="16dp"
-            android:layout_marginBottom="228dp"
+            android:layout_marginBottom="24dp"
             android:ems="10"
             android:hint="Búsqueda Artistas"
             android:inputType="textPersonName"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/barraBusquedaPodcasts"
             app:layout_constraintEnd_toStartOf="@+id/botonBusquedaArtistas"
             app:layout_constraintHorizontal_bias="0.648"
             app:layout_constraintStart_toStartOf="parent" />
@@ -84,7 +84,30 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="228dp"
+            android:layout_marginBottom="20dp"
+            android:text="Buscar"
+            app:layout_constraintBottom_toTopOf="@+id/botonBusquedaPodcasts"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <EditText
+            android:id="@+id/barraBusquedaPodcasts"
+            android:layout_width="254dp"
+            android:layout_height="47dp"
+            android:layout_marginBottom="156dp"
+            android:ems="10"
+            android:hint="Búsqueda Podcasts"
+            android:inputType="textPersonName"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/botonBusquedaPodcasts"
+            app:layout_constraintHorizontal_bias="0.754"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/botonBusquedaPodcasts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="156dp"
             android:text="Buscar"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />

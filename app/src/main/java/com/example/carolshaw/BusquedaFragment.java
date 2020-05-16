@@ -20,6 +20,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.carolshaw.objetos.Album;
 import com.example.carolshaw.objetos.Artista;
 import com.example.carolshaw.objetos.Cancion;
+import com.example.carolshaw.objetos.Podcast;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -37,11 +38,15 @@ public class BusquedaFragment extends Fragment {
     private Button botonBusquedaAlbumes;
     private EditText barraBusquedaArtistas;
     private Button botonBusquedaArtistas;
+    private EditText barraBusquedaPodcasts;
+    private Button botonBusquedaPodcasts;
+
     private String URL_API;
     private String busqueda;
     private ArrayList<Album> albumesEncontrados = new ArrayList<Album>();
     private ArrayList<Cancion> cancionesEncontradas = new ArrayList<Cancion>();
     private ArrayList<Artista> artistasEncontrados = new ArrayList<Artista>();
+    private ArrayList<Podcast> podcastsEncontrados = new ArrayList<Podcast>();
 
     public BusquedaFragment() {
         // Required empty public constructor
@@ -62,6 +67,8 @@ public class BusquedaFragment extends Fragment {
         botonBusquedaAlbumes = getView().findViewById(R.id.botonBusquedaAlbumes);
         barraBusquedaArtistas = getView().findViewById(R.id.barraBusquedaArtistas);
         botonBusquedaArtistas = getView().findViewById(R.id.botonBusquedaArtistas);
+        barraBusquedaPodcasts = getView().findViewById(R.id.barraBusquedaPodcasts);
+        botonBusquedaPodcasts = getView().findViewById(R.id.botonBusquedaPodcasts);
 
 
         botonBusquedaCanciones.setOnClickListener(new View.OnClickListener() {
@@ -87,9 +94,15 @@ public class BusquedaFragment extends Fragment {
                 buscarArtista();
             }
         });
+
+        botonBusquedaPodcasts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                busqueda = barraBusquedaPodcasts.getText().toString();
+                buscarPodcasts();
+            }
+        });
     }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -226,6 +239,42 @@ public class BusquedaFragment extends Fragment {
                         Log.d("BusquedaFragment", "error busqueda cancion: " + error.toString());
                         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                                 new ResultadoArtistaBusquedaFragment().newInstance(artistasEncontrados)).commit();
+                    }
+                });
+        // Adding the string request to the queue
+        rq.add(jsonArrayRequest);
+    }
+
+    private void buscarPodcasts() {
+        final RequestQueue rq = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
+        String urlGet = URL_API + "/podcast/getByName?name=" + busqueda;
+
+        // Creating a JSON Object request
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, urlGet, null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Gson gson = new Gson();
+                        Podcast obj;
+                        try {
+                            for (int i = 0; i < response.length(); i++) {
+                                obj = gson.fromJson(response.getJSONObject(i).toString(), Podcast.class);
+                                podcastsEncontrados.add(obj);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                                new ResultadoPodcastsBusquedaFragment().newInstance(podcastsEncontrados)).commit();
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("BusquedaFragment", "error busqueda cancion: " + error.toString());
+                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                                new ResultadoPodcastsBusquedaFragment().newInstance(podcastsEncontrados)).commit();
                     }
                 });
         // Adding the string request to the queue
