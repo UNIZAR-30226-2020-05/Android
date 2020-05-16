@@ -95,16 +95,12 @@ public class AnadirCancionesALista extends Fragment {
                 }
             }
         });
-        /*getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new ResultadoCancionesBusquedaFragment()).commit();*/
     }
 
-    //TODO: añadir todo el album a la lista
     private void anadirAlbum(final int idAlbum, final int idLista, final int indiceLista) {
         Log.d("idAlbum","idAlbum: " + idAlbum + " lista: " + idLista);
-        /*final RequestQueue rq = Volley.newRequestQueue(getActivity().getApplicationContext());
-        String url = URL_API + "/listaCancion/add/" + idAlbum;
-        Log.d("idCancion", "idCancion: " + String.valueOf(idAlbum));
+        final RequestQueue rq = Volley.newRequestQueue(getActivity().getApplicationContext());
+        String url = URL_API + "/listaCancion/addByAlbum/" + idLista;
         // Creating a JSON Object request
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PATCH, url, null,
                 new Response.Listener<JSONObject>() {
@@ -112,28 +108,29 @@ public class AnadirCancionesALista extends Fragment {
                     public void onResponse(JSONObject response) {
                         Gson gson = new Gson();
                         ListaCancion obj = gson.fromJson(response.toString(), ListaCancion.class);
-                        usuarioLog.deleteLista_cancion(idAlbum);
+                        usuarioLog.deleteLista_cancion(indiceLista);
                         usuarioLog.addLista_cancion(obj);
-                        informarCancionAnadida(obj.getNombre());
-                        finalizarFragmento();
+                        informarAlbumAnadido(obj.getNombre());
+                        finalizarFragmentoDeAlbum();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        informarCancionRepetida();
-                        finalizarFragmento();
+                        informarCancionesEnAlbumRepetida();
+                        finalizarFragmentoDeAlbum();
                     }
                 }) {
             @Override
             public byte[] getBody() {
-                return String.valueOf(idCancion).getBytes();
+                return String.valueOf(idAlbum).getBytes();
             }
         };
 
         // Adding the string request to the queue
-        rq.add(jsonObjectRequest);*/
+        rq.add(jsonObjectRequest);
     }
+
 
     private void anadirCancion(final int idCancion, final int idLista, final int indiceLista) {
         final RequestQueue rq = Volley.newRequestQueue(getActivity().getApplicationContext());
@@ -149,14 +146,14 @@ public class AnadirCancionesALista extends Fragment {
                         usuarioLog.deleteLista_cancion(indiceLista);
                         usuarioLog.addLista_cancion(obj);
                         informarCancionAnadida(obj.getNombre());
-                        finalizarFragmento();
+                        finalizarFragmentoDeCancion();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         informarCancionRepetida();
-                        finalizarFragmento();
+                        finalizarFragmentoDeCancion();
                     }
                 }) {
                 @Override
@@ -169,9 +166,14 @@ public class AnadirCancionesALista extends Fragment {
         rq.add(jsonObjectRequest);
     }
 
-    private void finalizarFragmento() {
+    private void finalizarFragmentoDeCancion() {
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new ResultadoCancionesBusquedaFragment()).commit();
+    }
+
+    private void finalizarFragmentoDeAlbum() {
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                new ResultadoAlbumesBusquedaFragment()).commit();
     }
 
     /* informa mediante un TOAST de que la canción ha sido añadida a la lista
@@ -191,6 +193,30 @@ public class AnadirCancionesALista extends Fragment {
     private void informarCancionRepetida() {
         Toast toast = Toast.makeText(getActivity().getApplicationContext(),
                 "La canción ya está en la lista", Toast.LENGTH_SHORT);
+        View view = toast.getView();
+
+        //Cambiar color del fonto
+        view.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN);
+        toast.show();
+    }
+
+    /* informa mediante un TOAST de que alguna cancion ya estaba en la lista
+     */
+    private void informarCancionesEnAlbumRepetida() {
+        Toast toast = Toast.makeText(getActivity().getApplicationContext(),
+                "Todas las canciones del album ya estaban en la lista", Toast.LENGTH_SHORT);
+        View view = toast.getView();
+
+        //Cambiar color del fonto
+        view.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN);
+        toast.show();
+    }
+
+    /* informa mediante un TOAST de que el album ha sido añadido correctamente
+     */
+    private void informarAlbumAnadido(String nombre) {
+        Toast toast = Toast.makeText(getActivity().getApplicationContext(),
+                "Canciones del album añadidas a " + nombre, Toast.LENGTH_SHORT);
         View view = toast.getView();
 
         //Cambiar color del fonto
