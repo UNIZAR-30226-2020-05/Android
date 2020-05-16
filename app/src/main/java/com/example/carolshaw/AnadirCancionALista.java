@@ -105,6 +105,7 @@ public class AnadirCancionALista extends Fragment {
                         ListaCancion obj = gson.fromJson(response.toString(), ListaCancion.class);
                         usuarioLog.deleteLista_cancion(indiceLista);
                         usuarioLog.addLista_cancion(obj);
+                        informarCancionAnadida(obj.getNombre());
                         finalizarFragmento();
                     }
                 },
@@ -128,6 +129,18 @@ public class AnadirCancionALista extends Fragment {
     private void finalizarFragmento() {
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new ResultadoCancionesBusquedaFragment()).commit();
+    }
+
+    /* informa mediante un TOAST de que la canción ha sido añadida a la lista
+     */
+    private void informarCancionAnadida(String nombreLista) {
+        Toast toast = Toast.makeText(getActivity().getApplicationContext(),
+                "Canción añadida a " + nombreLista, Toast.LENGTH_SHORT);
+        View view = toast.getView();
+
+        //Cambiar color del fonto
+        view.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN);
+        toast.show();
     }
 
     /* informa mediante un TOAST de que la canción ya estaba en la lista y no se ha añadido
