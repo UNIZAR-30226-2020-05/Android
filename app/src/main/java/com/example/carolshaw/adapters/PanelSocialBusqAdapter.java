@@ -20,7 +20,7 @@ public class PanelSocialBusqAdapter extends RecyclerView.Adapter<PanelSocialBusq
 implements View.OnClickListener {
 
     private View.OnClickListener listener;
-    private ImageView btnBorrarAmigo;
+   // private ImageView btnBorrarAmigo;
     ArrayList<UsuarioDto> listTodos;
 
     TextView dat1;

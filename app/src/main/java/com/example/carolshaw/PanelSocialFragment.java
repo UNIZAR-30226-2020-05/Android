@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -126,14 +127,30 @@ public class PanelSocialFragment extends Fragment {
         return vista;
     }
 
-    private void cargarLista(ArrayList<Amigo> lst) {
-        PanelSocialAdapter adapter = new PanelSocialAdapter(listAmigos);
-        adapter.setOnClickListener(new View.OnClickListener() {
+    public void cargarLista(ArrayList<Amigo> lst) {
+        final PanelSocialAdapter adapter = new PanelSocialAdapter(listAmigos, null);
+        adapter.setOnItemClickListener(new PanelSocialAdapter.OnItemClickListener() {
             @Override
-            public void onClick(View v) { // Que pasa cuando se toca encima del amigo
+            public void onItemClick(int position) {
+                // Que pasa cuando se toca encima del amigo
                Toast.makeText(getContext(),"Tratar amigo elegido: " +
-                       listAmigos.get(recycler.getChildAdapterPosition(v)).getNick(),
+                       listAmigos.get(position).getNick(),
                        Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onDeleteClick(int position) {
+                //Que pasa cuando se le da al icono papelera
+                try {
+                    Toast.makeText(getContext(), listAmigos.get(position).getNick() +
+                        " eliminado de la lista de amigos",Toast.LENGTH_LONG).show();
+                    eliminarAmigo(listAmigos.get(position).getId());
+                    listAmigos.remove(position);
+                    adapter.notifyItemRemoved(position);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
             }
         });
         recycler = getView().findViewById(R.id.recyclerView2);
@@ -144,7 +161,7 @@ public class PanelSocialFragment extends Fragment {
         Log.d("PanelSocialFragment", "tamaño lista: " + String.valueOf(listAmigos.size()));
     }
 
-    private void cambiarAbusquedaAmig() {
+    public void cambiarAbusquedaAmig() {
         Bundle datos = new Bundle();
         datos.putInt("idUsu",userLogeado.getId());
         Fragment frag = new PanelSocialBusqFragment();
@@ -161,32 +178,37 @@ public class PanelSocialFragment extends Fragment {
                 // LLamar al Fragment secundario pasandole el id de usuario logeado.*/
     }
 
-    private void eliminarAmigo(Integer id) throws JSONException {
+    public void eliminarAmigo(final Integer id) throws JSONException {
 
         final RequestQueue rq = Volley.newRequestQueue(getActivity().getApplicationContext());
         UsuarioDto userLogeado = (UsuarioDto) getActivity().getApplicationContext();
-        String peticion = URL_API +"'/user/deleteAmigo/" + userLogeado.getId();
-
-        JSONObject jsonBody = new JSONObject();
-        jsonBody.put("id", id);
+        String peticion = URL_API +"/user/deleteAmigo/" + userLogeado.getId();
 
 
+        JSONObject params = new JSONObject();
+        try {
+            params.put("id2", id);
 
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         // Creating a JSON Object request
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PATCH, peticion, jsonBody,
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PATCH, peticion, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-
-
                         Log.d("HA borrado", "algo");
-
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) { Log.d("PanelSocialFragment","error"); }
-                });
+                }) {
+            @Override
+            public byte[] getBody() {
+                return id.toString().getBytes();
+            }
+        };
 
         // Adding the string request to the queue
         rq.add(jsonObjectRequest);

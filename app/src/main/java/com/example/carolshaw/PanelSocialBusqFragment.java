@@ -98,7 +98,7 @@ public class PanelSocialBusqFragment extends Fragment {
                                 usu.setNombre(response.getJSONObject(i).getString("nombre"));
                                 usu.setApellidos(response.getJSONObject(i).getString("apellidos"));
                                 usu.setNombre_avatar(response.getJSONObject(i).getString("nombre_avatar"));
-                                Log.d("zzz",usu.toString());
+                                Log.d("zzz",usu.getNick());
                                 usuarios.add(usu);
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -121,14 +121,12 @@ public class PanelSocialBusqFragment extends Fragment {
         recycler = getView().findViewById(R.id.recyclerAgregarAmigo);
         recycler.setLayoutManager(new LinearLayoutManager(getContext(),
                 LinearLayoutManager.VERTICAL,false));
+        recycler.setItemViewCacheSize(50);
         PanelSocialBusqAdapter adapter = new PanelSocialBusqAdapter(usuarios);
         adapter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { // Que pasa cuando se toca encima del amigo
                 anyadirAmigo(usuarios.get(recycler.getChildAdapterPosition(v)).getId());
-                /*Toast.makeText(getContext(), "Tratar amigo elegido: " +
-                                usuarios.get(recycler.getChildAdapterPosition(v)).getNick(),
-                        Toast.LENGTH_LONG).show();*/
             }
         });
         recycler.setAdapter(adapter);
@@ -162,6 +160,42 @@ public class PanelSocialBusqFragment extends Fragment {
             @Override
             public byte[] getBody() {
                 return id2.toString().getBytes();
+            }
+        };
+
+
+        // Adding the string request to the queue
+        rq.add(jsonObjectRequest);
+    }
+
+        public void borrarAmigo(final Integer idAmigo) {
+
+        final RequestQueue rq = Volley.newRequestQueue(getActivity().getApplicationContext());
+        String peticion = URL_API +"/user/deleteAmigo/" + idUsuLoageado;
+        JSONObject params = new JSONObject();
+        try {
+            params.put("id2", idAmigo);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        // Creating a JSON Object request
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PATCH, peticion, null ,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        //Cuando llega la respuesta de objeto usuario
+                        Toast.makeText(getContext(), "Eliminado", Toast.LENGTH_LONG).show();
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) { Log.d("PanelSocialFragment","error"); }
+                }) {
+            @Override
+            public byte[] getBody() {
+                return idAmigo.toString().getBytes();
             }
         };
 
