@@ -24,26 +24,25 @@ import com.example.carolshaw.adapters.ListaCancionesAdapter;
 import com.example.carolshaw.objetos.ListaCancion;
 import com.example.carolshaw.objetos.UsuarioDto;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
-
-public class AnadirCancionALista extends Fragment {
+/* Fragmento que dado un id de canción o album, lo añade a la lista seleccionada
+ */
+public class AnadirCancionesALista extends Fragment {
 
     private UsuarioDto usuarioLog;
     private static final String ID_CANCION = "id_cancion";
-    private static final String ID_LISTA = "id_lista";
-    private int idCancion;
-    private int idLista;
+    private static final String TIPO = "tipo";
+    private int idElemento;
+    private int tipo;
     private String URL_API;
     private RecyclerView recycler;
     private ListaCancionesAdapter adapter;
+    public static final int TIPO_CANCION = 0;
+    public static final int TIPO_ALBUM = 1;
 
-    public AnadirCancionALista() {
+    public AnadirCancionesALista() {
         // Required empty public constructor
     }
 
@@ -51,7 +50,8 @@ public class AnadirCancionALista extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            idCancion = getArguments().getInt(ID_CANCION);
+            idElemento = getArguments().getInt(ID_CANCION);
+            tipo = getArguments().getInt(TIPO);
         }
         URL_API = getString(R.string.API);
         usuarioLog = (UsuarioDto) getActivity().getApplicationContext();
@@ -70,10 +70,11 @@ public class AnadirCancionALista extends Fragment {
         return vista;
     }
 
-    public static AnadirCancionALista newInstance(int idCancion) {
-        AnadirCancionALista fragment = new AnadirCancionALista();
+    public static AnadirCancionesALista newInstance(int idElemento, int tipo) {
+        AnadirCancionesALista fragment = new AnadirCancionesALista();
         Bundle args = new Bundle();
-        args.putInt(ID_CANCION, idCancion);
+        args.putInt(ID_CANCION, idElemento);
+        args.putInt(TIPO, tipo);
         fragment.setArguments(args);
         return fragment;
     }
@@ -85,11 +86,53 @@ public class AnadirCancionALista extends Fragment {
             @Override
             public void onClick(View v) { // Que pasa cuando se toca encima del amigo
                 int p = recycler.getChildAdapterPosition(v);
-                anadirCancion(idCancion,usuarioLog.getLista_cancion().get(p).getId(),p);
+                switch (tipo){
+                    case TIPO_CANCION:
+                        anadirCancion(idElemento,usuarioLog.getLista_cancion().get(p).getId(),p);
+                        break;
+                    case TIPO_ALBUM:
+                        anadirAlbum(idElemento,usuarioLog.getLista_cancion().get(p).getId(),p);
+                }
             }
         });
         /*getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new ResultadoCancionesBusquedaFragment()).commit();*/
+    }
+
+    //TODO: añadir todo el album a la lista
+    private void anadirAlbum(final int idAlbum, final int idLista, final int indiceLista) {
+        Log.d("idAlbum","idAlbum: " + idAlbum + " lista: " + idLista);
+        /*final RequestQueue rq = Volley.newRequestQueue(getActivity().getApplicationContext());
+        String url = URL_API + "/listaCancion/add/" + idAlbum;
+        Log.d("idCancion", "idCancion: " + String.valueOf(idAlbum));
+        // Creating a JSON Object request
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PATCH, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Gson gson = new Gson();
+                        ListaCancion obj = gson.fromJson(response.toString(), ListaCancion.class);
+                        usuarioLog.deleteLista_cancion(idAlbum);
+                        usuarioLog.addLista_cancion(obj);
+                        informarCancionAnadida(obj.getNombre());
+                        finalizarFragmento();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        informarCancionRepetida();
+                        finalizarFragmento();
+                    }
+                }) {
+            @Override
+            public byte[] getBody() {
+                return String.valueOf(idCancion).getBytes();
+            }
+        };
+
+        // Adding the string request to the queue
+        rq.add(jsonObjectRequest);*/
     }
 
     private void anadirCancion(final int idCancion, final int idLista, final int indiceLista) {

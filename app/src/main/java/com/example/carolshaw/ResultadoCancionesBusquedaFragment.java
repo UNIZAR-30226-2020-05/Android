@@ -1,7 +1,6 @@
 package com.example.carolshaw;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
@@ -9,26 +8,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.carolshaw.adapters.ResultadoCancionesBusquedaAdapter;
 import com.example.carolshaw.objetos.Cancion;
 import com.example.carolshaw.objetos.UsuarioDto;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -114,7 +101,7 @@ public class ResultadoCancionesBusquedaFragment extends Fragment {
 
     private void elegirLista(int idCancion) {
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new AnadirCancionALista().newInstance(idCancion)).commit();
+                new AnadirCancionesALista().newInstance(idCancion, AnadirCancionesALista.TIPO_CANCION)).commit();
     }
 
 

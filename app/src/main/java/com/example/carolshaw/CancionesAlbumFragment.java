@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.carolshaw.adapters.CancionesAlbumAdapter;
 import com.example.carolshaw.objetos.Album;
@@ -31,6 +32,10 @@ public class CancionesAlbumFragment extends Fragment {
     TextView artistas;
     private ArrayList<Cancion> lisaCanciones;
 
+
+    private ImageView anadirALista;
+    private ImageView reproducirAlbum;
+
     public CancionesAlbumFragment() {
         // Required empty public constructor
     }
@@ -38,6 +43,21 @@ public class CancionesAlbumFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         URL_API = getString(R.string.API);
+
+        anadirALista.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { // Que pasa cuando se toca encima del amigo
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new AnadirCancionesALista().newInstance(album.getId(), AnadirCancionesALista.TIPO_ALBUM)).commit();
+            }
+        });
+
+        reproducirAlbum.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { // Que pasa cuando se toca encima del amigo
+                Toast.makeText(getContext(), "reproducir album entero", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
@@ -61,6 +81,8 @@ public class CancionesAlbumFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View vista = inflater.inflate(R.layout.fragment_canciones_album, container, false);
+        anadirALista = vista.findViewById(R.id.btnAnadirAlbum);
+        reproducirAlbum = vista.findViewById(R.id.btnPlayAlbum);
         recycler = vista.findViewById(R.id.recyclerViewListas);
         recycler.setLayoutManager(new LinearLayoutManager(getContext(),
                 LinearLayoutManager.VERTICAL,false));
