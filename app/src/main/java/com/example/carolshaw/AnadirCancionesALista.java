@@ -1,17 +1,21 @@
 package com.example.carolshaw;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -23,8 +27,10 @@ import com.android.volley.toolbox.Volley;
 import com.example.carolshaw.adapters.ListaCancionesAdapter;
 import com.example.carolshaw.objetos.ListaCancion;
 import com.example.carolshaw.objetos.UsuarioDto;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /* Fragmento que dado un id de canción o album, lo añade a la lista seleccionada
@@ -41,6 +47,8 @@ public class AnadirCancionesALista extends Fragment {
     private ListaCancionesAdapter adapter;
     public static final int TIPO_CANCION = 0;
     public static final int TIPO_ALBUM = 1;
+    private String nombreLista;
+    private FloatingActionButton crearNuevaLista;
 
     public AnadirCancionesALista() {
         // Required empty public constructor
@@ -67,6 +75,7 @@ public class AnadirCancionesALista extends Fragment {
                 LinearLayoutManager.VERTICAL,false));
         adapter = new ListaCancionesAdapter(usuarioLog.getLista_cancion());
         recycler.setAdapter(adapter);
+        crearNuevaLista = vista.findViewById(R.id.btnAnadirLista);
         return vista;
     }
 
@@ -95,6 +104,87 @@ public class AnadirCancionesALista extends Fragment {
                 }
             }
         });
+
+        crearNuevaLista.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { // Que pasa cuando se toca encima del amigo
+                nuevaLista();
+            }
+        });
+    }
+
+    //Función del botón añadir nueva lista
+    public void nuevaLista() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Nombre de la lista");
+
+        // Set up the input
+        final EditText input = new EditText(getContext());
+        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                nombreLista = input.getText().toString();
+                crearNuevaLista();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
+    }
+
+    //Manda la petición al back para crear la lista
+    private void crearNuevaLista() {
+        final RequestQueue rq = Volley.newRequestQueue(getActivity().getApplicationContext());
+        JSONObject params = new JSONObject();
+        String urlPost = URL_API + "/listaCancion/create";
+        // Adding parameters to request
+        try {
+            params.put("id_usuario", usuarioLog.getId());
+            params.put("nombre", nombreLista);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        // Creating a JSON Object request
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, urlPost, params,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("ListaCancionesActivity", "response: " + response.toString());
+                        try {
+                            ListaCancion listaCancion = new ListaCancion(response.getInt("id"),
+                                    response.getInt("id_usuario"),response.getString("nombre"));
+                            usuarioLog.addLista_cancion(listaCancion);
+                            cargarListas();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("AnadirCancionesALista", "error: " + error.toString());
+                        Toast.makeText(getContext(), "Error al cargar las listas de canción", Toast.LENGTH_SHORT).show();
+                    }
+                });
+        // Adding the string request to the queue
+        rq.add(jsonObjectRequest);
+    }
+
+    //Carga las listas del usuario
+    private void cargarListas() {
+        recycler.setLayoutManager(new LinearLayoutManager(getContext(),
+                LinearLayoutManager.VERTICAL,false));
+        recycler.setAdapter(adapter);
     }
 
     private void anadirAlbum(final int idAlbum, final int idLista, final int indiceLista) {

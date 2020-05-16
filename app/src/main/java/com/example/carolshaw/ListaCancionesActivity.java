@@ -46,7 +46,7 @@ public class ListaCancionesActivity extends AppCompatActivity {
 
         adapter.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { // Que pasa cuando se toca encima del amigo
+            public void onClick(View v) {
                 Intent intent = new Intent(ListaCancionesActivity.this, CancionesListaActivity.class);
                 Bundle b = new Bundle();
                 b.putString("nombre", usuarioLog.getLista_cancion().get(
@@ -75,7 +75,7 @@ public class ListaCancionesActivity extends AppCompatActivity {
     //Función del botón añadir nueva lista
     public void nuevaLista(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Title");
+        builder.setTitle("Nombre de la lista");
 
         // Set up the input
         final EditText input = new EditText(this);
