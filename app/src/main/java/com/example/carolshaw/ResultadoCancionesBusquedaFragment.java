@@ -112,7 +112,6 @@ public class ResultadoCancionesBusquedaFragment extends Fragment {
         builder.show();
     }
 
-    //TODO: permitir elegir la lista que quiera añadir la cancion
     private void elegirLista(int idCancion) {
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new AnadirCancionALista().newInstance(idCancion)).commit();

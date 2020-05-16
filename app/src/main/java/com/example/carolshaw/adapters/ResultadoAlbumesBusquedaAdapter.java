@@ -15,8 +15,10 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class ResultadoAlbumesBusquedaAdapter extends RecyclerView.Adapter<ResultadoAlbumesBusquedaAdapter.Datos>{
+public class ResultadoAlbumesBusquedaAdapter extends RecyclerView.Adapter<ResultadoAlbumesBusquedaAdapter.Datos>
+        implements View.OnClickListener{
     ArrayList<Album> array;
+    private View.OnClickListener listener;
 
     public ResultadoAlbumesBusquedaAdapter(ArrayList<Album> array) {
         this.array = array;
@@ -27,6 +29,7 @@ public class ResultadoAlbumesBusquedaAdapter extends RecyclerView.Adapter<Result
     public ResultadoAlbumesBusquedaAdapter.Datos onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recycler_view_item_album,null,false);
+        view.setOnClickListener(this);
         return new ResultadoAlbumesBusquedaAdapter.Datos(view);
     }
 
@@ -35,9 +38,20 @@ public class ResultadoAlbumesBusquedaAdapter extends RecyclerView.Adapter<Result
         holder.establecer(array.get(position));
     }
 
+    public void setOnClickListener(View.OnClickListener listen) {
+        this.listener = listen;
+    }
+
     @Override
     public int getItemCount() {
         return array.size();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (listener != null) {
+            listener.onClick(v);
+        }
     }
 
     public class Datos extends RecyclerView.ViewHolder {
