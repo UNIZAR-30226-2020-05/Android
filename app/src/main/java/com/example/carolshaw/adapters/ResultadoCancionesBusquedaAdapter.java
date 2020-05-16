@@ -13,9 +13,11 @@ import com.example.carolshaw.objetos.Cancion;
 
 import java.util.ArrayList;
 
-public class ResultadoCancionesBusquedaAdapter extends RecyclerView.Adapter<ResultadoCancionesBusquedaAdapter.Datos>{
+public class ResultadoCancionesBusquedaAdapter extends RecyclerView.Adapter<ResultadoCancionesBusquedaAdapter.Datos>
+        implements View.OnClickListener{
 
     ArrayList<Cancion> array;
+    private View.OnClickListener listener;
 
     public ResultadoCancionesBusquedaAdapter(ArrayList<Cancion> array) {
         this.array = array;
@@ -26,6 +28,7 @@ public class ResultadoCancionesBusquedaAdapter extends RecyclerView.Adapter<Resu
     public ResultadoCancionesBusquedaAdapter.Datos onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recycler_view_item_cancion,null,false);
+        view.setOnClickListener(this);
         return new ResultadoCancionesBusquedaAdapter.Datos(view);
     }
 
@@ -34,9 +37,20 @@ public class ResultadoCancionesBusquedaAdapter extends RecyclerView.Adapter<Resu
         holder.establecer(array.get(position));
     }
 
+    public void setOnClickListener(View.OnClickListener listen) {
+        this.listener = listen;
+    }
+
     @Override
     public int getItemCount() {
         return array.size();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (listener != null) {
+            listener.onClick(v);
+        }
     }
 
     public class Datos extends RecyclerView.ViewHolder {
