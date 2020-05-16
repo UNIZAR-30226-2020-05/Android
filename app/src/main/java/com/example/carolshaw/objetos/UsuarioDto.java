@@ -17,7 +17,10 @@ public class UsuarioDto extends Application {
     private int minuto_ultima_reproduccion;
     private int tipo_ultima_reproduccion;
     private ArrayList<ListaCancion> lista_cancion;
+    private ArrayList<ListaPodcast> lista_podcast;
     private ArrayList<Amigo> amigos;
+
+
 
     public UsuarioDto(){
         //Constructor por defecto
@@ -46,6 +49,7 @@ public class UsuarioDto extends Application {
         tipo_ultima_reproduccion = usuarioLog.getTipo_ultima_reproduccion();
         lista_cancion = usuarioLog.getLista_cancion();
         amigos = usuarioLog.getAmigos();
+        lista_podcast = usuarioLog.getLista_podcast();
     }
     public int getId() {
         return id;
@@ -156,5 +160,17 @@ public class UsuarioDto extends Application {
 
     public void setAmigos(ArrayList<Amigo> amigos) {
         this.amigos = amigos;
+    }
+
+    public ArrayList<ListaPodcast> getLista_podcast() {
+        return lista_podcast;
+    }
+
+    public void setLista_podcast(ArrayList<ListaPodcast> lista_podcast) {
+        this.lista_podcast = lista_podcast;
+    }
+
+    public void addLista_podcast(ListaPodcast lista_podcast) {
+        this.lista_podcast.add(lista_podcast);
     }
 }
