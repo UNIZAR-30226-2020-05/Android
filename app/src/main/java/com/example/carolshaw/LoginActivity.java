@@ -82,7 +82,6 @@ public class LoginActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("LoginActivity", "exito validar (usuario existente): " + response.toString());
                         //Exito aquí significa que el usuario existía, por tanto no se debe permitir el registro
                         UsuarioDto usuarioLog = (UsuarioDto) getApplicationContext();
                         Gson gson = new Gson();
