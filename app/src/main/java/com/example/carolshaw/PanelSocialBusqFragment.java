@@ -38,6 +38,7 @@ public class PanelSocialBusqFragment extends Fragment {
     private Integer idUsuLoageado;
     private static ArrayList<UsuarioDto> usuarios;
     private RecyclerView recycler;
+    private ArrayList<String> registroAmigos;
 
     public PanelSocialBusqFragment() {
         // Required empty public constructor
@@ -70,6 +71,8 @@ public class PanelSocialBusqFragment extends Fragment {
             return;
         }
         idUsuLoageado = datosRecuperados.getInt("idUsu");
+        registroAmigos = datosRecuperados.getStringArrayList("listaActual");
+
         Log.d("LLEGA",idUsuLoageado.toString());
     }
 
@@ -126,7 +129,16 @@ public class PanelSocialBusqFragment extends Fragment {
         adapter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { // Que pasa cuando se toca encima del amigo
-                anyadirAmigo(usuarios.get(recycler.getChildAdapterPosition(v)).getId());
+                if (registroAmigos.contains(usuarios.get(recycler.getChildAdapterPosition(v)).
+                        getNick())) {
+                    Toast.makeText(getContext(), usuarios.get(recycler.getChildAdapterPosition(v)).
+                            getNick()+ " ya está en la lista de amigos", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    registroAmigos.add(usuarios.get(recycler.getChildAdapterPosition(v)).
+                            getNick());
+                    anyadirAmigo(usuarios.get(recycler.getChildAdapterPosition(v)).getId());
+                }
             }
         });
         recycler.setAdapter(adapter);
@@ -149,8 +161,7 @@ public class PanelSocialBusqFragment extends Fragment {
                     @Override
                     public void onResponse(JSONObject response) {
                         //Cuando llega la respuesta de objeto usuario
-                        Toast.makeText(getContext(), "Añadido ", Toast.LENGTH_LONG).show();
-
+                        Toast.makeText(getContext(), "Añadido a la lista", Toast.LENGTH_LONG).show();
                     }
                 },
                 new Response.ErrorListener() {

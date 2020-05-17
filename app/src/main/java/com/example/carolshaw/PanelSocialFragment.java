@@ -164,6 +164,11 @@ public class PanelSocialFragment extends Fragment {
     public void cambiarAbusquedaAmig() {
         Bundle datos = new Bundle();
         datos.putInt("idUsu",userLogeado.getId());
+        ArrayList<String> registroAmigos = new ArrayList<String>();
+        for (int i=0; i<listAmigos.size(); i++) {
+            registroAmigos.add(listAmigos.get(i).getNick());
+        }
+        datos.putStringArrayList("listaActual",registroAmigos);
         Fragment frag = new PanelSocialBusqFragment();
         frag.setArguments(datos);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
