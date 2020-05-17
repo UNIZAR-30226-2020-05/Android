@@ -11,6 +11,13 @@ public class ListaPodcast {
     public ListaPodcast() {
     }
 
+    public ListaPodcast(int id, int id_usuario, String nombre) {
+        this.id = id;
+        this.id_usuario = id_usuario;
+        this.nombre = nombre;
+        this.podcasts = new ArrayList<Podcast>();
+    }
+
     public int getId() {
         return id;
     }

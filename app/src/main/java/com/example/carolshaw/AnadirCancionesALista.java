@@ -160,7 +160,7 @@ public class AnadirCancionesALista extends Fragment {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("ListaCancionesActivity", "response: " + response.toString());
+                        Log.d("AnadirCancionesALista", "response: " + response.toString());
                         try {
                             ListaCancion listaCancion = new ListaCancion(response.getInt("id"),
                                     response.getInt("id_usuario"),response.getString("nombre"));
@@ -203,14 +203,14 @@ public class AnadirCancionesALista extends Fragment {
                         usuarioLog.deleteLista_cancion(indiceLista);
                         usuarioLog.addLista_cancion(obj);
                         informarAlbumAnadido(obj.getNombre());
-                        finalizarFragmentoDeAlbum();
+                        finalizarFragmento();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         informarCancionesEnAlbumRepetida();
-                        finalizarFragmentoDeAlbum();
+                        finalizarFragmento();
                     }
                 }) {
             @Override
@@ -238,14 +238,14 @@ public class AnadirCancionesALista extends Fragment {
                         usuarioLog.deleteLista_cancion(indiceLista);
                         usuarioLog.addLista_cancion(obj);
                         informarCancionAnadida(obj.getNombre());
-                        finalizarFragmentoDeCancion();
+                        finalizarFragmento();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         informarCancionRepetida();
-                        finalizarFragmentoDeCancion();
+                        finalizarFragmento();
                     }
                 }) {
                 @Override
@@ -258,14 +258,9 @@ public class AnadirCancionesALista extends Fragment {
         rq.add(jsonObjectRequest);
     }
 
-    private void finalizarFragmentoDeCancion() {
+    private void finalizarFragmento() {
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new ResultadoCancionesBusquedaFragment()).commit();
-    }
-
-    private void finalizarFragmentoDeAlbum() {
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new ResultadoAlbumesBusquedaFragment()).commit();
+                new BusquedaFragment()).commit();
     }
 
     /* informa mediante un TOAST de que la canción ha sido añadida a la lista

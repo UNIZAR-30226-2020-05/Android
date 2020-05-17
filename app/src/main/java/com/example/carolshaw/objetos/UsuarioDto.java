@@ -170,6 +170,10 @@ public class UsuarioDto extends Application {
         this.lista_podcast = lista_podcast;
     }
 
+    public void deleteLista_podcast(int indice) {
+        this.lista_podcast.remove(indice);
+    }
+
     public void addLista_podcast(ListaPodcast lista_podcast) {
         this.lista_podcast.add(lista_podcast);
     }
