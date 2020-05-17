@@ -2,9 +2,10 @@ package com.example.carolshaw.objetos;
 
 import android.annotation.SuppressLint;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Podcast {
+public class Podcast implements Serializable {
     private int id;
     private String name;
     private Date fecha_subida;

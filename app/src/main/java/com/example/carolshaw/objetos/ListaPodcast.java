@@ -1,8 +1,9 @@
 package com.example.carolshaw.objetos;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ListaPodcast {
+public class ListaPodcast implements Serializable {
     private int id;
     private int id_usuario;
     private String nombre;

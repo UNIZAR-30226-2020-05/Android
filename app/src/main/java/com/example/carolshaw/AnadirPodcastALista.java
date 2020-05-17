@@ -75,7 +75,6 @@ public class AnadirPodcastALista extends Fragment {
             @Override
             public void onClick(View v) { // Que pasa cuando se toca encima del amigo
                 int p = recycler.getChildAdapterPosition(v);
-                Log.d("AnadirPodcast", String.valueOf(p));
                 anadirPodcast(idPodcast,usuarioLog.getLista_podcast().get(p).getId(),p);
 
             }
@@ -112,7 +111,6 @@ public class AnadirPodcastALista extends Fragment {
                     public void onResponse(JSONObject response) {
                         Gson gson = new Gson();
                         ListaPodcast obj = gson.fromJson(response.toString(), ListaPodcast.class);
-                        Log.d("AnadirPodcast", String.valueOf(indiceLista));
                         usuarioLog.deleteLista_podcast(indiceLista);
                         usuarioLog.addLista_podcast(obj);
                         informar("Podcast añadida a ", obj.getNombre());

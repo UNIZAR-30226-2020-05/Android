@@ -84,28 +84,6 @@ public class PrincipalFragment extends Fragment {
                         Log.d("principalFragment",response.toString());
                         for(int i=0; i<response.length(); i++){
                             try {
-                                /*Album album = new Album();
-                                ArrayList<Cancion> canciones = new ArrayList<Cancion>();
-                                //Meter toda la informacion de un album en la lista
-                                Integer.parseInt(response.getJSONObject(i).getString("id"));
-                                album.setTitulo(response.getJSONObject(i).getString("titulo"));
-                                album.setCaratula(response.getJSONObject(i).getString("caratula"));
-                                Artista artista = new Artista();
-                                artista.setName(response.getJSONObject(i).getString("artista"));
-                                album.setArtista(artista);
-
-                                cancionesArrayJSON = response.getJSONObject(i).getJSONArray("canciones"); //Obtiene las canciones del album
-                                for(int j=0; j<cancionesArrayJSON.length(); j++){
-                                    Cancion cancion = new Cancion();
-                                    cancion.setId(cancionesArrayJSON.getJSONObject(j).getInt("id"));
-                                    cancion.setName(cancionesArrayJSON.getJSONObject(j).getString("name"));
-                                    cancion.setFecha_subida(cancionesArrayJSON.getJSONObject(j).getString("fecha_subida"));
-                                    cancion.setDuracion(cancionesArrayJSON.getJSONObject(j).getInt("duracion"));
-                                    cancion.setAlbum(cancionesArrayJSON.getJSONObject(j).getString("album"));
-                                    cancion.setArtistas(cancionesArrayJSON.getJSONObject(j).getString("artistas"));
-                                    canciones.add(cancion);
-                                }
-                                album.setCanciones(canciones);*/
                                 Gson gson = new Gson();
                                 Album obj = gson.fromJson(response.getJSONObject(i).toString(), Album.class);
                                 albumes.add(obj);
