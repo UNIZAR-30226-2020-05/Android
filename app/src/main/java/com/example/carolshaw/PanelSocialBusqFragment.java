@@ -48,8 +48,6 @@ public class PanelSocialBusqFragment extends Fragment {
     public static PanelSocialBusqFragment newInstance(Serializable usuarioLogeado) {
         PanelSocialBusqFragment fragment = new PanelSocialBusqFragment();
         Bundle args = new Bundle();
-
-
         return fragment;
     }
 
@@ -134,6 +132,10 @@ public class PanelSocialBusqFragment extends Fragment {
                     Toast.makeText(getContext(), usuarios.get(recycler.getChildAdapterPosition(v)).
                             getNick()+ " ya está en la lista de amigos", Toast.LENGTH_LONG).show();
                 }
+                else if(usuarios.get(recycler.getChildAdapterPosition(v)).getId()==idUsuLoageado) {
+                    Toast.makeText(getContext(), "No puedes añadirte a ti mismo",
+                            Toast.LENGTH_LONG).show();
+                }
                 else {
                     registroAmigos.add(usuarios.get(recycler.getChildAdapterPosition(v)).
                             getNick());
@@ -178,42 +180,5 @@ public class PanelSocialBusqFragment extends Fragment {
         // Adding the string request to the queue
         rq.add(jsonObjectRequest);
     }
-
-        public void borrarAmigo(final Integer idAmigo) {
-
-        final RequestQueue rq = Volley.newRequestQueue(getActivity().getApplicationContext());
-        String peticion = URL_API +"/user/deleteAmigo/" + idUsuLoageado;
-        JSONObject params = new JSONObject();
-        try {
-            params.put("id2", idAmigo);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        // Creating a JSON Object request
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PATCH, peticion, null ,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        //Cuando llega la respuesta de objeto usuario
-                        Toast.makeText(getContext(), "Eliminado", Toast.LENGTH_LONG).show();
-
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) { Log.d("PanelSocialFragment","error"); }
-                }) {
-            @Override
-            public byte[] getBody() {
-                return idAmigo.toString().getBytes();
-            }
-        };
-
-
-        // Adding the string request to the queue
-        rq.add(jsonObjectRequest);
-    }
-
 }
 

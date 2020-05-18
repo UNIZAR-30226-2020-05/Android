@@ -141,9 +141,10 @@ public class PanelSocialFragment extends Fragment {
             @Override
             public void onDeleteClick(int position) {
                 //Que pasa cuando se le da al icono papelera
+
                 try {
                     Toast.makeText(getContext(), listAmigos.get(position).getNick() +
-                        " eliminado de la lista de amigos",Toast.LENGTH_LONG).show();
+                            " eliminado de la lista de amigos", Toast.LENGTH_LONG).show();
                     eliminarAmigo(listAmigos.get(position).getId());
                     listAmigos.remove(position);
                     adapter.notifyItemRemoved(position);
