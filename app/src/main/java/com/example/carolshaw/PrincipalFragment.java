@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -35,17 +36,18 @@ import java.util.Objects;
 
 
 public class PrincipalFragment extends Fragment {
-    private ArrayList<ImageView> imagesAlbum;
+    private ArrayList<ImageView> imagesAlbum = new ArrayList<ImageView>();;
     private ArrayList<Album> albumes = new ArrayList<Album>();
-    private ArrayList<ImageView> imagesPodcasts;
+    private ArrayList<ImageView> imagesPodcasts = new ArrayList<ImageView>();;
     private ArrayList<Podcast> podcasts = new ArrayList<Podcast>();
+    private ArrayList<TextView> tituloPodcast = new ArrayList<TextView>();
     private String URL_API;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         URL_API = getString(R.string.API);
-        iniciarImageviews();
+        iniciarViews();
         obtenerAlbumes();
         obtenerPodcasts();
 
@@ -157,9 +159,10 @@ public class PrincipalFragment extends Fragment {
                         Gson gson = new Gson();
                         Podcast obj;
                         try {
-                            for (int i = 0; i < response.length(); i++) {
+                            for (int i = 0; i < 4; i++) {
                                 obj = gson.fromJson(response.getJSONObject(i).toString(), Podcast.class);
                                 podcasts.add(obj);
+                                tituloPodcast.get(i).setText(obj.getName());
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -179,13 +182,12 @@ public class PrincipalFragment extends Fragment {
 
     /* Inicia las variables de Imageviews
      */
-    private void iniciarImageviews() {
-        imagesAlbum = new ArrayList<ImageView>();
+    private void iniciarViews() {
         imagesAlbum.add((ImageView) getView().findViewById(R.id.caratulaAlbum));
         imagesAlbum.add((ImageView) getView().findViewById(R.id.album2));
         imagesAlbum.add((ImageView) getView().findViewById(R.id.album3));
         imagesAlbum.add((ImageView) getView().findViewById(R.id.album4));
-        imagesPodcasts = new ArrayList<ImageView>();
+
         imagesPodcasts.add((ImageView) getView().findViewById(R.id.podcast1));
         imagesPodcasts.add((ImageView) getView().findViewById(R.id.podcast2));
         imagesPodcasts.add((ImageView) getView().findViewById(R.id.podcast3));
@@ -193,9 +195,11 @@ public class PrincipalFragment extends Fragment {
 
         for (int i = 0; i < imagesPodcasts.size(); i++) {
             imagesPodcasts.get(i).setImageResource(R.drawable.podcast1);
-            //ConstraintLayout.LayoutParams params = getView().getLayoutParams();
-            //imagesPodcasts.get(i).setLayoutParams(params);
         }
+        tituloPodcast.add((TextView) getView().findViewById(R.id.tituloPodcast1));
+        tituloPodcast.add((TextView) getView().findViewById(R.id.tituloPodcast2));
+        tituloPodcast.add((TextView) getView().findViewById(R.id.tituloPodcast3));
+        tituloPodcast.add((TextView) getView().findViewById(R.id.tituloPodcast4));
     }
 
 
