@@ -1,7 +1,11 @@
 package com.example.carolshaw;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 
+import androidx.annotation.DrawableRes;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -9,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -17,23 +23,22 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.carolshaw.objetos.Album;
-import com.example.carolshaw.objetos.Artista;
-import com.example.carolshaw.objetos.Cancion;
-import com.example.carolshaw.objetos.UsuarioDto;
+import com.example.carolshaw.objetos.Podcast;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 public class PrincipalFragment extends Fragment {
     private ArrayList<ImageView> imagesAlbum;
     private ArrayList<Album> albumes = new ArrayList<Album>();
-    private ArrayList<ImageView> podcasts;
+    private ArrayList<ImageView> imagesPodcasts;
+    private ArrayList<Podcast> podcasts = new ArrayList<Podcast>();
     private String URL_API;
 
     @Override
@@ -42,6 +47,7 @@ public class PrincipalFragment extends Fragment {
         URL_API = getString(R.string.API);
         iniciarImageviews();
         obtenerAlbumes();
+        obtenerPodcasts();
 
         imagesAlbum.get(0).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,6 +74,30 @@ public class PrincipalFragment extends Fragment {
             }
         });
 
+        imagesPodcasts.get(0).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clickPodcast(podcasts.get(0));
+            }
+        });
+        imagesPodcasts.get(1).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clickPodcast(podcasts.get(1));
+            }
+        });
+        imagesPodcasts.get(2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clickPodcast(podcasts.get(2));
+            }
+        });
+        imagesPodcasts.get(3).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clickPodcast(podcasts.get(3));
+            }
+        });
     }
 
     /* Obtiene la información de los albumes a mostrar
@@ -105,11 +135,44 @@ public class PrincipalFragment extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d("PrincipalFragment", "Error al obtener albumes: " + error.toString());
-
+                        informar("Error al obtener los álbumes");
                     }
                 });
 
+        // Adding the string request to the queue
+        rq.add(jsonArrayRequest);
+    }
+
+    /* Obtiene la información de los podcasts a mostrar
+     */
+    private void obtenerPodcasts() {
+        final RequestQueue rq = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
+        String urlGet = URL_API + "/podcast/getByName?name=";
+
+        // Creating a JSON Object request
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, urlGet, null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Gson gson = new Gson();
+                        Podcast obj;
+                        try {
+                            for (int i = 0; i < response.length(); i++) {
+                                obj = gson.fromJson(response.getJSONObject(i).toString(), Podcast.class);
+                                podcasts.add(obj);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("BusquedaFragment", "error busqueda cancion: " + error.toString());
+                        informar("Error al obtener los podcasts");
+                    }
+                });
         // Adding the string request to the queue
         rq.add(jsonArrayRequest);
     }
@@ -122,11 +185,17 @@ public class PrincipalFragment extends Fragment {
         imagesAlbum.add((ImageView) getView().findViewById(R.id.album2));
         imagesAlbum.add((ImageView) getView().findViewById(R.id.album3));
         imagesAlbum.add((ImageView) getView().findViewById(R.id.album4));
-        podcasts = new ArrayList<ImageView>();
-        podcasts.add((ImageView) getView().findViewById(R.id.podcast1));
-        podcasts.add((ImageView) getView().findViewById(R.id.podcast2));
-        podcasts.add((ImageView) getView().findViewById(R.id.podcast3));
-        podcasts.add((ImageView) getView().findViewById(R.id.podcast4));
+        imagesPodcasts = new ArrayList<ImageView>();
+        imagesPodcasts.add((ImageView) getView().findViewById(R.id.podcast1));
+        imagesPodcasts.add((ImageView) getView().findViewById(R.id.podcast2));
+        imagesPodcasts.add((ImageView) getView().findViewById(R.id.podcast3));
+        imagesPodcasts.add((ImageView) getView().findViewById(R.id.podcast4));
+
+        for (int i = 0; i < imagesPodcasts.size(); i++) {
+            imagesPodcasts.get(i).setImageResource(R.drawable.podcast1);
+            //ConstraintLayout.LayoutParams params = getView().getLayoutParams();
+            //imagesPodcasts.get(i).setLayoutParams(params);
+        }
     }
 
 
@@ -135,8 +204,8 @@ public class PrincipalFragment extends Fragment {
                 new CancionesAlbumFragment().newInstance(album)).commit();
     }
 
-    public void clickPodcast(){
-
+    public void clickPodcast(Podcast podcast){
+        informar("Habría que reproducir directamente el podcast");
     }
 
     @Override
@@ -144,5 +213,16 @@ public class PrincipalFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_principal, container, false);
+    }
+
+    /* informa mediante un TOAST
+     */
+    private void informar(String mensaje) {
+        Toast toast = Toast.makeText(getActivity().getApplicationContext(), mensaje, Toast.LENGTH_SHORT);
+        View view = toast.getView();
+
+        //Cambiar color del fonto
+        view.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN);
+        toast.show();
     }
 }

@@ -78,6 +78,22 @@
                     app:layout_constraintTop_toBottomOf="@+id/textView3"
                     app:srcCompat="@drawable/ic_launcher_background" />
 
+                <TextView
+                    android:id="@+id/tituloPodcast1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="48dp"
+                    android:layout_marginTop="12dp"
+                    android:maxWidth="130dp"
+                    android:text="Titulo Podcast"
+                    android:textAllCaps="true"
+                    android:textSize="15sp"
+                    android:textStyle="italic"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/podcast1" />
+
                 <ImageView
                     android:id="@+id/podcast3"
                     android:layout_width="wrap_content"
@@ -91,15 +107,42 @@
                     app:srcCompat="@drawable/ic_launcher_background" />
 
 
+                <TextView
+                    android:id="@+id/tituloPodcast3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Titulo Podcast"
+                    android:textAllCaps="true"
+                    android:textSize="15sp"
+                    android:layout_marginStart="48dp"
+                    android:layout_marginTop="12dp"
+                    android:maxWidth="130dp"
+                    android:textStyle="italic"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/podcast3" />
 
                 <ImageView
                     android:id="@+id/podcast2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="48dp"
+                    android:layout_marginEnd="56dp"
                     app:layout_constraintBottom_toBottomOf="@+id/podcast1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:srcCompat="@drawable/ic_launcher_background" />
+
+                <TextView
+                    android:id="@+id/tituloPodcast2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="52dp"
+                    android:maxWidth="130dp"
+                    android:text="Titulo Podcast"
+                    android:textAllCaps="true"
+                    android:textSize="15sp"
+                    android:textStyle="italic"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/podcast2" />
 
                 <ImageView
                     android:id="@+id/podcast4"
@@ -109,6 +152,20 @@
                     app:layout_constraintBottom_toBottomOf="@+id/podcast3"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:srcCompat="@drawable/ic_launcher_background" />
+
+                <TextView
+                    android:id="@+id/tituloPodcast4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="52dp"
+                    android:maxWidth="130dp"
+                    android:text="Titulo Podcast"
+                    android:textAllCaps="true"
+                    android:textSize="15sp"
+                    android:textStyle="italic"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/podcast4" />
 
 
 
