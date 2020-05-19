@@ -53,7 +53,6 @@ public class ListaCancionesActivity extends AppCompatActivity {
                         recycler.getChildAdapterPosition(v)).getNombre());
                 b.putInt("idLista", usuarioLog.getLista_cancion().get(
                         recycler.getChildAdapterPosition(v)).getId());
-                b.putInt("indiceLista", recycler.getChildAdapterPosition(v));
                 b.putSerializable("canciones", usuarioLog.getLista_cancion().get(
                         recycler.getChildAdapterPosition(v)).getCanciones());
 

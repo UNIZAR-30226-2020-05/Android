@@ -1,5 +1,8 @@
 package com.example.carolshaw;
 
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,21 +13,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.carolshaw.objetos.Album;
 import com.example.carolshaw.objetos.Artista;
 import com.example.carolshaw.objetos.Cancion;
+import com.example.carolshaw.objetos.ListaCancion;
+import com.example.carolshaw.objetos.ListaPodcast;
 import com.example.carolshaw.objetos.Podcast;
+import com.example.carolshaw.objetos.UsuarioDto;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -40,7 +49,10 @@ public class BusquedaFragment extends Fragment {
     private Button botonBusquedaArtistas;
     private EditText barraBusquedaPodcasts;
     private Button botonBusquedaPodcasts;
+    private EditText barraBusquedaListas;
+    private Button botonBusquedaListas;
 
+    private UsuarioDto usuarioLog;
     private String URL_API;
     private String busqueda;
     private ArrayList<Album> albumesEncontrados = new ArrayList<Album>();
@@ -55,6 +67,7 @@ public class BusquedaFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        usuarioLog = (UsuarioDto) getActivity().getApplicationContext();
     }
 
     @Override
@@ -69,6 +82,8 @@ public class BusquedaFragment extends Fragment {
         botonBusquedaArtistas = getView().findViewById(R.id.botonBusquedaArtistas);
         barraBusquedaPodcasts = getView().findViewById(R.id.barraBusquedaPodcasts);
         botonBusquedaPodcasts = getView().findViewById(R.id.botonBusquedaPodcasts);
+        barraBusquedaListas = getView().findViewById(R.id.barraBusquedaListas);
+        botonBusquedaListas = getView().findViewById(R.id.botonBusquedaListas);
 
 
         botonBusquedaCanciones.setOnClickListener(new View.OnClickListener() {
@@ -102,6 +117,14 @@ public class BusquedaFragment extends Fragment {
                 buscarPodcasts();
             }
         });
+
+        botonBusquedaListas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                busqueda = barraBusquedaListas.getText().toString();
+                buscarListaCancion();
+            }
+        });
     }
 
     @Override
@@ -125,14 +148,6 @@ public class BusquedaFragment extends Fragment {
                                 Gson gson = new Gson();
                                 Cancion obj = gson.fromJson(response.getJSONObject(i).toString(), Cancion.class);
                                 cancionesEncontradas.add(obj);
-                                /*Cancion cancion = new Cancion();
-                                cancion.setId(response.getJSONObject(i).getInt("id"));
-                                cancion.setName(response.getJSONObject(i).getString("name"));
-                                cancion.setFecha_subida(response.getJSONObject(i).getString("fecha_subida"));
-                                cancion.setDuracion(response.getJSONObject(i).getInt("duracion"));
-                                cancion.setAlbum(response.getJSONObject(i).getString("album"));
-                                cancion.setArtistas(response.getJSONObject(i).getString("artistas"));
-                                cancionesEncontradas.add(cancion);*/
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -145,8 +160,9 @@ public class BusquedaFragment extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("BusquedaFragment", "error busqueda cancion: " + error.toString());
-                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                                new ResultadoCancionesBusquedaFragment().newInstance(cancionesEncontradas)).commit();
+                        //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        //        new ResultadoCancionesBusquedaFragment().newInstance(cancionesEncontradas)).commit();
+                        informar("Canción no encontrada");
                     }
                 });
         // Adding the string request to the queue
@@ -167,42 +183,23 @@ public class BusquedaFragment extends Fragment {
                                 Gson gson = new Gson();
                                 Album obj = gson.fromJson(response.getJSONObject(i).toString(), Album.class);
                                 albumesEncontrados.add(obj);
-                                /*Album albumBuscado = new Album();
-                                Artista artista = new Artista();
-                                albumBuscado.setId(response.getJSONObject(i).getInt("id"));
-                                albumBuscado.setTitulo(response.getJSONObject(i).getString("titulo"));
-                                albumBuscado.setCaratula(response.getJSONObject(i).getString("caratula"));
-                                artista.setName(response.getJSONObject(i).getString("artista"));
-                                albumBuscado.setArtista(artista);
-                                //Coge canciones
-                                JSONArray JSONCanciones = response.getJSONObject(i).getJSONArray("canciones");
-                                ArrayList<Cancion> arrayCanciones = new ArrayList<Cancion>();
-                                for(int j=0; j<JSONCanciones.length(); j++){
-                                    Cancion cancion = new Cancion();
-                                    cancion.setId(JSONCanciones.getJSONObject(j).getInt("id"));
-                                    cancion.setName(JSONCanciones.getJSONObject(j).getString("name"));
-                                    cancion.setFecha_subida(JSONCanciones.getJSONObject(j).getString("fecha_subida"));
-                                    cancion.setDuracion(JSONCanciones.getJSONObject(j).getInt("duracion"));
-                                    cancion.setAlbum(JSONCanciones.getJSONObject(j).getString("album"));
-                                    cancion.setArtistas(JSONCanciones.getJSONObject(j).getString("artistas"));
-                                    arrayCanciones.add(cancion);
-                                }
-                                albumBuscado.setCanciones(arrayCanciones);
-                                albumesEncontrados.add(albumBuscado);*/
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                         }
-                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                                new ResultadoAlbumesBusquedaFragment().newInstance(albumesEncontrados)).commit();
+                        if(albumesEncontrados.size() > 0){
+                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                                    new ResultadoAlbumesBusquedaFragment().newInstance(albumesEncontrados)).commit();
+                        } else {
+                            informar("Album no encontrado");
+                        }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("BusquedaFragment", "error: " + error.toString());
-                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                                new ResultadoAlbumesBusquedaFragment().newInstance(albumesEncontrados)).commit();
+                        informar("Error desconocido");
                     }
                 });
         // Adding the string request to the queue
@@ -228,17 +225,19 @@ public class BusquedaFragment extends Fragment {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                                new ResultadoArtistaBusquedaFragment().newInstance(artistasEncontrados)).commit();
-
+                        if (artistasEncontrados.size() > 0) {
+                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                                    new ResultadoArtistaBusquedaFragment().newInstance(artistasEncontrados)).commit();
+                        } else {
+                            informar("Artista no encontrado");
+                        }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("BusquedaFragment", "error busqueda cancion: " + error.toString());
-                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                                new ResultadoArtistaBusquedaFragment().newInstance(artistasEncontrados)).commit();
+                        informar("Error desconocido");
                     }
                 });
         // Adding the string request to the queue
@@ -273,11 +272,88 @@ public class BusquedaFragment extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("BusquedaFragment", "error busqueda cancion: " + error.toString());
-                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                                new ResultadoPodcastsBusquedaFragment().newInstance(podcastsEncontrados)).commit();
+                        informar("Podcast no encontrado");
                     }
                 });
         // Adding the string request to the queue
         rq.add(jsonArrayRequest);
+    }
+
+    // En primer lugar busca una lista de canción, si falla, prueba a buscar una lista de podcasts
+    private void buscarListaCancion() {
+        final RequestQueue rq = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
+        String urlGet = URL_API + "/listaCancion/get?id=" + busqueda;
+
+        // Creating a JSON Object request
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urlGet, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Gson gson = new Gson();
+                        ListaCancion obj;
+                        obj = gson.fromJson(response.toString(), ListaCancion.class);
+
+                        Intent intent = new Intent(getContext(), CancionesListaActivity.class);
+                        Bundle b = new Bundle();
+                        b.putString("nombre", obj.getNombre());
+                        b.putInt("idLista", obj.getId());
+                        b.putSerializable("canciones", obj.getCanciones());
+
+                        intent.putExtras(b);
+                        startActivity(intent);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        buscarListaPodcast();
+                    }
+                });
+        // Adding the string request to the queue
+        rq.add(jsonObjectRequest);
+    }
+
+    private void buscarListaPodcast() {
+        final RequestQueue rq = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
+        String urlGet = URL_API + "/listaPodcast/get?id=" + busqueda;
+
+        // Creating a JSON Object request
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urlGet, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Gson gson = new Gson();
+                        ListaPodcast obj;
+                        obj = gson.fromJson(response.toString(), ListaPodcast.class);
+
+                        Intent intent = new Intent(getContext(), PodcastListaActivity.class);
+                        Bundle b = new Bundle();
+                        b.putString("nombre", obj.getNombre());
+                        b.putInt("idLista", obj.getId());
+                        b.putSerializable("podcasts", obj.getPodcasts());
+
+                        intent.putExtras(b);
+                        startActivity(intent);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        informar("Lista no encontrada");
+                    }
+                });
+        // Adding the string request to the queue
+        rq.add(jsonObjectRequest);
+    }
+
+    /* informa mediante un TOAST
+     */
+    private void informar(String mensaje) {
+        Toast toast = Toast.makeText(getActivity().getApplicationContext(), mensaje, Toast.LENGTH_SHORT);
+        View view = toast.getView();
+
+        //Cambiar color del fonto
+        view.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN);
+        toast.show();
     }
 }

@@ -45,6 +45,7 @@ public class PodcastListaActivity extends AppCompatActivity {
     private int idLista;
     private UsuarioDto usuarioLog;
     private int indiceLista;
+    private boolean perteneceUsuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,24 +64,34 @@ public class PodcastListaActivity extends AppCompatActivity {
             nombreLista = b.getString("nombre");
             idLista = b.getInt("idLista");
             copiarLista.setText(String.valueOf(idLista));
-            indiceLista = b.getInt("indiceLista");
             tituloVista.setText(nombreLista);
             adapter = new ResultadoPodcastsBusquedaAdapter(podcasts);
             recycler.setLayoutManager(new LinearLayoutManager(PodcastListaActivity.this,
                     LinearLayoutManager.VERTICAL,false));
             recycler.setAdapter(adapter);
-        }
-        //Evita que se borre si es el de favoritos
-        if (nombreLista.equals("Favoritos")) {
-            botonBorrar.setVisibility(View.GONE);
+            for (int i = 0; i < usuarioLog.getLista_podcast().size(); i++) {
+                if(usuarioLog.getLista_podcast().get(i).getId() == idLista){
+                    perteneceUsuario = true;
+                    indiceLista = i;
+                }
+            }
         }
 
-        botonBorrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                borrarLista();
+        if(perteneceUsuario){
+            //Evita que se borre si es el de favoritos
+            if (nombreLista.equals("Favoritos")) {
+                botonBorrar.setVisibility(View.GONE);
             }
-        });
+
+            botonBorrar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    borrarLista();
+                }
+            });
+        } else {
+            botonBorrar.setVisibility(View.GONE);
+        }
 
         copiarLista.setOnClickListener(new View.OnClickListener() {
             @Override

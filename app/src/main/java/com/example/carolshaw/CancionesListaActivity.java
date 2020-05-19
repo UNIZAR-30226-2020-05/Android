@@ -33,6 +33,7 @@ import java.util.ArrayList;
 
 public class CancionesListaActivity extends AppCompatActivity {
 
+    private UsuarioDto usuarioLog;
     private ArrayList<Cancion> canciones = null;
     private String nombreLista;
     private TextView tituloVista;
@@ -42,44 +43,54 @@ public class CancionesListaActivity extends AppCompatActivity {
     private ResultadoCancionesBusquedaAdapter adapter;
     private String URL_API;
     private int idLista;
-    private UsuarioDto usuarioLog;
     private int indiceLista;
+    private boolean perteneceUsuario = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_canciones_lista);
+        usuarioLog = (UsuarioDto) getApplicationContext();
         tituloVista = findViewById(R.id.tituloLista);
         botonBorrar = findViewById(R.id.btnBorrarLista);
         copiarLista = findViewById(R.id.codigoLista);
         recycler = findViewById(R.id.recyclerViewCanciones);
         URL_API = getString(R.string.API);
         usuarioLog = (UsuarioDto) getApplicationContext();
-
         Bundle b = getIntent().getExtras();
         if (b != null) {
             canciones = (ArrayList<Cancion>) b.getSerializable("canciones");
             nombreLista = b.getString("nombre");
             idLista = b.getInt("idLista");
             copiarLista.setText(String.valueOf(idLista));
-            indiceLista = b.getInt("indiceLista");
             tituloVista.setText(nombreLista);
             adapter = new ResultadoCancionesBusquedaAdapter(canciones);
             recycler.setLayoutManager(new LinearLayoutManager(CancionesListaActivity.this,
                     LinearLayoutManager.VERTICAL,false));
             recycler.setAdapter(adapter);
+            for (int i = 0; i < usuarioLog.getLista_cancion().size(); i++) {
+                if(usuarioLog.getLista_cancion().get(i).getId() == idLista){
+                    perteneceUsuario = true;
+                    indiceLista = i;
+                }
+            }
         }
-        //Evita que se borre si es el de favoritos
-        if (nombreLista.equals("Favoritos")) {
+        if(perteneceUsuario){
+            //Evita que se borre si es el de favoritos
+            if (nombreLista.equals("Favoritos")) {
+                botonBorrar.setVisibility(View.GONE);
+            }
+
+            botonBorrar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    borrarLista();
+                }
+            });
+        } else {
             botonBorrar.setVisibility(View.GONE);
         }
 
-        botonBorrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                borrarLista();
-            }
-        });
 
         copiarLista.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,7 +112,7 @@ public class CancionesListaActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("CancionesListaActivity","indiceLista: " + indiceLista);
+                        Log.d("CancionesListaActivity",response.toString());
                         usuarioLog.deleteLista_cancion(indiceLista);
                         finish();
                         //startActivity(new Intent(CancionesListaActivity.this, ListaCancionesActivity.class));
@@ -110,7 +121,7 @@ public class CancionesListaActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d("CancionesListaActivity","indiceLista: " + indiceLista);
+                        Log.d("CancionesListaActivity","error: " + error.toString());
                         usuarioLog.deleteLista_cancion(indiceLista);
                         finish();
                         //startActivity(new Intent(CancionesListaActivity.this, ListaCancionesActivity.class));
