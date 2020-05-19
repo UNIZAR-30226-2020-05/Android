@@ -8,8 +8,10 @@
 
     <TextView
         android:id="@+id/tituloLista"
-        android:layout_width="292dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="20dp"
         android:gravity="center"
         android:text="tituloLista"
         android:textSize="20sp"
@@ -17,34 +19,53 @@
         app:layout_constraintBottom_toTopOf="@+id/recyclerViewPodcasts"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.505" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:id="@+id/btnBorrarLista"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_gravity="center"
+        android:layout_marginEnd="50dp"
         android:layout_weight="1"
         android:baselineAligned="false"
         android:clickable="true"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/tituloLista"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tituloLista"
         app:layout_constraintTop_toTopOf="@+id/tituloLista"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/trash"
         tools:visibility="visible" />
 
+    <TextView
+        android:id="@+id/codigoLista"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="@color/gray_white"
+        android:gravity="center"
+        android:text="#Código lista"
+        android:textSize="17sp"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerViewPodcasts"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.076"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tituloLista"
+        app:layout_constraintVertical_bias="0.0" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewPodcasts"
-        android:layout_width="414dp"
-        android:layout_height="478dp"
+        android:layout_width="419dp"
+        android:layout_height="485dp"
+        android:layout_marginTop="120dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintVertical_bias="0.0"
         tools:listitem="@layout/recycler_view_item_podcast" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

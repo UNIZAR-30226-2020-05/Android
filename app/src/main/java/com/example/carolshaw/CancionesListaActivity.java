@@ -4,12 +4,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
+import android.content.ClipData;
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.content.ClipboardManager;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -32,6 +37,7 @@ public class CancionesListaActivity extends AppCompatActivity {
     private String nombreLista;
     private TextView tituloVista;
     private ImageView botonBorrar;
+    private TextView copiarLista;
     private RecyclerView recycler;
     private ResultadoCancionesBusquedaAdapter adapter;
     private String URL_API;
@@ -45,6 +51,7 @@ public class CancionesListaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_canciones_lista);
         tituloVista = findViewById(R.id.tituloLista);
         botonBorrar = findViewById(R.id.btnBorrarLista);
+        copiarLista = findViewById(R.id.codigoLista);
         recycler = findViewById(R.id.recyclerViewCanciones);
         URL_API = getString(R.string.API);
         usuarioLog = (UsuarioDto) getApplicationContext();
@@ -54,6 +61,7 @@ public class CancionesListaActivity extends AppCompatActivity {
             canciones = (ArrayList<Cancion>) b.getSerializable("canciones");
             nombreLista = b.getString("nombre");
             idLista = b.getInt("idLista");
+            copiarLista.setText(String.valueOf(idLista));
             indiceLista = b.getInt("indiceLista");
             tituloVista.setText(nombreLista);
             adapter = new ResultadoCancionesBusquedaAdapter(canciones);
@@ -70,6 +78,16 @@ public class CancionesListaActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 borrarLista();
+            }
+        });
+
+        copiarLista.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("Codigo lista", copiarLista.getText().toString());
+                clipboard.setPrimaryClip(clip);
+                informar("Código copiado");
             }
         });
     }
@@ -101,5 +119,16 @@ public class CancionesListaActivity extends AppCompatActivity {
 
         // Adding the string request to the queue
         rq.add(jsonObjectRequest);
+    }
+
+    /* informa mediante un TOAST
+     */
+    private void informar(String mensaje) {
+        Toast toast = Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_SHORT);
+        View view = toast.getView();
+
+        //Cambiar color del fonto
+        view.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN);
+        toast.show();
     }
 }
