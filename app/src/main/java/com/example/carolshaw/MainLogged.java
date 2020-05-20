@@ -59,6 +59,9 @@ public class MainLogged extends AppCompatActivity {
                             case R.id.nav_social:
                                 selectedFragment = new PanelSocialFragment();
                                 break;
+                            case R.id.nav_player:
+                                selectedFragment = new ReproductorFragment();
+                                break;
                             default:
                                 selectedFragment = new PrincipalFragment();
                         }

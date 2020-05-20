@@ -80,6 +80,7 @@ public class PanelSocialFragment extends Fragment {
 
         final RequestQueue rq = Volley.newRequestQueue(getActivity().getApplicationContext());
         userLogeado = (UsuarioDto) getActivity().getApplicationContext();
+
         String peticion = URL_API +"/user/get?nick=" + userLogeado.getNick();
 
         // Creating a JSON Object request
@@ -99,7 +100,7 @@ public class PanelSocialFragment extends Fragment {
                 },
                 new Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) { Log.d("PanelSocialFragment","error"); }
+                    public void onErrorResponse(VolleyError error) { Log.d("PanelSocialFragment",error.toString()); }
                 });
 
         // Adding the string request to the queue
@@ -208,7 +209,7 @@ public class PanelSocialFragment extends Fragment {
                 },
                 new Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) { Log.d("PanelSocialFragment","error"); }
+                    public void onErrorResponse(VolleyError error) { Log.d("PanelSocialFragment",error.toString()); }
                 }) {
             @Override
             public byte[] getBody() {
