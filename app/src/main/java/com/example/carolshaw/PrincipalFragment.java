@@ -105,6 +105,7 @@ public class PrincipalFragment extends Fragment {
     /* Obtiene la información de los albumes a mostrar
      */
     private void obtenerAlbumes() {
+        HttpsTrustManager.allowAllSSL();
         final RequestQueue rq = Volley.newRequestQueue(getActivity().getApplicationContext());
         String urlGet = URL_API + "/album/getByTitulo?titulo=";
         // Creating a JSON Object request
@@ -121,11 +122,13 @@ public class PrincipalFragment extends Fragment {
                                 albumes.add(obj);
 
                                 if (i < 4) {
+                                    Log.d("PrincipalFragment", URL_API + obj.getCaratula());
                                     Picasso.get()
-                                            .load(obj.getCaratula())
+                                            .load("https://3.18.169.143:8443/imagenes/albums/Run%20To%20The%20Hills.jpg")
                                             .resize(250, 250)
                                             .centerCrop()
                                             .into(imagesAlbum.get(i));
+                                    Log.d("PrincipalFragment", "--------------");
                                 }
                                 //albumes.add(album);
                             } catch (JSONException e) {

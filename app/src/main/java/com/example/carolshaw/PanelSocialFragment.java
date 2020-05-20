@@ -42,7 +42,7 @@ public class PanelSocialFragment extends Fragment {
     public ArrayList<Amigo> listAmigos = new ArrayList<>();
     public UsuarioDto userLogeado;
     RecyclerView recycler;
-    private String URL_API="https://3.18.169.143:8443";
+    private String URL_API;
     private FloatingActionButton amigo;
     private ImageView borrarAmigo;
 
@@ -55,6 +55,7 @@ public class PanelSocialFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         amigo= getView().findViewById(R.id.btnAmigo);
+        URL_API = getString(R.string.API);
         //borrarAmigo = recycler.findViewById(R.id.btnBorrarAmigo);
        /* borrarAmigo.setOnClickListener(new View.OnClickListener() {
             @Override
