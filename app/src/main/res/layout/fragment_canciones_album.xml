@@ -8,9 +8,9 @@
 
 
     <ImageView
-        android:id="@+id/caratulaAlbum"
-        android:layout_width="67dp"
-        android:layout_height="72dp"
+        android:id="@+id/album1"
+        android:layout_width="79dp"
+        android:layout_height="76dp"
         android:src="@drawable/ic_launcher_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -27,7 +27,7 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.365"
+        app:layout_constraintHorizontal_bias="0.458"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.107"

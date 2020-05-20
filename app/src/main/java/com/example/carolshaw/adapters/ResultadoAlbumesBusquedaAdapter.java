@@ -1,5 +1,6 @@
 package com.example.carolshaw.adapters;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.carolshaw.R;
 import com.example.carolshaw.objetos.Album;
 import com.squareup.picasso.Picasso;
@@ -19,6 +22,7 @@ public class ResultadoAlbumesBusquedaAdapter extends RecyclerView.Adapter<Result
         implements View.OnClickListener{
     ArrayList<Album> array;
     private View.OnClickListener listener;
+    private Context context;
 
     public ResultadoAlbumesBusquedaAdapter(ArrayList<Album> array) {
         this.array = array;
@@ -30,6 +34,7 @@ public class ResultadoAlbumesBusquedaAdapter extends RecyclerView.Adapter<Result
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recycler_view_item_album,null,false);
         view.setOnClickListener(this);
+        context = view.getContext();
         return new ResultadoAlbumesBusquedaAdapter.Datos(view);
     }
 
@@ -70,7 +75,9 @@ public class ResultadoAlbumesBusquedaAdapter extends RecyclerView.Adapter<Result
         public void establecer(Album album) {
             nombre.setText(album.getTitulo());
             artista.setText(album.getArtista());
-            Picasso.get().load(album.getCaratula()).into(imagen);
+            Glide.with(context).load("https://3.18.169.143:8443" + album.getCaratula()).
+                    apply(new RequestOptions().override(220, 220)).
+                    into(imagen);
         }
     }
 }

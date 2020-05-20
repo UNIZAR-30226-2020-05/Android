@@ -4,8 +4,6 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 
-import androidx.annotation.DrawableRes;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -13,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,10 +20,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.carolshaw.objetos.Album;
 import com.example.carolshaw.objetos.Podcast;
 import com.google.gson.Gson;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -122,13 +120,9 @@ public class PrincipalFragment extends Fragment {
                                 albumes.add(obj);
 
                                 if (i < 4) {
-                                    Log.d("PrincipalFragment", URL_API + obj.getCaratula());
-                                    Picasso.get()
-                                            .load("https://3.18.169.143:8443/imagenes/albums/Run%20To%20The%20Hills.jpg")
-                                            .resize(250, 250)
-                                            .centerCrop()
-                                            .into(imagesAlbum.get(i));
-                                    Log.d("PrincipalFragment", "--------------");
+                                    Glide.with(getContext()).load(URL_API + obj.getCaratula()).
+                                    apply(new RequestOptions().override(220, 220)).
+                                    into(imagesAlbum.get(i));
                                 }
                                 //albumes.add(album);
                             } catch (JSONException e) {
@@ -186,7 +180,7 @@ public class PrincipalFragment extends Fragment {
     /* Inicia las variables de Imageviews
      */
     private void iniciarViews() {
-        imagesAlbum.add((ImageView) getView().findViewById(R.id.caratulaAlbum));
+        imagesAlbum.add((ImageView) getView().findViewById(R.id.album1));
         imagesAlbum.add((ImageView) getView().findViewById(R.id.album2));
         imagesAlbum.add((ImageView) getView().findViewById(R.id.album3));
         imagesAlbum.add((ImageView) getView().findViewById(R.id.album4));

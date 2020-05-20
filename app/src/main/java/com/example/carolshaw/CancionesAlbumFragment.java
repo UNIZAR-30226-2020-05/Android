@@ -1,7 +1,6 @@
 package com.example.carolshaw;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
@@ -16,12 +15,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.carolshaw.adapters.CancionesAlbumAdapter;
 import com.example.carolshaw.objetos.Album;
-import com.example.carolshaw.objetos.Cancion;
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
 
 
 public class CancionesAlbumFragment extends Fragment {
@@ -46,7 +44,9 @@ public class CancionesAlbumFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         URL_API = getString(R.string.API);
-
+        Glide.with(getContext()).load(URL_API + album.getCaratula()).
+                apply(new RequestOptions().override(150, 150)).
+                into(caratula);
 
         adapter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,7 +97,7 @@ public class CancionesAlbumFragment extends Fragment {
         recycler = vista.findViewById(R.id.recyclerViewListas);
         recycler.setLayoutManager(new LinearLayoutManager(getContext(),
                 LinearLayoutManager.VERTICAL,false));
-        caratula = vista.findViewById(R.id.caratulaAlbum);
+        caratula = vista.findViewById(R.id.album1);
         titulo = vista.findViewById(R.id.tituloAlbum);
         artistas = vista.findViewById(R.id.artistaAlbum);
 
@@ -105,7 +105,6 @@ public class CancionesAlbumFragment extends Fragment {
         artistas.setText(album.getArtista());
         adapter = new CancionesAlbumAdapter(album.getCanciones());
         recycler.setAdapter(adapter);
-        Picasso.get().load(album.getCaratula()).into(caratula);
         return vista;
     }
 

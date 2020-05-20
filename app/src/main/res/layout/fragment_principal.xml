@@ -28,7 +28,7 @@
                 android:layout_height="734dp">
 
                 <ImageView
-                    android:id="@+id/caratulaAlbum"
+                    android:id="@+id/album1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="48dp"
@@ -56,7 +56,7 @@
                     app:layout_constraintEnd_toStartOf="@+id/album2"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/caratulaAlbum" />
+                    app:layout_constraintTop_toBottomOf="@+id/album1" />
 
                 <ImageView
                     android:id="@+id/album4"

@@ -32,11 +32,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ResultadoArtistaBusquedaFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class ResultadoArtistaBusquedaFragment extends Fragment {
     private static final String ARG_PARAM1 = "artistas";
 
