@@ -42,8 +42,7 @@ public class PanelSocialFragment extends Fragment {
     public ArrayList<Amigo> listAmigos = new ArrayList<>();
     public UsuarioDto userLogeado;
     RecyclerView recycler;
-    private String URL_API= "http://3.22.247.114:8080";
-
+    private String URL_API="https://3.18.169.143:8443";
     private FloatingActionButton amigo;
     private ImageView borrarAmigo;
 
