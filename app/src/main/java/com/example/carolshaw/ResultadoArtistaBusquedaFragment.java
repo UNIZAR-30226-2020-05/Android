@@ -37,7 +37,7 @@ public class ResultadoArtistaBusquedaFragment extends Fragment {
     private static final String ARG_PARAM1 = "artistas";
 
     private static ArrayList<Artista> artistasArray;
-    private static ArrayList<Album> albumesArray = new ArrayList<Album>();
+    private static ArrayList<Album> albumesArray;
 
     private String URL_API;
 
@@ -78,11 +78,13 @@ public class ResultadoArtistaBusquedaFragment extends Fragment {
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
+                        albumesArray = new ArrayList<Album>();
                         for (int i = 0; i < response.length(); i++) {
                             try {
                                 Gson gson = new Gson();
                                 Album obj = gson.fromJson(response.getJSONObject(i).toString(), Album.class);
                                 albumesArray.add(obj);
+                                Log.d("ResultadoArtista",String.valueOf(i));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
