@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -13,7 +14,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.content.ClipboardManager;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -22,59 +22,61 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.carolshaw.adapters.ListaCancionesAdapter;
 import com.example.carolshaw.adapters.ResultadoCancionesBusquedaAdapter;
+import com.example.carolshaw.adapters.ResultadoPodcastsBusquedaAdapter;
 import com.example.carolshaw.objetos.Cancion;
+import com.example.carolshaw.objetos.Podcast;
 import com.example.carolshaw.objetos.UsuarioDto;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class CancionesListaActivity extends AppCompatActivity {
+public class PodcastListaActivity extends AppCompatActivity {
 
-    private UsuarioDto usuarioLog;
-    private ArrayList<Cancion> canciones = null;
+    private ArrayList<Podcast> podcasts = null;
     private String nombreLista;
     private TextView tituloVista;
     private ImageView botonBorrar;
     private TextView copiarLista;
     private RecyclerView recycler;
-    private ResultadoCancionesBusquedaAdapter adapter;
+    private ResultadoPodcastsBusquedaAdapter adapter;
     private String URL_API;
     private int idLista;
+    private UsuarioDto usuarioLog;
     private int indiceLista;
-    private boolean perteneceUsuario = false;
+    private boolean perteneceUsuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_canciones_lista);
-        usuarioLog = (UsuarioDto) getApplicationContext();
+        setContentView(R.layout.activity_podcast_lista);
         tituloVista = findViewById(R.id.tituloLista);
         botonBorrar = findViewById(R.id.btnBorrarLista);
         copiarLista = findViewById(R.id.codigoLista);
-        recycler = findViewById(R.id.recyclerViewCanciones);
+        recycler = findViewById(R.id.recyclerViewPodcasts);
         URL_API = getString(R.string.API);
         usuarioLog = (UsuarioDto) getApplicationContext();
+
         Bundle b = getIntent().getExtras();
         if (b != null) {
-            canciones = (ArrayList<Cancion>) b.getSerializable("canciones");
+            podcasts = (ArrayList<Podcast>) b.getSerializable("podcasts");
             nombreLista = b.getString("nombre");
             idLista = b.getInt("idLista");
             copiarLista.setText(String.valueOf(idLista));
             tituloVista.setText(nombreLista);
-            adapter = new ResultadoCancionesBusquedaAdapter(canciones);
-            recycler.setLayoutManager(new LinearLayoutManager(CancionesListaActivity.this,
+            adapter = new ResultadoPodcastsBusquedaAdapter(podcasts);
+            recycler.setLayoutManager(new LinearLayoutManager(PodcastListaActivity.this,
                     LinearLayoutManager.VERTICAL,false));
             recycler.setAdapter(adapter);
-            for (int i = 0; i < usuarioLog.getLista_cancion().size(); i++) {
-                if(usuarioLog.getLista_cancion().get(i).getId() == idLista){
+            for (int i = 0; i < usuarioLog.getLista_podcast().size(); i++) {
+                if(usuarioLog.getLista_podcast().get(i).getId() == idLista){
                     perteneceUsuario = true;
                     indiceLista = i;
                 }
             }
         }
+
         if(perteneceUsuario){
             //Evita que se borre si es el de favoritos
             if (nombreLista.equals("Favoritos")) {
@@ -91,7 +93,6 @@ public class CancionesListaActivity extends AppCompatActivity {
             botonBorrar.setVisibility(View.GONE);
         }
 
-
         copiarLista.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,15 +106,14 @@ public class CancionesListaActivity extends AppCompatActivity {
 
     private void borrarLista() {
         final RequestQueue rq = Volley.newRequestQueue(getApplicationContext());
-        String url = URL_API + "/listaCancion/delete/" + idLista;
+        String url = URL_API + "/listaPodcast/delete/" + idLista;
 
         // Creating a JSON Object request
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.DELETE, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("CancionesListaActivity",response.toString());
-                        usuarioLog.deleteLista_cancion(indiceLista);
+                        usuarioLog.deleteLista_podcast(indiceLista);
                         finish();
                         //startActivity(new Intent(CancionesListaActivity.this, ListaCancionesActivity.class));
                     }
@@ -121,8 +121,7 @@ public class CancionesListaActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d("CancionesListaActivity","error: " + error.toString());
-                        usuarioLog.deleteLista_cancion(indiceLista);
+                        usuarioLog.deleteLista_podcast(indiceLista);
                         finish();
                         //startActivity(new Intent(CancionesListaActivity.this, ListaCancionesActivity.class));
                     }

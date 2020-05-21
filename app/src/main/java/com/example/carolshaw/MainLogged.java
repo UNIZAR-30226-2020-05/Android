@@ -59,6 +59,9 @@ public class MainLogged extends AppCompatActivity {
                             case R.id.nav_social:
                                 selectedFragment = new PanelSocialFragment();
                                 break;
+                            case R.id.nav_player:
+                                selectedFragment = new ReproductorFragment();
+                                break;
                             default:
                                 selectedFragment = new PrincipalFragment();
                         }
@@ -84,12 +87,7 @@ public class MainLogged extends AppCompatActivity {
                 startActivity(new Intent(MainLogged.this, ListaCancionesActivity.class));
                 return true;
             case R.id.lista_podcast:
-                toast = Toast.makeText(getApplicationContext(), "funcion aun no disponible de podcast", Toast.LENGTH_SHORT);
-                view = toast.getView();
-
-                //Cambiar color del fonto
-                view.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN);
-                toast.show();
+                startActivity(new Intent(MainLogged.this, ListaPodcastsActivity.class));
                 return true;
             case R.id.cerrar_sesion:
                 toast = Toast.makeText(getApplicationContext(), "Adios!", Toast.LENGTH_SHORT);
@@ -98,7 +96,8 @@ public class MainLogged extends AppCompatActivity {
                 //Cambiar color del fonto
                 view.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN);
                 toast.show();
-                startActivity(new Intent(MainLogged.this, LoginActivity.class));
+                //startActivity(new Intent(MainLogged.this, LoginActivity.class));
+                finish();
                 return true;
             default:
                 return true;

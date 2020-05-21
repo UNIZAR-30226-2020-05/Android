@@ -18,6 +18,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.carolshaw.adapters.PanelSocialBusqAdapter;
 import com.example.carolshaw.objetos.Cancion;
 import com.example.carolshaw.objetos.UsuarioDto;
@@ -38,6 +40,7 @@ public class PanelSocialBusqFragment extends Fragment {
     private Integer idUsuLoageado;
     private static ArrayList<UsuarioDto> usuarios;
     private RecyclerView recycler;
+    private ArrayList<String> registroAmigos;
 
     public PanelSocialBusqFragment() {
         // Required empty public constructor
@@ -47,8 +50,6 @@ public class PanelSocialBusqFragment extends Fragment {
     public static PanelSocialBusqFragment newInstance(Serializable usuarioLogeado) {
         PanelSocialBusqFragment fragment = new PanelSocialBusqFragment();
         Bundle args = new Bundle();
-
-
         return fragment;
     }
 
@@ -70,6 +71,8 @@ public class PanelSocialBusqFragment extends Fragment {
             return;
         }
         idUsuLoageado = datosRecuperados.getInt("idUsu");
+        registroAmigos = datosRecuperados.getStringArrayList("listaActual");
+
         Log.d("LLEGA",idUsuLoageado.toString());
     }
 
@@ -98,7 +101,8 @@ public class PanelSocialBusqFragment extends Fragment {
                                 usu.setNombre(response.getJSONObject(i).getString("nombre"));
                                 usu.setApellidos(response.getJSONObject(i).getString("apellidos"));
                                 usu.setNombre_avatar(response.getJSONObject(i).getString("nombre_avatar"));
-                                Log.d("zzz",usu.toString());
+
+                                Log.d("zzz",usu.getNick());
                                 usuarios.add(usu);
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -121,14 +125,25 @@ public class PanelSocialBusqFragment extends Fragment {
         recycler = getView().findViewById(R.id.recyclerAgregarAmigo);
         recycler.setLayoutManager(new LinearLayoutManager(getContext(),
                 LinearLayoutManager.VERTICAL,false));
+        recycler.setItemViewCacheSize(50);
         PanelSocialBusqAdapter adapter = new PanelSocialBusqAdapter(usuarios);
         adapter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { // Que pasa cuando se toca encima del amigo
-                anyadirAmigo(usuarios.get(recycler.getChildAdapterPosition(v)).getId());
-                /*Toast.makeText(getContext(), "Tratar amigo elegido: " +
-                                usuarios.get(recycler.getChildAdapterPosition(v)).getNick(),
-                        Toast.LENGTH_LONG).show();*/
+                if (registroAmigos.contains(usuarios.get(recycler.getChildAdapterPosition(v)).
+                        getNick())) {
+                    Toast.makeText(getContext(), usuarios.get(recycler.getChildAdapterPosition(v)).
+                            getNick()+ " ya está en la lista de amigos", Toast.LENGTH_LONG).show();
+                }
+                else if(usuarios.get(recycler.getChildAdapterPosition(v)).getId()==idUsuLoageado) {
+                    Toast.makeText(getContext(), "No puedes añadirte a ti mismo",
+                            Toast.LENGTH_LONG).show();
+                }
+                else {
+                    registroAmigos.add(usuarios.get(recycler.getChildAdapterPosition(v)).
+                            getNick());
+                    anyadirAmigo(usuarios.get(recycler.getChildAdapterPosition(v)).getId());
+                }
             }
         });
         recycler.setAdapter(adapter);
@@ -151,8 +166,7 @@ public class PanelSocialBusqFragment extends Fragment {
                     @Override
                     public void onResponse(JSONObject response) {
                         //Cuando llega la respuesta de objeto usuario
-                        Toast.makeText(getContext(), "Añadido ", Toast.LENGTH_LONG).show();
-
+                        Toast.makeText(getContext(), "Añadido a la lista", Toast.LENGTH_LONG).show();
                     }
                 },
                 new Response.ErrorListener() {
@@ -169,6 +183,5 @@ public class PanelSocialBusqFragment extends Fragment {
         // Adding the string request to the queue
         rq.add(jsonObjectRequest);
     }
-
 }
 

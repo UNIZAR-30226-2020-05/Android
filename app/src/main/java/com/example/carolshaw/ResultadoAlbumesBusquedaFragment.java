@@ -1,5 +1,6 @@
 package com.example.carolshaw;
 
+import android.media.Image;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.carolshaw.adapters.ResultadoAlbumesBusquedaAdapter;
 import com.example.carolshaw.objetos.Album;
@@ -21,6 +24,8 @@ import java.util.ArrayList;
 
 public class ResultadoAlbumesBusquedaFragment extends Fragment {
     private static final String ARG_PARAM1 = "albumes";
+    private String URL_API;
+    private ResultadoAlbumesBusquedaAdapter adapter;
 
     private static ArrayList<Album> albumesArray;
 
@@ -42,6 +47,12 @@ public class ResultadoAlbumesBusquedaFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        adapter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { // Que pasa cuando se toca encima del amigo
+                mostrarAlbum(albumesArray.get(recycler.getChildAdapterPosition(v)));
+            }
+        });
     }
 
     @Override
@@ -50,7 +61,7 @@ public class ResultadoAlbumesBusquedaFragment extends Fragment {
         if (getArguments() != null) {
             albumesArray = (ArrayList<Album>) getArguments().getSerializable(ARG_PARAM1);
         }
-
+        URL_API = getString(R.string.API);
     }
 
     @Override
@@ -60,8 +71,13 @@ public class ResultadoAlbumesBusquedaFragment extends Fragment {
         recycler = vista.findViewById(R.id.recyclerViewAlbumes);
         recycler.setLayoutManager(new LinearLayoutManager(getContext(),
                 LinearLayoutManager.VERTICAL,false));
-        ResultadoAlbumesBusquedaAdapter adapter = new ResultadoAlbumesBusquedaAdapter(albumesArray);
+        adapter = new ResultadoAlbumesBusquedaAdapter(albumesArray);
         recycler.setAdapter(adapter);
         return vista;
+    }
+
+    private void mostrarAlbum(Album album) {
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                new CancionesAlbumFragment().newInstance(album)).commit();
     }
 }

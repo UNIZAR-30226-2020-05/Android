@@ -43,6 +43,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        HttpsTrustManager.allowAllSSL();
         URL_API = getString(R.string.API);
 
         userRegistration = findViewById(R.id.tvRegister);
@@ -53,8 +54,6 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
                 String urlGet = URL_API + "/user/logIn?nick=" + nick.getText().toString() + "&pass=" +
                         android.util.Base64.encodeToString(contrasena.getText().toString().getBytes(), android.util.Base64.DEFAULT);
                 if(comprobarCamposRellenos()){
@@ -62,7 +61,6 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     informarRellenarDatos();
                 }
-
             }
         });
 
@@ -82,46 +80,11 @@ public class LoginActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("LoginActivity", "exito validar (usuario existente): " + response.toString());
                         //Exito aquí significa que el usuario existía, por tanto no se debe permitir el registro
                         UsuarioDto usuarioLog = (UsuarioDto) getApplicationContext();
                         Gson gson = new Gson();
                         UsuarioDto obj = gson.fromJson(response.toString(), UsuarioDto.class);
                         usuarioLog.setUsuarioDto(obj);
-                        Log.d("nombreuser", usuarioLog.getNombre());
-                            /*usuarioLog.setId(response.getInt("id"));
-                            usuarioLog.setNombre(response.getString("nombre"));
-                            usuarioLog.setApellidos(response.getString("apellidos"));
-                            usuarioLog.setNick(response.getString("nick"));
-                            usuarioLog.setContrasena(response.getString("contrasena"));
-                            usuarioLog.setTipo_user(response.getBoolean("tipo_user"));
-                            usuarioLog.setFecha_nacimiento(response.getString("fecha_nacimiento"));
-                            JSONArray JSONListaCanciones = response.getJSONArray("lista_cancion");
-                            ArrayList<ListaCancion> arrayListaCancion = new ArrayList<ListaCancion>();
-                            for (int i = 0; i < JSONListaCanciones.length(); i++) {
-                                ListaCancion listaCanciones = new ListaCancion();
-                                listaCanciones.setId(JSONListaCanciones.getJSONObject(i).getInt("id"));
-                                listaCanciones.setId_usuario(JSONListaCanciones.getJSONObject(i).getInt("id_usuario"));
-                                listaCanciones.setNombre(JSONListaCanciones.getJSONObject(i).getString("nombre"));
-                                JSONArray JSONcanciones = JSONListaCanciones.getJSONObject(i).getJSONArray("canciones");
-                                for (int j = 0; i < JSONcanciones.length(); i++) {
-                                    Gson gson = new Gson();
-                                    Cancion obj = gson.fromJson(JSONcanciones.getJSONObject(j).toString(), Cancion.class);
-                                    listaCanciones.addCancion(obj);
-                                }
-                                arrayListaCancion.add(listaCanciones);
-                            }
-                            usuarioLog.setLista_cancion(arrayListaCancion);
-                            if(!response.isNull("id_ultima_reproduccion")){
-                                usuarioLog.setId_ultima_reproduccion(Integer.parseInt(response.getString("id_ultima_reproduccion")));
-                            }
-                            if(!response.isNull("minuto_ultima_reproduccion")) {
-                                usuarioLog.setMinuto_ultima_reproduccion(response.getInt("minuto_ultima_reproduccion"));
-                            }
-                            if(!response.isNull("tipo_ultima_reproduccion")){
-                                usuarioLog.setTipo_ultima_reproduccion(response.getInt("tipo_ultima_reproduccion"));
-                            }*/
-                        //FALTA POR AÑADIR LISTA_CANCION Y AMIGOS
                         iniciarMainLogged();
                     }
                 },

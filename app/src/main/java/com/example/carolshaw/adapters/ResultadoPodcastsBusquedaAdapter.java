@@ -9,31 +9,31 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.carolshaw.R;
-import com.example.carolshaw.objetos.Cancion;
+import com.example.carolshaw.objetos.Podcast;
 
 import java.util.ArrayList;
 
-public class ResultadoCancionesBusquedaAdapter extends RecyclerView.Adapter<ResultadoCancionesBusquedaAdapter.Datos>
+public class ResultadoPodcastsBusquedaAdapter extends RecyclerView.Adapter<ResultadoPodcastsBusquedaAdapter.Datos>
         implements View.OnClickListener{
 
-    ArrayList<Cancion> array;
+    ArrayList<Podcast> array;
     private View.OnClickListener listener;
 
-    public ResultadoCancionesBusquedaAdapter(ArrayList<Cancion> array) {
+    public ResultadoPodcastsBusquedaAdapter(ArrayList<Podcast> array) {
         this.array = array;
     }
 
     @NonNull
     @Override
-    public ResultadoCancionesBusquedaAdapter.Datos onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ResultadoPodcastsBusquedaAdapter.Datos onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.recycler_view_item_cancion,null,false);
+                .inflate(R.layout.recycler_view_item_podcast,null,false);
         view.setOnClickListener(this);
-        return new ResultadoCancionesBusquedaAdapter.Datos(view);
+        return new ResultadoPodcastsBusquedaAdapter.Datos(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ResultadoCancionesBusquedaAdapter.Datos holder, int position) {
+    public void onBindViewHolder(@NonNull ResultadoPodcastsBusquedaAdapter.Datos holder, int position) {
         holder.establecer(array.get(position));
     }
 
@@ -56,20 +56,20 @@ public class ResultadoCancionesBusquedaAdapter extends RecyclerView.Adapter<Resu
     public class Datos extends RecyclerView.ViewHolder {
 
         TextView nombre;
-        TextView album;
+        TextView autor;
         TextView duracion;
 
         public Datos(@NonNull View itemView) {
             super(itemView);
-            nombre = itemView.findViewById(R.id.tituloCancion);
-            album = itemView.findViewById(R.id.albumCancion);
-            duracion = itemView.findViewById(R.id.duracionCancion);
+            nombre = itemView.findViewById(R.id.tituloPodcast);
+            autor = itemView.findViewById(R.id.autorPodcast);
+            duracion = itemView.findViewById(R.id.duracionPodcast);
         }
 
-        public void establecer(Cancion cancion) {
-            nombre.setText(cancion.getName());
-            album.setText(cancion.getAlbum());
-            duracion.setText(cancion.getDuracionMMSS());
+        public void establecer(Podcast podcast) {
+            nombre.setText(podcast.getName());
+            autor.setText(podcast.getArtista());
+            duracion.setText(podcast.getDuracionMMSS());
         }
     }
 }

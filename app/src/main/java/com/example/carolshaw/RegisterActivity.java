@@ -187,42 +187,7 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         Log.d("RegisterActivity", "exito: " + response.toString());
                         Toast.makeText(RegisterActivity.this, "Registro realizado correctamente", Toast.LENGTH_SHORT).show();
-                        try {
-                            UsuarioDto usuarioLog = (UsuarioDto) getApplicationContext();
-                            usuarioLog.setId(response.getInt("id"));
-                            usuarioLog.setNombre(response.getString("nombre"));
-                            usuarioLog.setApellidos(response.getString("apellidos"));
-                            usuarioLog.setNick(response.getString("nick"));
-                            usuarioLog.setContrasena(response.getString("contrasena"));
-                            usuarioLog.setTipo_user(response.getBoolean("tipo_user"));
-                            usuarioLog.setFecha_nacimiento(response.getString("fecha_nacimiento"));
-                            JSONArray JSONListaCanciones = response.getJSONArray("lista_cancion");
-                            for (int i = 0; i < JSONListaCanciones.length(); i++) {
-                                ListaCancion listaCanciones = new ListaCancion();
-                                listaCanciones.setId(JSONListaCanciones.getJSONObject(i).getInt("id"));
-                                listaCanciones.setId_usuario(JSONListaCanciones.getJSONObject(i).getInt("id_usuario"));
-                                listaCanciones.setNombre(JSONListaCanciones.getJSONObject(i).getString("nombre"));
-                                JSONArray JSONcanciones = JSONListaCanciones.getJSONObject(i).getJSONArray("canciones");
-                                for (int j = 0; i < JSONcanciones.length(); i++) {
-                                    Gson gson = new Gson();
-                                    Cancion obj = gson.fromJson(JSONcanciones.getJSONObject(j).toString(), Cancion.class);
-                                    listaCanciones.addCancion(obj);
-                                }
-                            }
-                            if(!response.isNull("id_ultima_reproduccion")){
-                                usuarioLog.setId_ultima_reproduccion(Integer.parseInt(response.getString("id_ultima_reproduccion")));
-                            }
-                            if(!response.isNull("minuto_ultima_reproduccion")) {
-                                usuarioLog.setMinuto_ultima_reproduccion(response.getInt("minuto_ultima_reproduccion"));
-                            }
-                            if(!response.isNull("tipo_ultima_reproduccion")){
-                                usuarioLog.setTipo_ultima_reproduccion(response.getInt("tipo_ultima_reproduccion"));
-                            }
-                            //FALTA POR AÑADIR LISTA_CANCION Y AMIGOS
-                            startActivity(new Intent(RegisterActivity.this, MainLogged.class));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                     }
                 },
                 new Response.ErrorListener() {

@@ -1,24 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="match_parent"
+    tools:context=".PodcastListaActivity">
 
     <TextView
         android:id="@+id/tituloLista"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="20dp"
         android:gravity="center"
         android:text="tituloLista"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerViewCanciones"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.134"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerViewPodcasts"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
@@ -36,6 +34,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/tituloLista"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tituloLista"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/trash"
         tools:visibility="visible" />
 
@@ -49,24 +48,24 @@
         android:text="#Código lista"
         android:textSize="17sp"
         android:textStyle="italic"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerViewCanciones"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerViewPodcasts"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.127"
+        app:layout_constraintHorizontal_bias="0.076"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tituloLista"
-        app:layout_constraintVertical_bias="0.464" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewCanciones"
-        android:layout_width="412dp"
-        android:layout_height="403dp"
-        android:layout_marginTop="122dp"
+        android:id="@+id/recyclerViewPodcasts"
+        android:layout_width="419dp"
+        android:layout_height="485dp"
+        android:layout_marginTop="120dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.058"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        tools:listitem="@layout/recycler_view_item_cancion" />
+        tools:listitem="@layout/recycler_view_item_podcast" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

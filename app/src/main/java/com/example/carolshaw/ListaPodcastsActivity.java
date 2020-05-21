@@ -21,19 +21,21 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.carolshaw.adapters.ListaCancionesAdapter;
+import com.example.carolshaw.adapters.ListaPodcastsAdapter;
 import com.example.carolshaw.objetos.ListaCancion;
+import com.example.carolshaw.objetos.ListaPodcast;
 import com.example.carolshaw.objetos.UsuarioDto;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ListaCancionesActivity extends AppCompatActivity {
+public class ListaPodcastsActivity extends AppCompatActivity {
 
     private UsuarioDto usuarioLog;
     private String URL_API;
     private String nombreLista = "";
     private RecyclerView recycler;
-    private ListaCancionesAdapter adapter;
+    private ListaPodcastsAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,19 +44,20 @@ public class ListaCancionesActivity extends AppCompatActivity {
         usuarioLog = (UsuarioDto) getApplicationContext();
         URL_API = getString(R.string.API);
         recycler = findViewById(R.id.recyclerViewListas);
-        adapter = new ListaCancionesAdapter(usuarioLog.getLista_cancion());
+        adapter = new ListaPodcastsAdapter(usuarioLog.getLista_podcast());
 
         adapter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ListaCancionesActivity.this, CancionesListaActivity.class);
+                Intent intent = new Intent(ListaPodcastsActivity.this, PodcastListaActivity.class);
                 Bundle b = new Bundle();
-                b.putString("nombre", usuarioLog.getLista_cancion().get(
+                b.putString("nombre", usuarioLog.getLista_podcast().get(
                         recycler.getChildAdapterPosition(v)).getNombre());
-                b.putInt("idLista", usuarioLog.getLista_cancion().get(
+                b.putInt("idLista", usuarioLog.getLista_podcast().get(
                         recycler.getChildAdapterPosition(v)).getId());
-                b.putSerializable("canciones", usuarioLog.getLista_cancion().get(
-                        recycler.getChildAdapterPosition(v)).getCanciones());
+                b.putInt("indiceLista", recycler.getChildAdapterPosition(v));
+                b.putSerializable("podcasts", usuarioLog.getLista_podcast().get(
+                        recycler.getChildAdapterPosition(v)).getPodcasts());
 
                 intent.putExtras(b);
                 finish();
@@ -66,7 +69,7 @@ public class ListaCancionesActivity extends AppCompatActivity {
 
     //Carga las listas del usuario
     private void cargarListas() {
-        recycler.setLayoutManager(new LinearLayoutManager(ListaCancionesActivity.this,
+        recycler.setLayoutManager(new LinearLayoutManager(ListaPodcastsActivity.this,
                 LinearLayoutManager.VERTICAL,false));
         recycler.setAdapter(adapter);
     }
@@ -103,7 +106,7 @@ public class ListaCancionesActivity extends AppCompatActivity {
     private void crearNuevaLista() {
         final RequestQueue rq = Volley.newRequestQueue(getApplicationContext());
         JSONObject params = new JSONObject();
-        String urlPost = URL_API + "/listaCancion/create";
+        String urlPost = URL_API + "/listaPodcast/create";
         // Adding parameters to request
         try {
             params.put("id_usuario", usuarioLog.getId());
@@ -116,11 +119,11 @@ public class ListaCancionesActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("ListaCancionesActivity", "response: " + response.toString());
+                        Log.d("ListaPodcastsActivity", "response: " + response.toString());
                         try {
-                            ListaCancion listaCancion = new ListaCancion(response.getInt("id"),
+                            ListaPodcast listaPodcast = new ListaPodcast(response.getInt("id"),
                                     response.getInt("id_usuario"),response.getString("nombre"));
-                            usuarioLog.addLista_cancion(listaCancion);
+                            usuarioLog.addLista_podcast(listaPodcast);
                             cargarListas();
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -130,8 +133,8 @@ public class ListaCancionesActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d("ListaCancionesActivity", "error: " + error.toString());
-                        Toast.makeText(ListaCancionesActivity.this, "Error al cargar las listas de canción", Toast.LENGTH_SHORT).show();
+                        Log.d("ListaPodcastsActivity", "error: " + error.toString());
+                        Toast.makeText(ListaPodcastsActivity.this, "Error al cargar las listas de canción", Toast.LENGTH_SHORT).show();
                     }
                 });
 

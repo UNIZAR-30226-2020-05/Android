@@ -13,7 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Reproductor"></activity>
+        <activity android:name=".PodcastListaActivity"></activity>
+        <activity android:name=".ListaPodcastsActivity" />
         <activity android:name=".CancionesListaActivity" />
         <activity android:name=".ListaCancionesActivity" />
         <activity android:name=".BusqAmigoActivity" />
