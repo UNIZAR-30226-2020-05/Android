@@ -18,6 +18,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.carolshaw.adapters.PanelSocialBusqAdapter;
 import com.example.carolshaw.objetos.Cancion;
 import com.example.carolshaw.objetos.UsuarioDto;
@@ -99,6 +101,7 @@ public class PanelSocialBusqFragment extends Fragment {
                                 usu.setNombre(response.getJSONObject(i).getString("nombre"));
                                 usu.setApellidos(response.getJSONObject(i).getString("apellidos"));
                                 usu.setNombre_avatar(response.getJSONObject(i).getString("nombre_avatar"));
+
                                 Log.d("zzz",usu.getNick());
                                 usuarios.add(usu);
                             } catch (JSONException e) {

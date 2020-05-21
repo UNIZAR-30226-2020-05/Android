@@ -1,5 +1,6 @@
 package com.example.carolshaw.adapters;
 
+import android.media.Image;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,8 +22,6 @@ import java.util.ArrayList;
 public class PanelSocialAdapter extends RecyclerView.Adapter<PanelSocialAdapter.Datos>
 implements View.OnClickListener {
 
-    //private View.OnClickListener listener;
-
     ArrayList<Amigo> listAmigos;
     private OnItemClickListener mListener;
     PanelSocialFragment fragLocal;
@@ -30,6 +29,7 @@ implements View.OnClickListener {
     Amigo amigo;
 
     public ImageView borrar;
+    ImageView fotoPerf;
 
     public PanelSocialAdapter(ArrayList<Amigo> listAmigos, PanelSocialFragment frag) {
         this.listAmigos = listAmigos;
@@ -42,11 +42,6 @@ implements View.OnClickListener {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recycler_view_item_amigo,null,false);
         view.setOnClickListener(this);
-       // btnBorrarAmigo = btnBorrarAmigo.findViewById(R.id.btnBorrarAmigo);
-       // btnBorrarAmigo.setOnClickListener(listener);
-
-        //imagen.setTag(this.position);
-
         return new Datos(view, mListener);
     }
 
@@ -77,9 +72,7 @@ implements View.OnClickListener {
             view.setOnClickListener(this);
         }
 
-        public void onClick(View v) {
-            Log.d("A VER", "ES EL ");
-        }
+        public void onClick(View v) {}
     }
 
     public interface OnItemClickListener {
@@ -98,20 +91,14 @@ implements View.OnClickListener {
         return position;
     }
 
-    /*@Override
-    public void onClick(View v) {
-        if (listener != null) {
-            listener.onClick(v);
-        }
-    }
-*/
+
 
     public class Datos extends RecyclerView.ViewHolder {
 
         TextView dato1;
         TextView dato2;
         TextView dato3;
-        public ImageView imagen;
+
 
         public Datos(@NonNull final View itemView, final OnItemClickListener listener) {
             super(itemView);
@@ -119,6 +106,7 @@ implements View.OnClickListener {
             dato1 = (TextView) itemView.findViewById(R.id.nickAm);
             dato2 = (TextView) itemView.findViewById(R.id.nomAm);
             dato3 = (TextView) itemView.findViewById(R.id.ultimaRepr);
+            fotoPerf = (ImageView) itemView.findViewById(R.id.fotoPerfil);
             borrar = (ImageView) itemView.findViewById(R.id.btnBorrarAmigo);
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -127,8 +115,6 @@ implements View.OnClickListener {
                     if (position != RecyclerView.NO_POSITION) {
                         listener.onItemClick(position);
                     }
-                    Log.d("ASDASD","SISISIS ");
-                    //fragLocal.eliminarAmigo(listAmigos.get(parent.).getId());
                 }
             });
 
@@ -138,8 +124,6 @@ implements View.OnClickListener {
                         if (position != RecyclerView.NO_POSITION) {
                             listener.onDeleteClick(position);
                         }
-                    Log.d("ASDASD","SISISIS ");
-                    //fragLocal.eliminarAmigo(listAmigos.get(parent.).getId());
                 }
             });
 
@@ -147,8 +131,17 @@ implements View.OnClickListener {
         }
 
         public void establecer(Amigo amigo) {
+
             dato1.setText(amigo.getNick());
             dato2.setText(amigo.getNombre()+" "+ amigo.getApellidos());
+            char idA = amigo.getAvatar().charAt(0);
+            if(idA=='1') fotoPerf.setImageResource(R.drawable.perfil1);
+            else if (idA=='2') fotoPerf.setImageResource(R.drawable.perfil2);
+            else if (idA=='3') fotoPerf.setImageResource(R.drawable.perfil3);
+            else if (idA=='4') fotoPerf.setImageResource(R.drawable.perfil4);
+            else if (idA=='5') fotoPerf.setImageResource(R.drawable.perfil5);
+            else if (idA=='6') fotoPerf.setImageResource(R.drawable.perfil6);
+
             if (!amigo.getUltimaCancion().equals("") && !amigo.getArtistaUltimaCancion().equals("")) {
                 dato3.setText(amigo.getUltimaCancion()+" - "+ amigo.getArtistaUltimaCancion());
             }

@@ -72,7 +72,6 @@ public class PanelSocialFragment extends Fragment {
         amigo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("PULSA","BOTONTILLO");
                 cambiarAbusquedaAmig();
             }
         });

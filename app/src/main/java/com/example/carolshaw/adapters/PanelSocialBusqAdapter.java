@@ -1,5 +1,6 @@
 package com.example.carolshaw.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,6 +86,15 @@ implements View.OnClickListener {
            else {
                 dat1.setText(usu.getNick());
                 dat2.setText((usu.getNombre()+ " "+ usu.getApellidos()));
+                char idA = usu.getNombre_avatar().charAt(0);
+                if(idA=='1') fotoPerfil.setImageResource(R.drawable.perfil1);
+                else if (idA=='2') fotoPerfil.setImageResource(R.drawable.perfil2);
+                else if (idA=='3') fotoPerfil.setImageResource(R.drawable.perfil3);
+                else if (idA=='4') fotoPerfil.setImageResource(R.drawable.perfil4);
+                else if (idA=='5') fotoPerfil.setImageResource(R.drawable.perfil5);
+                else if (idA=='6') fotoPerfil.setImageResource(R.drawable.perfil6);
+
+
                 /*
                 if ((usu.getNombre_avatar().equals("1"))) { fotoPerfil.setImageResource(R.drawable.perfil1); }
                 else if ((usu.getNombre_avatar().equals("2"))) { fotoPerfil.setImageResource(R.drawable.perfil2); }
