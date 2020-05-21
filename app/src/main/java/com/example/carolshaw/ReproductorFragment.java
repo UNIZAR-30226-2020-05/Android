@@ -2,11 +2,14 @@ package com.example.carolshaw;
 
 import androidx.fragment.app.Fragment;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
-import android.util.Log;
+import android.net.wifi.WifiManager;
+import android.os.Handler;
+import android.os.PowerManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,44 +18,35 @@ import android.widget.ImageView;
 import android.widget.MediaController.MediaPlayerControl;
 
 import android.os.Bundle;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.carolshaw.objetos.Cancion;
 import com.example.carolshaw.objetos.ListaCancion;
 import com.example.carolshaw.objetos.ListaPodcast;
 import com.example.carolshaw.objetos.Podcast;
-import com.example.carolshaw.objetos.UsuarioDto;
-import com.google.gson.Gson;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static android.media.MediaPlayer.create;
 
-public class ReproductorFragment extends Fragment implements MediaPlayerControl {
+public class ReproductorFragment extends Fragment {
 
     public static final int TIPO_CANCION = 0;
     public static final int TIPO_PODCAST = 1;
     private static final String LISTA = "lista";
     private static final String TIPO = "tipo";
 
-    String URL_API;
-    ImageButton play_pause;
-    MediaPlayer mp;
-    ImageView iv; //foto de portada
-    int posicion = 0; //indice del vector
-    int tipo;
+    private String URL_API;
+    private ImageButton play_pause;
+    private MediaPlayer mediaPlayer;
+    private ImageView caratula;
+    private SeekBar seekBar;
+
+    private Runnable runnable;
+    private int posicion = 0; //indice del vector
+    private int tipo;
 
     ListaCancion listaCancion;
     ArrayList<Cancion> canciones = new ArrayList<Cancion>();
@@ -64,89 +58,57 @@ public class ReproductorFragment extends Fragment implements MediaPlayerControl 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         URL_API = getString(R.string.API);
-        cargarPodcasts();
-        /*if (getArguments() != null) {
-            tipo = getArguments().getInt(TIPO);
-            if(tipo == TIPO_CANCION){
-                listaCancion = (ListaCancion) getArguments().getSerializable(LISTA);
-                canciones = listaCancion.getCanciones();
-                cargarCanciones();
-            } else if (tipo == TIPO_PODCAST) {
-                listaPodcast = (ListaPodcast) getArguments().getSerializable(LISTA);
-                podcasts = listaPodcast.getPodcasts();
-                cargarPodcasts();
-            } else {
-                informar("Error desconocido");
-            }
+        //TODO: Mover el mediaPlayer a un 'servicio' para que pueda ejecutarse en segundo plano o con new Thread(obj).start
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        try {
+            mediaPlayer.setDataSource(URL_API + "/song/play/Run To The Hills");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        mediaPlayer.setWakeMode(getContext(), PowerManager.PARTIAL_WAKE_LOCK); //Evita que el CPU se apague por ahorro de energía
+        WifiManager.WifiLock wifiLock = ((WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE))
+                .createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock"); //Evita que el wifi se apague por ahorro de energía
+        //wifiLock.release(); cuando se haga stop()
 
-        }*/
+        wifiLock.acquire();
+        mediaPlayer.prepareAsync();
+        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+
+                mediaPlayer.start();
+                actualizarSeekBar();
+            }
+        });
 
 
     }
 
-    /* NO FUNCIONA */
-    private void cargarPodcasts() {
-        final RequestQueue rq = Volley.newRequestQueue(getActivity().getApplicationContext());
-        String peticion = URL_API + "/podcast/play/The News - 11.05.20";
-
-        StringRequest postRequest = new StringRequest(Request.Method.GET, peticion,
-                new Response.Listener<String>()
-                {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.d("Reproductor", "respuesta: " + response);
-                    }
-                },
-                new Response.ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // error
-                        Log.d("Reproductor", error.toString());
-                    }
+    private void actualizarSeekBar() {
+        int duracionCancion = 231; //en segundos
+        seekBar.setMax(duracionCancion*1000);
+        seekBar.setProgress(mediaPlayer.getCurrentPosition(),true);
+        if (mediaPlayer.isPlaying()) {
+            runnable = new Runnable() {
+                @Override
+                public void run() {
+                    actualizarSeekBar();
                 }
-        );
-        rq.add(postRequest);
-    }
+            };
 
-    private void cargarCanciones() {
-        final RequestQueue rq = Volley.newRequestQueue(getActivity().getApplicationContext());
-        String peticion = URL_API + "/podcast/play/Run To The Hills";
-
-        StringRequest postRequest = new StringRequest(Request.Method.GET, peticion,
-                new Response.Listener<String>()
-                {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.d("Reproductor", "respuesta: " + response);
-                        crearListaMediaPlayer(response);
-                    }
-                },
-                new Response.ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // error
-                        Log.d("Reproductor", error.toString());
-                    }
-                }
-        );
-        rq.add(postRequest);
-    }
-
-    private void crearListaMediaPlayer( String url) {
-        Uri myUri = Uri.parse(url);
-        MediaPlayer aux = MediaPlayer.create(this.getContext(), myUri);
-        listaStreaming.add(aux);
+            Handler handler = new Handler();
+            handler.postDelayed(runnable,1000);
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View vista = inflater.inflate(R.layout.activity_reproductor, container, false);
+        View vista = inflater.inflate(R.layout.fragment_reproductor, container, false);
         play_pause = vista.findViewById(R.id.play);
-        iv = vista.findViewById(R.id.imageView2);
+        caratula = vista.findViewById(R.id.imageView2);
+        seekBar = vista.findViewById(R.id.seekBar);
         return vista;
     }
 
@@ -238,60 +200,5 @@ public class ReproductorFragment extends Fragment implements MediaPlayerControl 
         //Cambiar color del fonto
         view.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN);
         toast.show();
-    }
-
-    @Override
-    public void start() {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public int getDuration() {
-        return 0;
-    }
-
-    @Override
-    public int getCurrentPosition() {
-        return 0;
-    }
-
-    @Override
-    public void seekTo(int pos) {
-
-    }
-
-    @Override
-    public boolean isPlaying() {
-        return false;
-    }
-
-    @Override
-    public int getBufferPercentage() {
-        return 0;
-    }
-
-    @Override
-    public boolean canPause() {
-        return false;
-    }
-
-    @Override
-    public boolean canSeekBackward() {
-        return false;
-    }
-
-    @Override
-    public boolean canSeekForward() {
-        return false;
-    }
-
-    @Override
-    public int getAudioSessionId() {
-        return 0;
     }
 }

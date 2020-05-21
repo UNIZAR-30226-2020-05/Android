@@ -118,13 +118,7 @@ public class PrincipalFragment extends Fragment {
                                 Gson gson = new Gson();
                                 Album obj = gson.fromJson(response.getJSONObject(i).toString(), Album.class);
                                 albumes.add(obj);
-
-                                if (i < 4) {
-                                    Glide.with(getContext()).load(URL_API + obj.getCaratula()).
-                                    apply(new RequestOptions().override(220, 220)).
-                                    into(imagesAlbum.get(i));
-                                }
-                                //albumes.add(album);
+                                mostrarAlbumes();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -140,6 +134,16 @@ public class PrincipalFragment extends Fragment {
 
         // Adding the string request to the queue
         rq.add(jsonArrayRequest);
+    }
+
+    private void mostrarAlbumes() {
+        if(isAdded()) {
+            for (int i = 0; i < 4 && i < albumes.size(); i++) {
+                Glide.with(getContext()).load(URL_API + albumes.get(i).getCaratula()).
+                        apply(new RequestOptions().override(220, 220)).
+                        into(imagesAlbum.get(i));
+            }
+        }
     }
 
     /* Obtiene la información de los podcasts a mostrar
