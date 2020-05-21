@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +37,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import static android.media.MediaPlayer.create;
 
 public class ReproductorFragment extends Fragment implements MediaPlayerControl {
 
@@ -77,9 +80,6 @@ public class ReproductorFragment extends Fragment implements MediaPlayerControl 
             }
         }
 
-        for (int i = 0; i < canciones.size(); i++) {
-            //llamar al back, distinguir cancion/podcast
-            listaStreaming.get(i) = MediaPlayer.create(this, canciones.cancio.url);
         }*/
 
 
@@ -120,7 +120,7 @@ public class ReproductorFragment extends Fragment implements MediaPlayerControl 
                     @Override
                     public void onResponse(String response) {
                         Log.d("Reproductor", "respuesta: " + response);
-                        // guardar cancion recibida funcion(response);
+                        crearListaMediaPlayer(response);
                     }
                 },
                 new Response.ErrorListener()
@@ -133,6 +133,12 @@ public class ReproductorFragment extends Fragment implements MediaPlayerControl 
                 }
         );
         rq.add(postRequest);
+    }
+
+    private void crearListaMediaPlayer( String url) {
+        Uri myUri = Uri.parse(url);
+        MediaPlayer aux = MediaPlayer.create(this.getContext(), myUri);
+        listaStreaming.add(aux);
     }
 
     @Override
@@ -158,19 +164,19 @@ public class ReproductorFragment extends Fragment implements MediaPlayerControl 
     }
 /*
     public void PlayPause(View view){
-        if(vector[posicion].isPlaying()){ //verifica que cancion del vector esta sonando
-            vector[posicion].pause();
+        if(listaStreaming[posicion].isPlaying()){ //verifica que cancion del vector esta sonando
+            listaStreaming[posicion].pause();
             play_pause.setBackgroundResource(R.drawable.play);
-            Toast.makeText(this,"Pausa",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this.getContext(),"Pausa",Toast.LENGTH_SHORT).show();
         }
         else{
             vector[posicion].start();
             play_pause.setBackgroundResource(R.drawable.pause);
-            Toast.makeText(this,"Play",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this.getContext(),"Play",Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void Siguiente(View view){
+   /* public void Siguiente(View view){
         if(posicion < vector.length-1){
             if(vector[posicion].isPlaying()){
                 vector[posicion].stop();
