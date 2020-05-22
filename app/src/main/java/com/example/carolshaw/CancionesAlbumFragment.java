@@ -1,6 +1,7 @@
 package com.example.carolshaw;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
@@ -19,7 +20,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.carolshaw.adapters.CancionesAlbumAdapter;
 import com.example.carolshaw.objetos.Album;
+import com.example.carolshaw.objetos.Cancion;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 
 public class CancionesAlbumFragment extends Fragment {
@@ -51,7 +55,8 @@ public class CancionesAlbumFragment extends Fragment {
         adapter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                opcionesClick(album.getCanciones().get(recycler.getChildAdapterPosition(v)).getId());
+                opcionesClick(album.getCanciones().get(recycler.getChildAdapterPosition(v)).getId(),
+                        album.getCanciones().get(recycler.getChildAdapterPosition(v)));
             }
         });
 
@@ -66,7 +71,13 @@ public class CancionesAlbumFragment extends Fragment {
         reproducirAlbum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { // Que pasa cuando se toca encima del amigo
-                Toast.makeText(getContext(), "reproducir album entero", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getContext(), MainLogged.class);
+                Bundle b = new Bundle();
+                ArrayList<Cancion> cancionesReproductor = new ArrayList<Cancion>(album.getCanciones()); //Añade la cancion correspondiente
+                b.putSerializable("canciones", cancionesReproductor);
+                b.putInt("tipo",ReproductorFragment.TIPO_CANCION);
+                intent.putExtras(b);
+                startActivity(intent);
             }
         });
     }
@@ -108,7 +119,7 @@ public class CancionesAlbumFragment extends Fragment {
         return vista;
     }
 
-    private void opcionesClick(final int idCancion){
+    private void opcionesClick(final int idCancion, final Cancion cancionReproductor){
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Elige una opción");
 
@@ -116,7 +127,14 @@ public class CancionesAlbumFragment extends Fragment {
         builder.setPositiveButton("Reproducir", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(getContext(), "Falta reproducir cancion", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getContext(), MainLogged.class);
+                Bundle b = new Bundle();
+                ArrayList<Cancion> cancionesReproductor = new ArrayList<Cancion>();
+                cancionesReproductor.add(cancionReproductor); //Añade la cancion correspondiente
+                b.putSerializable("canciones", cancionesReproductor);
+                b.putInt("tipo",ReproductorFragment.TIPO_CANCION);
+                intent.putExtras(b);
+                startActivity(intent);
             }
         });
         builder.setNegativeButton("Añadir a lista", new DialogInterface.OnClickListener() {

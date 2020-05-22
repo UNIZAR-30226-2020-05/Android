@@ -131,7 +131,6 @@ public class PodcastListaActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         usuarioLog.deleteLista_podcast(indiceLista);
                         finish();
-                        //startActivity(new Intent(CancionesListaActivity.this, ListaCancionesActivity.class));
                     }
                 },
                 new Response.ErrorListener() {
