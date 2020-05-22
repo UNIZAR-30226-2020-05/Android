@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +38,10 @@ public class ModificarPerfilFragment extends Fragment {
     private TextView confirmarContrasena;
     private Button confirmar;
     private Button borrarUsuario;
+    private ImageView perf1, perf2, perf3, perf4,
+            perf5, perf6;
     private String URL_API;
+    public UsuarioDto userLogeado;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -47,6 +51,49 @@ public class ModificarPerfilFragment extends Fragment {
         confirmarContrasena = getView().findViewById(R.id.confirmarContrasena);
         confirmar = getView().findViewById(R.id.confirmar);
         borrarUsuario = getView().findViewById(R.id.borrar);
+        perf1 = getView().findViewById(R.id.imagenPerfil1);
+        perf2 = getView().findViewById(R.id.imagenPerfil2);
+        perf3 = getView().findViewById(R.id.imagenPerfil3);
+        perf4 = getView().findViewById(R.id.imagenPerfil4);
+        perf5 = getView().findViewById(R.id.imagenPerfil5);
+        perf6 = getView().findViewById(R.id.imagenPerfil6);
+        perf1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cambiarImagen("1.jpg");
+            }
+        });
+        perf2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cambiarImagen("2.jpg");
+            }
+        });
+        perf3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cambiarImagen("3.jpg");
+            }
+        });
+        perf4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cambiarImagen("4.jpg");
+            }
+        });
+        perf5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cambiarImagen("5.jpg");
+            }
+        });
+        perf6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cambiarImagen("6.jpg");
+            }
+        });
+        userLogeado = (UsuarioDto) getActivity().getApplicationContext();
 
         confirmar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,6 +108,41 @@ public class ModificarPerfilFragment extends Fragment {
                 borrarUsuario();
             }
         });
+    }
+
+    private void cambiarImagen(final String numImg) {
+        final RequestQueue rq = Volley.newRequestQueue(getActivity().getApplicationContext());
+        UsuarioDto userLogeado = (UsuarioDto) getActivity().getApplicationContext();
+        String peticion = URL_API +"/user/setAvatar/" + userLogeado.getId();
+
+        JSONObject params = new JSONObject();
+        try {
+            params.put("avatar", numImg );
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        // Creating a JSON Object request
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PATCH, peticion, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Toast.makeText(getContext(),"Establecida imagen " + numImg.charAt(0) + " como perfil",
+                                Toast.LENGTH_SHORT).show();;
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) { Log.d("PanelSocialFragment",error.toString()); }
+                }) {
+            @Override
+            public byte[] getBody() {
+                return numImg.getBytes();
+            }
+        };
+
+        // Adding the string request to the queue
+        rq.add(jsonObjectRequest);
     }
 
     private void borrarUsuario() {
