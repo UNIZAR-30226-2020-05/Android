@@ -3,18 +3,26 @@ package com.example.carolshaw;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ReportFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.carolshaw.adapters.ResultadoCancionesBusquedaAdapter;
+import com.example.carolshaw.objetos.Cancion;
+import com.example.carolshaw.objetos.Podcast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.ArrayList;
 
 public class MainLogged extends AppCompatActivity {
 
@@ -24,7 +32,9 @@ public class MainLogged extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_logged);
-        if(primeraVez){
+        Bundle b = getIntent().getExtras();
+        if(primeraVez && b == null){
+            Log.d("mainlogged","dentro primera vez");
             this.firstFragment = new PrincipalFragment();
             primeraVez = false;
             BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
@@ -32,9 +42,29 @@ public class MainLogged extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,firstFragment).commit();
 
         }else{
+            Log.d("mainlogged","dentro else");
             //Para que entre directamente al fragmento principal
             BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);//findViewById(R.id.bottom_navigation);
             bottomNav.setOnNavigationItemSelectedListener(navListener);
+            if (b != null) {
+                primeraVez = false;
+                int tipo = b.getInt("tipo");
+                if (tipo == ReproductorFragment.TIPO_CANCION) {
+                    ArrayList<Cancion> canciones = (ArrayList<Cancion>) b.getSerializable("canciones");
+                    b = new Bundle();
+                    b.putSerializable("canciones", canciones);
+                    b.putInt("tipo",tipo);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            new ReproductorFragment()).commit();
+                } else if (tipo == ReproductorFragment.TIPO_PODCAST) {
+                    ArrayList<Podcast> podcasts = (ArrayList<Podcast>) b.getSerializable("podcasts");
+                    b = new Bundle();
+                    b.putSerializable("podcasts", podcasts);
+                    b.putInt("tipo",tipo);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            new ReproductorFragment()).commit();
+                }
+            }
         }
     }
 

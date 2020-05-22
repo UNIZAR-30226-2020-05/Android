@@ -10,6 +10,7 @@ import android.media.MediaPlayer;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.PowerManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import android.os.Bundle;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
+import com.example.carolshaw.objetos.Album;
 import com.example.carolshaw.objetos.Cancion;
 import com.example.carolshaw.objetos.ListaCancion;
 import com.example.carolshaw.objetos.ListaPodcast;
@@ -35,7 +37,8 @@ public class ReproductorFragment extends Fragment {
 
     public static final int TIPO_CANCION = 0;
     public static final int TIPO_PODCAST = 1;
-    private static final String LISTA = "lista";
+    private static final String LISTA_CANCIONES = "lista_canciones";
+    private static final String LISTA_PODCASTS = "lista_podcasts";
     private static final String TIPO = "tipo";
 
     private String URL_API;
@@ -48,9 +51,7 @@ public class ReproductorFragment extends Fragment {
     private int posicion = 0; //indice del vector
     private int tipo;
 
-    ListaCancion listaCancion;
     ArrayList<Cancion> canciones = new ArrayList<Cancion>();
-    ListaPodcast listaPodcast;
     ArrayList<Podcast> podcasts = new ArrayList<Podcast>();
     ArrayList<MediaPlayer> listaStreaming = new ArrayList<MediaPlayer>();
 
@@ -58,11 +59,22 @@ public class ReproductorFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         URL_API = getString(R.string.API);
+
+        Bundle b = getActivity().getIntent().getExtras();
+        if (b != null) {
+            int tipo = b.getInt("tipo");
+            if (tipo == TIPO_CANCION) {
+                canciones = (ArrayList<Cancion>) b.getSerializable("canciones");
+            } else if (tipo == TIPO_PODCAST) {
+                podcasts =  (ArrayList<Podcast>) b.getSerializable("podcasts");
+            }
+        }
+        Log.d("mainlogged","----dentro create: " + canciones.get(0).getName());
         //TODO: Mover el mediaPlayer a un 'servicio' para que pueda ejecutarse en segundo plano o con new Thread(obj).start
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
-            mediaPlayer.setDataSource(URL_API + "/song/play/Run To The Hills");
+            mediaPlayer.setDataSource(URL_API + "/song/play/" + canciones.get(0).getName());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -81,8 +93,6 @@ public class ReproductorFragment extends Fragment {
                 actualizarSeekBar();
             }
         });
-
-
     }
 
     private void actualizarSeekBar() {
@@ -112,18 +122,7 @@ public class ReproductorFragment extends Fragment {
         return vista;
     }
 
-    /*TODO: OJO, A LO MEJOR NO COGE BIEN EL ARRAYLIST DE OBJECT.
-     * ALTERNATIVA: PASAR TRES PARAMETROS CANCIONES PODCAST Y TIPO Y EL QUE NO SE VAYA A USAR,
-     * SE PASA COMO PARAMETRO DEL QUE NO SE USE UN NULL
-     */
-    public static AnadirCancionesALista newInstance(ArrayList<Object> lista, int tipo) {
-        AnadirCancionesALista fragment = new AnadirCancionesALista();
-        Bundle args = new Bundle();
-        args.putSerializable(LISTA, lista);
-        args.putInt(TIPO, tipo);
-        fragment.setArguments(args);
-        return fragment;
-    }
+
 /*
     public void PlayPause(View view){
         if(listaStreaming[posicion].isPlaying()){ //verifica que cancion del vector esta sonando

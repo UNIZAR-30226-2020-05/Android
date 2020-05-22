@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.ClipData;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.carolshaw.adapters.ListaCancionesAdapter;
 import com.example.carolshaw.adapters.ResultadoCancionesBusquedaAdapter;
 import com.example.carolshaw.objetos.Cancion;
+import com.example.carolshaw.objetos.ListaCancion;
 import com.example.carolshaw.objetos.UsuarioDto;
 
 import org.json.JSONObject;
@@ -76,8 +78,9 @@ public class CancionesListaActivity extends AppCompatActivity {
             }
         }
         if(perteneceUsuario){
-            //Evita que se borre si es el de favoritos
+            //Evita que se borre y copie si es el de favoritos
             if (nombreLista.equals("Favoritos")) {
+                copiarLista.setVisibility(View.GONE);
                 botonBorrar.setVisibility(View.GONE);
             }
 
@@ -99,6 +102,21 @@ public class CancionesListaActivity extends AppCompatActivity {
                 ClipData clip = ClipData.newPlainText("Codigo lista", copiarLista.getText().toString());
                 clipboard.setPrimaryClip(clip);
                 informar("Código copiado");
+            }
+        });
+
+        adapter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CancionesListaActivity.this, MainLogged.class);
+                Bundle b = new Bundle();
+                ArrayList<Cancion> cancion = new ArrayList<Cancion>();
+                cancion.add(canciones.get(recycler.getChildAdapterPosition(v))); //Añade la cancion correspondiente
+                b.putSerializable("canciones", cancion);
+                b.putInt("tipo",ReproductorFragment.TIPO_CANCION);
+                intent.putExtras(b);
+                finish();
+                startActivity(intent);
             }
         });
     }
