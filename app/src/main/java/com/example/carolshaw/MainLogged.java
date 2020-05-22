@@ -34,7 +34,6 @@ public class MainLogged extends AppCompatActivity {
         setContentView(R.layout.activity_main_logged);
         Bundle b = getIntent().getExtras();
         if(primeraVez && b == null){
-            Log.d("mainlogged","dentro primera vez");
             this.firstFragment = new PrincipalFragment();
             primeraVez = false;
             BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
@@ -42,7 +41,6 @@ public class MainLogged extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,firstFragment).commit();
 
         }else{
-            Log.d("mainlogged","dentro else");
             //Para que entre directamente al fragmento principal
             BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);//findViewById(R.id.bottom_navigation);
             bottomNav.setOnNavigationItemSelectedListener(navListener);

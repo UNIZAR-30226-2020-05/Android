@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -100,6 +101,21 @@ public class PodcastListaActivity extends AppCompatActivity {
                 ClipData clip = ClipData.newPlainText("Codigo lista", copiarLista.getText().toString());
                 clipboard.setPrimaryClip(clip);
                 informar("Código copiado");
+            }
+        });
+
+        adapter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PodcastListaActivity.this, MainLogged.class);
+                Bundle b = new Bundle();
+                ArrayList<Podcast> podcastsReproductor = new ArrayList<Podcast>();
+                podcastsReproductor.add(podcasts.get(recycler.getChildAdapterPosition(v))); //Añade la cancion correspondiente
+                b.putSerializable("podcasts", podcastsReproductor);
+                b.putInt("tipo",ReproductorFragment.TIPO_PODCAST);
+                intent.putExtras(b);
+                finish();
+                startActivity(intent);
             }
         });
     }

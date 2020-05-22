@@ -110,9 +110,9 @@ public class CancionesListaActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(CancionesListaActivity.this, MainLogged.class);
                 Bundle b = new Bundle();
-                ArrayList<Cancion> cancion = new ArrayList<Cancion>();
-                cancion.add(canciones.get(recycler.getChildAdapterPosition(v))); //Añade la cancion correspondiente
-                b.putSerializable("canciones", cancion);
+                ArrayList<Cancion> cancionesReproductor = new ArrayList<Cancion>();
+                cancionesReproductor.add(canciones.get(recycler.getChildAdapterPosition(v))); //Añade la cancion correspondiente
+                b.putSerializable("canciones", cancionesReproductor);
                 b.putInt("tipo",ReproductorFragment.TIPO_CANCION);
                 intent.putExtras(b);
                 finish();

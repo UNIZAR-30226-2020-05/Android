@@ -55,6 +55,7 @@ public class ReproductorFragment extends Fragment {
     ArrayList<Podcast> podcasts = new ArrayList<Podcast>();
     ArrayList<MediaPlayer> listaStreaming = new ArrayList<MediaPlayer>();
 
+    //TODO: Mover el mediaPlayer a un 'servicio' para que pueda ejecutarse en segundo plano o con new Thread(obj).start
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,36 +64,47 @@ public class ReproductorFragment extends Fragment {
         Bundle b = getActivity().getIntent().getExtras();
         if (b != null) {
             int tipo = b.getInt("tipo");
+            mediaPlayer = new MediaPlayer();
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             if (tipo == TIPO_CANCION) {
                 canciones = (ArrayList<Cancion>) b.getSerializable("canciones");
+                reproducirCanciones();
             } else if (tipo == TIPO_PODCAST) {
                 podcasts =  (ArrayList<Podcast>) b.getSerializable("podcasts");
+                reproducirPodcasts();
             }
+            mediaPlayer.setWakeMode(getContext(), PowerManager.PARTIAL_WAKE_LOCK); //Evita que el CPU se apague por ahorro de energía
+            WifiManager.WifiLock wifiLock = ((WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE))
+                    .createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock"); //Evita que el wifi se apague por ahorro de energía
+            //wifiLock.release(); cuando se haga stop()
+
+            wifiLock.acquire();
+            mediaPlayer.prepareAsync();
+            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+
+                    mediaPlayer.start();
+                    actualizarSeekBar();
+                }
+            });
         }
-        Log.d("mainlogged","----dentro create: " + canciones.get(0).getName());
-        //TODO: Mover el mediaPlayer a un 'servicio' para que pueda ejecutarse en segundo plano o con new Thread(obj).start
-        mediaPlayer = new MediaPlayer();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+    }
+
+    private void reproducirPodcasts() {
+        try {
+            mediaPlayer.setDataSource(URL_API + "/podcast/play/" + podcasts.get(0).getName());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void reproducirCanciones() {
         try {
             mediaPlayer.setDataSource(URL_API + "/song/play/" + canciones.get(0).getName());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        mediaPlayer.setWakeMode(getContext(), PowerManager.PARTIAL_WAKE_LOCK); //Evita que el CPU se apague por ahorro de energía
-        WifiManager.WifiLock wifiLock = ((WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE))
-                .createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock"); //Evita que el wifi se apague por ahorro de energía
-        //wifiLock.release(); cuando se haga stop()
-
-        wifiLock.acquire();
-        mediaPlayer.prepareAsync();
-        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-
-                mediaPlayer.start();
-                actualizarSeekBar();
-            }
-        });
     }
 
     private void actualizarSeekBar() {
