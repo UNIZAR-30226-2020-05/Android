@@ -10,24 +10,18 @@ import android.media.MediaPlayer;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.PowerManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.MediaController.MediaPlayerControl;
 
 import android.os.Bundle;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
-import com.example.carolshaw.objetos.Album;
 import com.example.carolshaw.objetos.Cancion;
-import com.example.carolshaw.objetos.ListaCancion;
-import com.example.carolshaw.objetos.ListaPodcast;
 import com.example.carolshaw.objetos.Podcast;
-import com.example.carolshaw.objetos.UsuarioDto;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,23 +32,21 @@ public class ReproductorFragment extends Fragment {
 
     public static final int TIPO_CANCION = 0;
     public static final int TIPO_PODCAST = 1;
-    private static final String LISTA_CANCIONES = "lista_canciones";
-    private static final String LISTA_PODCASTS = "lista_podcasts";
-    private static final String TIPO = "tipo";
     private static MediaPlayer mediaPlayer = new MediaPlayer();
+    private int tipo;
 
     private String URL_API;
     private ImageButton play_pause;
+    private ImageButton previo;
+    private ImageButton siguiente;
     private ImageView caratula;
     private SeekBar seekBar;
 
     private Runnable runnable;
-    private int posicion = 0; //indice del vector
-    private int tipo;
+    private int indiceReproduccion; //indice del vector
 
     ArrayList<Cancion> canciones = new ArrayList<Cancion>();
     ArrayList<Podcast> podcasts = new ArrayList<Podcast>();
-    ArrayList<MediaPlayer> listaStreaming = new ArrayList<MediaPlayer>();
 
     //TODO: Mover el mediaPlayer a un 'servicio' para que pueda ejecutarse en segundo plano o con new Thread(obj).start
     @Override
@@ -64,20 +56,34 @@ public class ReproductorFragment extends Fragment {
 
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         Bundle b = getActivity().getIntent().getExtras();
+        reiniciarMediaPlayer();
+
+        if (b != null) {
+            tipo = b.getInt("tipo");
+            indiceReproduccion = 0;
+            if (tipo == TIPO_CANCION) {
+                canciones = (ArrayList<Cancion>) b.getSerializable("canciones");
+                reproducirCanciones(indiceReproduccion);
+            } else if (tipo == TIPO_PODCAST) {
+                podcasts =  (ArrayList<Podcast>) b.getSerializable("podcasts");
+                reproducirPodcasts(indiceReproduccion);
+            }
+        } else {
+            informar("hay que poner la ultima cancion del userlog global");
+        }
+    }
+
+    private void reiniciarMediaPlayer() {
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
             mediaPlayer.release();
             mediaPlayer = new MediaPlayer();
         }
-        if (b != null) {
-            int tipo = b.getInt("tipo");
-            if (tipo == TIPO_CANCION) {
-                canciones = (ArrayList<Cancion>) b.getSerializable("canciones");
-                reproducirCanciones();
-            } else if (tipo == TIPO_PODCAST) {
-                podcasts =  (ArrayList<Podcast>) b.getSerializable("podcasts");
-                reproducirPodcasts();
-            }
+    }
+
+    private void reproducirPodcasts(final int id) {
+        try {
+            mediaPlayer.setDataSource(URL_API + "/podcast/play/" + podcasts.get(id).getName());
             mediaPlayer.setWakeMode(getContext(), PowerManager.PARTIAL_WAKE_LOCK); //Evita que el CPU se apague por ahorro de energía
             WifiManager.WifiLock wifiLock = ((WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE))
                     .createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock"); //Evita que el wifi se apague por ahorro de energía
@@ -88,27 +94,34 @@ public class ReproductorFragment extends Fragment {
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
-
+                    play_pause.setImageResource(R.drawable.pause);
                     mediaPlayer.start();
                     actualizarSeekBar();
                 }
             });
-        } else {
-            informar("hay que poner la ultima cancion del userlog global");
-        }
-    }
-
-    private void reproducirPodcasts() {
-        try {
-            mediaPlayer.setDataSource(URL_API + "/podcast/play/" + podcasts.get(0).getName());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void reproducirCanciones() {
+    private void reproducirCanciones(final int id) {
         try {
-            mediaPlayer.setDataSource(URL_API + "/song/play/" + canciones.get(0).getName());
+            mediaPlayer.setDataSource(URL_API + "/song/play/" + canciones.get(id).getName());
+            mediaPlayer.setWakeMode(getContext(), PowerManager.PARTIAL_WAKE_LOCK); //Evita que el CPU se apague por ahorro de energía
+            WifiManager.WifiLock wifiLock = ((WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE))
+                    .createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock"); //Evita que el wifi se apague por ahorro de energía
+            //TODO: wifiLock.release(); cuando se haga stop()
+
+            wifiLock.acquire();
+            mediaPlayer.prepareAsync();
+            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    play_pause.setImageResource(R.drawable.pause);
+                    mediaPlayer.start();
+                    actualizarSeekBar();
+                }
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -136,75 +149,81 @@ public class ReproductorFragment extends Fragment {
                              Bundle savedInstanceState) {
         View vista = inflater.inflate(R.layout.fragment_reproductor, container, false);
         play_pause = vista.findViewById(R.id.play);
+        previo = vista.findViewById(R.id.previo);
+        siguiente = vista.findViewById(R.id.next);
         caratula = vista.findViewById(R.id.imageView2);
         seekBar = vista.findViewById(R.id.seekBar);
+        play_pause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playPause();
+            }
+        });
+        
+        siguiente.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                siguiente();
+            }
+        });
+
+        previo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                previo();
+            }
+        });
         return vista;
     }
 
-
-/*
-    public void PlayPause(View view){
-        if(listaStreaming[posicion].isPlaying()){ //verifica que cancion del vector esta sonando
-            listaStreaming[posicion].pause();
-            play_pause.setBackgroundResource(R.drawable.play);
-            Toast.makeText(this.getContext(),"Pausa",Toast.LENGTH_SHORT).show();
-        }
-        else{
-            vector[posicion].start();
-            play_pause.setBackgroundResource(R.drawable.pause);
-            Toast.makeText(this.getContext(),"Play",Toast.LENGTH_SHORT).show();
-        }
-    }
-
-   /* public void Siguiente(View view){
-        if(posicion < vector.length-1){
-            if(vector[posicion].isPlaying()){
-                vector[posicion].stop();
-                posicion++;
-                vector[posicion].start();
-                for(int i=0;i<lista.length;i++){ //para cambiar portada
-                    if(posicion == i){
-                        //llamar back con nombre album
-                        iv.setImageURI(lista[i].cancion.url);
-                    }
-                }
-            }
-            else{ posicion++;
-                for(int i=0;i<lista.length;i++){ //para cambiar portada
-                    if(posicion == i){
-                        iv.setImageURI(lista[i].cancion.url);
-                    }
-                }
-            }
-        }
-        else{ Toast.makeText(this,"No hay más canciones",Toast.LENGTH_SHORT).show();}
-    }
-
-    public void Anterior(View view) {
-        if (posicion >= 1) {
-            if (vector[posicion].isPlaying()) {
-                vector[posicion].stop();
-                for(int i=0; i < lista.lenght ; i++){ //se vuelve a poner porque hay posibilidad
-                    //del que el stop pierda la cancion que se estaba reproduciendo
-                    vector[i] = MediaPlayer.create(this,lista.cancio.url);
-                }
-                posicion--;
-                vector[posicion].start();
-                for (int i = 0; i < lista.length; i++) { //para cambiar portada
-                    if (posicion == i) {
-                        iv.setImageURI(lista[i].cancion.url);
-                    }
-                }
+    private void previo() {
+        if (tipo == TIPO_CANCION) {
+            if(indiceReproduccion > 0){
+                reiniciarMediaPlayer();
+                indiceReproduccion--;
+                reproducirCanciones(indiceReproduccion);
             } else {
-                posicion--;
-                for (int i = 0; i < lista.length; i++) { //para cambiar portada
-                    if (posicion == i) {
-                        iv.setImageURI(lista[i].cancion.url);
-                    }
-                }
+                informar("Esta es la primera canción de la lista de reproducción");
             }
+        } else if (tipo == TIPO_PODCAST) {
+            if(indiceReproduccion > 0){
+                reiniciarMediaPlayer();
+                indiceReproduccion--;
+                reproducirPodcasts(indiceReproduccion);
+            } else {
+                informar("Este es el primer podcast de la lista de reproducción");
+            }
+        }
+    }
+
+    private void siguiente() {
+        if (tipo == TIPO_CANCION) {
+            if(indiceReproduccion < canciones.size()-1){
+                reiniciarMediaPlayer();
+                indiceReproduccion++;
+                reproducirCanciones(indiceReproduccion);
+            } else {
+                informar("No hay más canciones en la lista de reproducción");
+            }
+        } else if (tipo == TIPO_PODCAST) {
+            if(indiceReproduccion < podcasts.size()-1){
+                reiniciarMediaPlayer();
+                indiceReproduccion++;
+                reproducirPodcasts(indiceReproduccion);
+            } else {
+                informar("No hay más podcasts en la lista de reproducción");
+            }
+        }
+    }
+
+
+    public void playPause() {
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+            play_pause.setImageResource(R.drawable.play);
         } else {
-            Toast.makeText(this, "No hay más canciones", Toast.LENGTH_SHORT).show();
+            mediaPlayer.start();
+            play_pause.setImageResource(R.drawable.pause);
         }
     }
 
