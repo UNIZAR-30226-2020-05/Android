@@ -1,5 +1,6 @@
 package com.example.carolshaw;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -7,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -39,6 +41,7 @@ public class PodcastListaActivity extends AppCompatActivity {
     private String nombreLista;
     private TextView tituloVista;
     private ImageView botonBorrar;
+    private ImageView botonPlay;
     private TextView copiarLista;
     private RecyclerView recycler;
     private ResultadoPodcastsBusquedaAdapter adapter;
@@ -56,6 +59,8 @@ public class PodcastListaActivity extends AppCompatActivity {
         botonBorrar = findViewById(R.id.btnBorrarLista);
         copiarLista = findViewById(R.id.codigoLista);
         recycler = findViewById(R.id.recyclerViewPodcasts);
+        botonPlay = findViewById(R.id.btnPlayLista);
+
         URL_API = getString(R.string.API);
         usuarioLog = (UsuarioDto) getApplicationContext();
 
@@ -87,7 +92,7 @@ public class PodcastListaActivity extends AppCompatActivity {
             botonBorrar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    borrarLista();
+                    confirmarBorrado();
                 }
             });
         } else {
@@ -118,6 +123,20 @@ public class PodcastListaActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        botonPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PodcastListaActivity.this, MainLogged.class);
+                Bundle b = new Bundle();
+                b.putSerializable("podcasts", podcasts);
+                b.putInt("tipo",ReproductorFragment.TIPO_PODCAST);
+                intent.putExtras(b);
+                finish();
+                startActivity(intent);
+            }
+        });
+
     }
 
     private void borrarLista() {
@@ -144,6 +163,26 @@ public class PodcastListaActivity extends AppCompatActivity {
 
         // Adding the string request to the queue
         rq.add(jsonObjectRequest);
+    }
+
+    private void confirmarBorrado() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("¿Seguro que dese eliminar la lista?");
+
+        // Set up the buttons
+        builder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                borrarLista();
+            }
+        });
+        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
     }
 
     /* informa mediante un TOAST

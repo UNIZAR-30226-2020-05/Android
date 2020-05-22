@@ -40,6 +40,19 @@
         app:srcCompat="@drawable/trash"
         tools:visibility="visible" />
 
+    <ImageView
+        android:id="@+id/btnPlayLista"
+        android:layout_width="58dp"
+        android:layout_height="58dp"
+        android:src="@drawable/play"
+        android:translationZ="90dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.954"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.856" />
+
     <TextView
         android:id="@+id/codigoLista"
         android:layout_width="wrap_content"

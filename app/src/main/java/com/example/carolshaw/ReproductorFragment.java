@@ -81,6 +81,13 @@ public class ReproductorFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mediaPlayer.setWakeMode(getContext(), PowerManager.PARTIAL_WAKE_LOCK); //Evita que el CPU se apague por ahorro de energía
+        WifiManager.WifiLock wifiLock = ((WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE))
+                .createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock"); //Evita que el wifi se apague por ahorro de energía
+        //TODO: wifiLock.release(); cuando se haga stop()
+
+        wifiLock.acquire();
+
         Bundle b = getActivity().getIntent().getExtras();
         reiniciarMediaPlayer();
 
@@ -165,6 +172,7 @@ public class ReproductorFragment extends Fragment {
     private void reiniciarMediaPlayer () {
         mediaPlayer.stop();
         mediaPlayer.release();
+        mediaPlayer = null;
         mediaPlayer = new MediaPlayer();
     }
 
@@ -197,12 +205,7 @@ public class ReproductorFragment extends Fragment {
     private void reproducirCanciones(final int id) {
         try {
             mediaPlayer.setDataSource(URL_API + "/song/play/" + canciones.get(id).getName());
-            mediaPlayer.setWakeMode(getContext(), PowerManager.PARTIAL_WAKE_LOCK); //Evita que el CPU se apague por ahorro de energía
-            WifiManager.WifiLock wifiLock = ((WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE))
-                    .createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock"); //Evita que el wifi se apague por ahorro de energía
-            //TODO: wifiLock.release(); cuando se haga stop()
 
-            wifiLock.acquire();
             mediaPlayer.prepareAsync();
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
