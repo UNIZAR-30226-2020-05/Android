@@ -1,6 +1,7 @@
 package com.example.carolshaw;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
@@ -53,7 +54,8 @@ public class ResultadoPodcastsBusquedaFragment extends Fragment {
         adapter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { // Que pasa cuando se toca encima del amigo
-                opcionesClick(PodcastsArray.get(recycler.getChildAdapterPosition(v)).getId());
+                opcionesClick(PodcastsArray.get(recycler.getChildAdapterPosition(v)).getId(),
+                        PodcastsArray.get(recycler.getChildAdapterPosition(v)));
             }
         });
     }
@@ -80,7 +82,7 @@ public class ResultadoPodcastsBusquedaFragment extends Fragment {
         return vista;
     }
 
-    private void opcionesClick(final int idPodcast){
+    private void opcionesClick(final int idPodcast, final Podcast podcastReproductor){
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Elige una opción");
 
@@ -88,7 +90,14 @@ public class ResultadoPodcastsBusquedaFragment extends Fragment {
         builder.setPositiveButton("Reproducir", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(getContext(), "Falta reproducir podcast", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getContext(), MainLogged.class);
+                Bundle b = new Bundle();
+                ArrayList<Podcast> podcastsReproductor = new ArrayList<Podcast>();
+                podcastsReproductor.add(podcastReproductor); //Añade la cancion correspondiente
+                b.putSerializable("podcasts", podcastsReproductor);
+                b.putInt("tipo",ReproductorFragment.TIPO_PODCAST);
+                intent.putExtras(b);
+                startActivity(intent);
             }
         });
         builder.setNegativeButton("Añadir a lista", new DialogInterface.OnClickListener() {
