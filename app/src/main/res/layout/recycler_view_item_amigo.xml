@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:background="@color/carol_shaw_color"
+    android:backgroundTint="@color/carol_shaw_color"
     android:orientation="horizontal"
     android:padding="8dp">
 
@@ -36,6 +38,7 @@
         android:id="@+id/nickAm"
         android:layout_width="215dp"
         android:layout_height="wrap_content"
+        android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
         tools:text="@tools:sample/lorem[3]" />
@@ -44,6 +47,7 @@
         android:id="@+id/nomAm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/white"
         android:textSize="18sp"
         tools:text="@tools:sample/lorem[4]" />
 
@@ -51,6 +55,7 @@
         android:id="@+id/ultimaRepr"
         android:layout_width="238dp"
         android:layout_height="47dp"
+        android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="italic"
         tools:text="@tools:sample/lorem[3]" />
