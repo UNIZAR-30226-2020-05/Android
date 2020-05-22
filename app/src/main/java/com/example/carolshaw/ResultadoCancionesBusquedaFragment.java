@@ -102,7 +102,6 @@ public class ResultadoCancionesBusquedaFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 elegirLista(idCancion);
-                //anadirCancion(idCancion);
             }
         });
         builder.show();

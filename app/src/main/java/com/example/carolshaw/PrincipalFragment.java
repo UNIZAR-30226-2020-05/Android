@@ -1,5 +1,6 @@
 package com.example.carolshaw;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -210,7 +211,14 @@ public class PrincipalFragment extends Fragment {
     }
 
     public void clickPodcast(Podcast podcast){
-        informar("Habría que reproducir directamente el podcast");
+        Intent intent = new Intent(getContext(), MainLogged.class);
+        Bundle b = new Bundle();
+        ArrayList<Podcast> podcastsReproductor = new ArrayList<Podcast>();
+        podcastsReproductor.add(podcast); //Añade la cancion correspondiente
+        b.putSerializable("podcasts", podcastsReproductor);
+        b.putInt("tipo",ReproductorFragment.TIPO_PODCAST);
+        intent.putExtras(b);
+        startActivity(intent);
     }
 
     @Override
