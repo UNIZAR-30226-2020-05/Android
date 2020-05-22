@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/carol_shaw_color"
     tools:context=".ResultadoCancionesBusquedaFragment">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -23,6 +24,7 @@
         android:layout_marginTop="40dp"
         android:gravity="center_horizontal"
         android:text="Selecione usuario a añadir"
+        android:textColor="@color/white"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

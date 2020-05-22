@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/carol_shaw_color">
 
     <TextView
         android:id="@+id/textView5"
@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:text="@string/amigosList_string"
         android:textAllCaps="false"
+        android:textColor="@color/white"
         android:textSize="26sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/recyclerView2"
@@ -40,7 +41,7 @@
         android:clickable="true"
         android:contentDescription="Añadir Amigos"
         android:tint="#FDFDFD"
-        app:backgroundTint="#8568B8"
+        app:backgroundTint="#57BF92"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/ic_input_add" />
