@@ -18,10 +18,13 @@ import android.widget.ImageView;
 
 import android.os.Bundle;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.carolshaw.objetos.Cancion;
 import com.example.carolshaw.objetos.Podcast;
+
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,6 +44,10 @@ public class ReproductorFragment extends Fragment {
     private ImageButton siguiente;
     private ImageView caratula;
     private SeekBar seekBar;
+    private TextView tiempoTotal;
+    private TextView tiempoActual;
+    private TextView titulo;
+    private TextView autor;
 
     private Runnable runnable;
     private int indiceReproduccion; //indice del vector
@@ -99,6 +106,7 @@ public class ReproductorFragment extends Fragment {
                     actualizarSeekBar();
                 }
             });
+            actualizarDatosVista();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -122,6 +130,7 @@ public class ReproductorFragment extends Fragment {
                     actualizarSeekBar();
                 }
             });
+            actualizarDatosVista();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -131,6 +140,8 @@ public class ReproductorFragment extends Fragment {
         int duracionCancion = 231; //en segundos
         seekBar.setMax(duracionCancion*1000);
         seekBar.setProgress(mediaPlayer.getCurrentPosition(),true);
+        int tiempo = mediaPlayer.getCurrentPosition()/1000;
+        tiempoActual.setText(String.format("%02d:%02d", tiempo / 60, tiempo % 60));
         if (mediaPlayer.isPlaying()) {
             runnable = new Runnable() {
                 @Override
@@ -153,6 +164,11 @@ public class ReproductorFragment extends Fragment {
         siguiente = vista.findViewById(R.id.next);
         caratula = vista.findViewById(R.id.imageView2);
         seekBar = vista.findViewById(R.id.seekBar);
+        tiempoActual = vista.findViewById(R.id.progreso_actual);
+        //tiempoTotal = vista.findViewById(R.id.duracionTotal);
+        titulo = vista.findViewById(R.id.nombre);
+        autor = vista.findViewById(R.id.autor);
+
         play_pause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -174,6 +190,23 @@ public class ReproductorFragment extends Fragment {
             }
         });
         return vista;
+    }
+
+    private void actualizarDatosVista() {
+        //TODO: no se por que el tiempoTotal y titulo lo coge como null y no puede poner texto en ellos
+        //Poner caratula (hacer busqueda del album con el nombre de la cancion), podcast siempre tiene la misma
+        /*if (tipo == TIPO_CANCION) {
+            Cancion cancion = canciones.get(indiceReproduccion);
+            tiempoTotal.setText(cancion.getDuracionMMSS());
+            titulo.setText(cancion.getName());
+            String autorString = "";
+            ArrayList<String> artistas = new ArrayList<String>();
+            artistas = cancion.getArtistas();
+            for (int i = 0; i < artistas.size(); i++) {
+                autorString += artistas.get(i) + "\n";
+            }
+            autor.setText(autorString);
+        }*/
     }
 
     private void previo() {
