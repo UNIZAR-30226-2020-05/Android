@@ -25,8 +25,8 @@
         android:layout_marginStart="28dp"
         android:text="Nombre de Cancion"
         android:textColor="@color/white"
-        android:textStyle="bold"
         android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/autor"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView2"
@@ -37,11 +37,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
-        android:layout_marginBottom="8dp"
         android:text="Nombre de autor"
         android:textColor="@color/white"
-        android:textStyle="bold"
         android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/seekBar"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -64,7 +63,6 @@
         android:layout_marginEnd="96dp"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
-        android:onClick="nuevaLista"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -90,10 +88,9 @@
         android:id="@+id/seekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@+id/next"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
@@ -106,10 +103,10 @@
         android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/previo"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.035"
+        app:layout_constraintHorizontal_bias="0.042"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/seekBar"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/duracionTotal"
