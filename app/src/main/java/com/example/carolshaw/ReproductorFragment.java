@@ -74,11 +74,13 @@ public class ReproductorFragment extends Fragment {
     private static boolean estabaSonando = false;
     private boolean nuevo = false;
     private static int tempUltimaReproduccion = 0;
+    private static Context context;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         URL_API = getString(R.string.API);
+        context = getActivity().getApplicationContext();
     }
 
     @Override
@@ -329,7 +331,7 @@ public class ReproductorFragment extends Fragment {
     }
 
     private void establecerUltimoPodcast() {
-        final RequestQueue rq = Volley.newRequestQueue(getActivity().getApplicationContext());
+        final RequestQueue rq = Volley.newRequestQueue(context);
         String peticion = URL_API +"/user/modifyLastPlayAndroid/" + usuarioLog.getId();
 
         final String params = podcasts.get(indiceReproduccion).getId() + ";" +
@@ -358,7 +360,7 @@ public class ReproductorFragment extends Fragment {
     }
 
     private void establecerUltimaCancion() {
-        final RequestQueue rq = Volley.newRequestQueue(getActivity().getApplicationContext());
+        final RequestQueue rq = Volley.newRequestQueue(context);
         String peticion = URL_API +"/user/modifyLastPlayAndroid/" + usuarioLog.getId();
 
         final String params = canciones.get(indiceReproduccion).getId() + ";" +
