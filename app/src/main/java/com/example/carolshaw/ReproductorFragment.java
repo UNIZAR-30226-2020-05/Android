@@ -84,6 +84,7 @@ public class ReproductorFragment extends Fragment {
     private static boolean primeraVez = true;
     private static boolean estabaSonando = false;
     private boolean nuevo = false;
+    private static int tempUltimaReproduccion = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -107,8 +108,7 @@ public class ReproductorFragment extends Fragment {
 
         if (primeraVez) {
             //prepara para reproducir la ultima cancion/podcast del usuario
-            //TODO: tipo = usuarioLog.getTipo_ultima_reproduccion();
-            tipo = 1;
+            tipo = usuarioLog.getTipo_ultima_reproduccion();
             Log.d("reproductor","primera vez");
         }
 
@@ -134,13 +134,11 @@ public class ReproductorFragment extends Fragment {
                     reproducirPodcasts(indiceReproduccion);
                 }
             } else {
-                // TODO:Descomentar esto
-                /*if (usuarioLog.getTipo_ultima_reproduccion() == TIPO_CANCION) {
+                if (usuarioLog.getTipo_ultima_reproduccion() == TIPO_CANCION) {
                     descargarUltimaCancion();
                 } else if (usuarioLog.getTipo_ultima_reproduccion() == TIPO_PODCAST) {
                     descargarUltimoPodcast();
-                }*/
-                descargarUltimoPodcast();
+                }
             }
 
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -191,8 +189,7 @@ public class ReproductorFragment extends Fragment {
                             }
                         }
                         for (Podcast podcast : podcastsEncontrados) {
-                            //TODO: if (cancion.getId() == usuarioLog.getId_ultima_reproduccion()) {
-                            if (podcast.getId() == 73) {
+                            if (podcast.getId() == usuarioLog.getId_ultima_reproduccion()) {
                                 indiceReproduccion = 0;
                                 podcasts.add(podcast);
                                 reproducirPodcasts(indiceReproduccion);
@@ -230,8 +227,7 @@ public class ReproductorFragment extends Fragment {
                             }
                         }
                         for (Cancion cancion : cancionesEncontradas) {
-                            //TODO: if (cancion.getId() == usuarioLog.getId_ultima_reproduccion()) {
-                            if (cancion.getId() == 113) {
+                            if (cancion.getId() == usuarioLog.getId_ultima_reproduccion()) {
                                 indiceReproduccion = 0;
                                 canciones.add(cancion);
                                 bajarCaratulaCancion(indiceReproduccion,true);
@@ -345,15 +341,41 @@ public class ReproductorFragment extends Fragment {
     }
 
     private void establecerUltimoPodcast() {
+        final RequestQueue rq = Volley.newRequestQueue(getActivity().getApplicationContext());
+        String peticion = URL_API +"/user/modifyLastPlayAndroid/" + usuarioLog.getId();
+
+        final String params = podcasts.get(indiceReproduccion).getId() + ";" +
+                mediaPlayer.getCurrentPosition()/1000 + ";" +
+                TIPO_PODCAST;
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PATCH, peticion, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Reproductor","Guardado ultimo podcast");
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) { Log.d("Reproductor",error.toString()); }
+                }) {
+            @Override
+            public byte[] getBody() {
+                return params.getBytes();
+            }
+        };
+
+        // Adding the string request to the queue
+        rq.add(jsonObjectRequest);
     }
 
     private void establecerUltimaCancion() {
         final RequestQueue rq = Volley.newRequestQueue(getActivity().getApplicationContext());
-        String peticion = URL_API +"/user/modifyLastPlay/" + usuarioLog.getId();
+        String peticion = URL_API +"/user/modifyLastPlayAndroid/" + usuarioLog.getId();
 
-        final String params = "id_play: " + canciones.get(indiceReproduccion).getId() + "\n" +
-            "minuto_play: " + mediaPlayer.getCurrentPosition()/1000 + "\n" +
-            "tipo_play: 0";
+        final String params = canciones.get(indiceReproduccion).getId() + ";" +
+            mediaPlayer.getCurrentPosition()/1000 + ";" +
+            TIPO_CANCION;
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PATCH, peticion, null,
                 new Response.Listener<JSONObject>() {
@@ -384,6 +406,16 @@ public class ReproductorFragment extends Fragment {
         tiempoActual.setText(String.format("%02d:%02d", tiempo / 60, tiempo % 60));
         if (tiempoTotal == tiempo) {
             siguiente();
+        }
+        if (tempUltimaReproduccion >= 30) { //cada 30s guarda el punto de la ultima reproduccion
+            tempUltimaReproduccion = 0;
+            if (tipo == TIPO_CANCION) {
+                establecerUltimaCancion();
+            } else if (tipo == TIPO_PODCAST) {
+                establecerUltimoPodcast();
+            }
+        } else {
+            tempUltimaReproduccion++;
         }
         if (mediaPlayer.isPlaying()) {
             runnable = new Runnable() {
