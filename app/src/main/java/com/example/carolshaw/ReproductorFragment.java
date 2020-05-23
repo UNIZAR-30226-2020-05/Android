@@ -1,29 +1,25 @@
 package com.example.carolshaw;
 
-import androidx.fragment.app.Fragment;
-
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.media.AudioAttributes;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.wifi.WifiManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-
-import android.os.Bundle;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -33,7 +29,6 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.example.carolshaw.objetos.Album;
 import com.example.carolshaw.objetos.Cancion;
 import com.example.carolshaw.objetos.ListaCancion;
@@ -45,16 +40,10 @@ import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
-
-import static android.media.AudioAttributes.CONTENT_TYPE_MUSIC;
-import static android.media.MediaPlayer.SEEK_CLOSEST_SYNC;
-import static android.media.MediaPlayer.create;
 
 public class ReproductorFragment extends Fragment {
 
@@ -118,7 +107,6 @@ public class ReproductorFragment extends Fragment {
             nuevo = b.getBoolean("nuevo");
         }
         if (!estabaSonando || primeraVez || nuevo) {
-            primeraVez = false;
             reiniciarMediaPlayer();
 
             if (b != null) {
@@ -140,7 +128,7 @@ public class ReproductorFragment extends Fragment {
                     descargarUltimoPodcast();
                 }
             }
-
+            primeraVez = false;
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mediaPlayer) {

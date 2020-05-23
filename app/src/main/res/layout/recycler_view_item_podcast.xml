@@ -22,7 +22,8 @@
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:textStyle="bold"
-            tools:text="@tools:sample/lorem[6]" />
+            tools:text="@tools:sample/lorem[6]"
+            android:textColor="@color/white"/>
 
         <TextView
             android:id="@+id/autorPodcast"
@@ -30,14 +31,16 @@
             android:layout_height="wrap_content"
             android:textSize="15sp"
             android:textStyle="italic"
-            tools:text="@tools:sample/lorem[4]" />
+            tools:text="@tools:sample/lorem[4]"
+            android:textColor="@color/white"/>
 
         <TextView
             android:id="@+id/duracionPodcast"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="15sp"
-            tools:text="99:99" />
+            tools:text="99:99"
+            android:textColor="@color/white"/>
 
     </LinearLayout>
 

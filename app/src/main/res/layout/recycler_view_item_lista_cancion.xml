@@ -4,7 +4,8 @@
     android:orientation="horizontal"
     android:padding="8dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/carol_shaw_color">
 
 
     <LinearLayout
@@ -19,7 +20,8 @@
             android:layout_height="wrap_content"
             android:textSize="25sp"
             android:textStyle="bold"
-            tools:text="@tools:sample/lorem[4]" />
+            tools:text="@tools:sample/lorem[4]"
+            android:textColor="@color/white"/>
 
     </LinearLayout>
 

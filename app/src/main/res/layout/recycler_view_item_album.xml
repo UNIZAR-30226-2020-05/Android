@@ -5,7 +5,8 @@
     android:orientation="horizontal"
     android:padding="8dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/carol_shaw_color">
 
 
     <LinearLayout
@@ -26,7 +27,8 @@
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:textStyle="bold"
-            tools:text="titulo Album" />
+            tools:text="titulo Album"
+            android:textColor="@color/white"/>
 
         <TextView
             android:id="@+id/artistaAlbum"
@@ -34,7 +36,8 @@
             android:layout_height="wrap_content"
             android:textSize="15sp"
             android:textStyle="italic"
-            tools:text="Artista album" />
+            tools:text="Artista album"
+            android:textColor="@color/white"/>
 
 
     </LinearLayout>

@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".BusquedaFragment">
+    tools:context=".BusquedaFragment"
+    android:background="@color/carol_shaw_color">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,6 +21,7 @@
             android:layout_marginBottom="24dp"
             android:ems="10"
             android:hint="Búsqueda Canciones"
+            android:textColorHint="@color/white"
             android:inputType="textPersonName"
             app:layout_constraintBottom_toTopOf="@+id/barraBusquedaAlbumes"
             app:layout_constraintEnd_toStartOf="@+id/botonBusquedaCanciones"
@@ -49,6 +51,7 @@
             android:layout_marginBottom="24dp"
             android:ems="10"
             android:hint="Búsqueda Albumes"
+            android:textColorHint="@color/white"
             android:inputType="textPersonName"
             app:layout_constraintBottom_toTopOf="@+id/barraBusquedaArtistas"
             app:layout_constraintEnd_toStartOf="@+id/botonBusquedaAlbumes"
@@ -73,6 +76,7 @@
             android:layout_marginBottom="24dp"
             android:ems="10"
             android:hint="Búsqueda Artistas"
+            android:textColorHint="@color/white"
             android:inputType="textPersonName"
             app:layout_constraintBottom_toTopOf="@+id/barraBusquedaPodcasts"
             app:layout_constraintEnd_toStartOf="@+id/botonBusquedaArtistas"
@@ -97,6 +101,7 @@
             android:layout_marginBottom="24dp"
             android:ems="10"
             android:hint="Búsqueda Podcasts"
+            android:textColorHint="@color/white"
             android:inputType="textPersonName"
             app:layout_constraintBottom_toTopOf="@+id/barraBusquedaListas"
             app:layout_constraintEnd_toStartOf="@+id/botonBusquedaPodcasts"
@@ -121,6 +126,7 @@
             android:layout_marginBottom="88dp"
             android:ems="10"
             android:hint="Búsqueda Listas"
+            android:textColorHint="@color/white"
             android:inputType="textPersonName"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/botonBusquedaListas"

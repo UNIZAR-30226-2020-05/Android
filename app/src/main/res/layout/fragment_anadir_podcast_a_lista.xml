@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ListaCancionesActivity">
+    tools:context=".ListaCancionesActivity"
+    android:background="@color/carol_shaw_color">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewListasPodcasts"

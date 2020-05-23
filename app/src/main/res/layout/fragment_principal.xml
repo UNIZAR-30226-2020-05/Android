@@ -5,7 +5,8 @@
     android:id="@+id/constraintLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PrincipalFragment">
+    tools:context=".PrincipalFragment"
+    android:background="@color/carol_shaw_color">
 
 
     <ScrollView
@@ -86,6 +87,7 @@
                     android:layout_marginTop="12dp"
                     android:maxWidth="130dp"
                     android:text="Titulo Podcast"
+                    android:textColor="@color/white"
                     android:textAllCaps="true"
                     android:textSize="12sp"
                     android:textStyle="italic"
@@ -112,6 +114,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Titulo Podcast"
+                    android:textColor="@color/white"
                     android:textAllCaps="true"
                     android:textSize="12sp"
                     android:layout_marginStart="48dp"
@@ -138,6 +141,7 @@
                     android:layout_marginEnd="52dp"
                     android:maxWidth="130dp"
                     android:text="Titulo Podcast"
+                    android:textColor="@color/white"
                     android:textAllCaps="true"
                     android:textSize="12sp"
                     android:textStyle="italic"
@@ -161,6 +165,7 @@
                     android:layout_marginEnd="52dp"
                     android:maxWidth="130dp"
                     android:text="Titulo Podcast"
+                    android:textColor="@color/white"
                     android:textAllCaps="true"
                     android:textSize="12sp"
                     android:textStyle="italic"
@@ -175,6 +180,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
                     android:text="@string/albumes_string"
+                    android:textColor="@color/white"
                     android:textAllCaps="true"
                     android:textSize="26sp"
                     android:textStyle="bold"
@@ -189,6 +195,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="36dp"
                     android:text="@string/podcasts_string"
+                    android:textColor="@color/white"
                     android:textAllCaps="true"
                     android:textSize="26sp"
                     android:textStyle="bold"
