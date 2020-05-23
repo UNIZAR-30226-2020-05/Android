@@ -76,6 +76,7 @@ public class CancionesAlbumFragment extends Fragment {
                 ArrayList<Cancion> cancionesReproductor = new ArrayList<Cancion>(album.getCanciones()); //Añade la cancion correspondiente
                 b.putSerializable("canciones", cancionesReproductor);
                 b.putInt("tipo",ReproductorFragment.TIPO_CANCION);
+                b.putBoolean("nuevo",true);
                 intent.putExtras(b);
                 startActivity(intent);
             }
@@ -133,6 +134,7 @@ public class CancionesAlbumFragment extends Fragment {
                 cancionesReproductor.add(cancionReproductor); //Añade la cancion correspondiente
                 b.putSerializable("canciones", cancionesReproductor);
                 b.putInt("tipo",ReproductorFragment.TIPO_CANCION);
+                b.putBoolean("nuevo",true);
                 intent.putExtras(b);
                 startActivity(intent);
             }

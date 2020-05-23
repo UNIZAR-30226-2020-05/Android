@@ -94,6 +94,7 @@ public class ResultadoCancionesBusquedaFragment extends Fragment {
                 cancionesReproductor.add(cancionReproductor); //Añade la cancion correspondiente
                 b.putSerializable("canciones", cancionesReproductor);
                 b.putInt("tipo",ReproductorFragment.TIPO_CANCION);
+                b.putBoolean("nuevo",true);
                 intent.putExtras(b);
                 startActivity(intent);
             }

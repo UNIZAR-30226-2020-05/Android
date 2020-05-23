@@ -52,6 +52,7 @@ public class MainLogged extends AppCompatActivity {
                     b = new Bundle();
                     b.putSerializable("canciones", canciones);
                     b.putInt("tipo",tipo);
+                    //b.putBoolean("nuevo",true);
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                             new ReproductorFragment()).commit();
                 } else if (tipo == ReproductorFragment.TIPO_PODCAST) {
@@ -59,6 +60,7 @@ public class MainLogged extends AppCompatActivity {
                     b = new Bundle();
                     b.putSerializable("podcasts", podcasts);
                     b.putInt("tipo",tipo);
+                    //b.putBoolean("nuevo",true);
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                             new ReproductorFragment()).commit();
                 }

@@ -122,6 +122,7 @@ public class CancionesListaActivity extends AppCompatActivity {
                 cancionesReproductor.add(canciones.get(recycler.getChildAdapterPosition(v))); //Añade la cancion correspondiente
                 b.putSerializable("canciones", cancionesReproductor);
                 b.putInt("tipo",ReproductorFragment.TIPO_CANCION);
+                b.putBoolean("nuevo",true);
                 intent.putExtras(b);
                 finish();
                 startActivity(intent);
@@ -135,6 +136,7 @@ public class CancionesListaActivity extends AppCompatActivity {
                 Bundle b = new Bundle();
                 b.putSerializable("canciones", canciones);
                 b.putInt("tipo",ReproductorFragment.TIPO_CANCION);
+                b.putBoolean("nuevo",true);
                 intent.putExtras(b);
                 finish();
                 startActivity(intent);

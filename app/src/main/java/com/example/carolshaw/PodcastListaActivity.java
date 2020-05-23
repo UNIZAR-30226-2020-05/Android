@@ -118,6 +118,7 @@ public class PodcastListaActivity extends AppCompatActivity {
                 podcastsReproductor.add(podcasts.get(recycler.getChildAdapterPosition(v))); //Añade la cancion correspondiente
                 b.putSerializable("podcasts", podcastsReproductor);
                 b.putInt("tipo",ReproductorFragment.TIPO_PODCAST);
+                b.putBoolean("nuevo",true);
                 intent.putExtras(b);
                 finish();
                 startActivity(intent);
@@ -131,6 +132,7 @@ public class PodcastListaActivity extends AppCompatActivity {
                 Bundle b = new Bundle();
                 b.putSerializable("podcasts", podcasts);
                 b.putInt("tipo",ReproductorFragment.TIPO_PODCAST);
+                b.putBoolean("nuevo",true);
                 intent.putExtras(b);
                 finish();
                 startActivity(intent);

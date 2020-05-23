@@ -96,6 +96,7 @@ public class ResultadoPodcastsBusquedaFragment extends Fragment {
                 podcastsReproductor.add(podcastReproductor); //Añade la cancion correspondiente
                 b.putSerializable("podcasts", podcastsReproductor);
                 b.putInt("tipo",ReproductorFragment.TIPO_PODCAST);
+                b.putBoolean("nuevo",true);
                 intent.putExtras(b);
                 startActivity(intent);
             }

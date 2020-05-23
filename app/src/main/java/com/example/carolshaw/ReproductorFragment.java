@@ -3,6 +3,7 @@ package com.example.carolshaw;
 import androidx.fragment.app.Fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.media.AudioAttributes;
@@ -47,6 +48,7 @@ import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -59,7 +61,7 @@ public class ReproductorFragment extends Fragment {
     public static final int TIPO_CANCION = 0;
     public static final int TIPO_PODCAST = 1;
     private static MediaPlayer mediaPlayer = new MediaPlayer();
-    private int tipo;
+    private static int tipo;
 
     private String URL_API;
     private ImageButton play_pause;
@@ -74,11 +76,14 @@ public class ReproductorFragment extends Fragment {
     private ImageView corazonFavorito;
 
     private Runnable runnable;
-    private int indiceReproduccion; //indice del vector
+    private static int indiceReproduccion; //indice del vector
 
-    ArrayList<Cancion> canciones = new ArrayList<Cancion>();
-    ArrayList<Podcast> podcasts = new ArrayList<Podcast>();
-    UsuarioDto usuarioLog;
+    private static ArrayList<Cancion> canciones = new ArrayList<Cancion>();
+    private static ArrayList<Podcast> podcasts = new ArrayList<Podcast>();
+    private UsuarioDto usuarioLog;
+    private static boolean primeraVez = true;
+    private static boolean estabaSonando = false;
+    private boolean nuevo = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -97,76 +102,154 @@ public class ReproductorFragment extends Fragment {
         mediaPlayer.setWakeMode(getContext(), PowerManager.PARTIAL_WAKE_LOCK); //Evita que el CPU se apague por ahorro de energía
         WifiManager.WifiLock wifiLock = ((WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE))
                 .createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock"); //Evita que el wifi se apague por ahorro de energía
-        //TODO: wifiLock.release(); cuando se haga stop()
 
         wifiLock.acquire();
 
-        Bundle b = getActivity().getIntent().getExtras();
-        reiniciarMediaPlayer();
-
-        if (b != null) {
-            tipo = b.getInt("tipo");
-            indiceReproduccion = 0;
-            if (tipo == TIPO_CANCION) {
-                canciones = (ArrayList<Cancion>) b.getSerializable("canciones");
-                bajarCaratulaCancion(indiceReproduccion);
-            } else if (tipo == TIPO_PODCAST) {
-                podcasts =  (ArrayList<Podcast>) b.getSerializable("podcasts");
-                caratula.setImageResource(R.drawable.podcast1);
-                reproducirPodcasts(indiceReproduccion);
-            }
-        } else {
-            informar("hay que poner la ultima cancion del userlog global");
+        if (primeraVez) {
+            //prepara para reproducir la ultima cancion/podcast del usuario
+            //TODO: tipo = usuarioLog.getTipo_ultima_reproduccion();
+            tipo = 1;
+            Log.d("reproductor","primera vez");
         }
 
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                Log.d("Reproductor","cancion terminada");
+        Bundle b = getActivity().getIntent().getExtras();
+
+        if (b != null) {
+            nuevo = b.getBoolean("nuevo");
+        }
+        if (!estabaSonando || primeraVez || nuevo) {
+            primeraVez = false;
+            reiniciarMediaPlayer();
+
+            if (b != null) {
+                getActivity().getIntent().removeExtra("nuevo");
+                tipo = b.getInt("tipo");
+                indiceReproduccion = 0;
                 if (tipo == TIPO_CANCION) {
-                    if (indiceReproduccion < canciones.size() - 1) {
-                        bajarCaratulaCancion(indiceReproduccion);
-                    }
+                    canciones = (ArrayList<Cancion>) b.getSerializable("canciones");
+                    bajarCaratulaCancion(indiceReproduccion,true);
                 } else if (tipo == TIPO_PODCAST) {
-                    if (indiceReproduccion < podcasts.size() - 1) {
-                        reproducirPodcasts(indiceReproduccion);
+                    podcasts = (ArrayList<Podcast>) b.getSerializable("podcasts");
+                    caratula.setImageResource(R.drawable.podcast1);
+                    reproducirPodcasts(indiceReproduccion);
+                }
+            } else {
+                // TODO:Descomentar esto
+                /*if (usuarioLog.getTipo_ultima_reproduccion() == TIPO_CANCION) {
+                    descargarUltimaCancion();
+                } else if (usuarioLog.getTipo_ultima_reproduccion() == TIPO_PODCAST) {
+                    descargarUltimoPodcast();
+                }*/
+                descargarUltimoPodcast();
+            }
+
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mediaPlayer) {
+                    Log.d("Reproductor", "cancion terminada");
+                    if (tipo == TIPO_CANCION) {
+                        if (indiceReproduccion < canciones.size() - 1) {
+                            bajarCaratulaCancion(indiceReproduccion,true);
+                        }
+                    } else if (tipo == TIPO_PODCAST) {
+                        if (indiceReproduccion < podcasts.size() - 1) {
+                            reproducirPodcasts(indiceReproduccion);
+                        }
                     }
                 }
+
+            });
+
+        } else {
+            actualizarDatosVista();
+            if (tipo == TIPO_CANCION) {
+                seekBar.setMax(canciones.get(indiceReproduccion).getDuracion()*1000);
+            } else if (tipo == TIPO_PODCAST) {
+                seekBar.setMax(podcasts.get(indiceReproduccion).getDuracion()*1000);
             }
-
-        });
-
-        /*seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            int position = 0;
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser) {
-                    Log.d("seekbar", String.valueOf(progress));
-                    position = progress;
-                }
-            }
-
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                if (mediaPlayer != null && mediaPlayer.isPlaying()) {
-                    mediaPlayer.seekTo(seekBar.getProgress());
-                    Log.d("seekbar", "progres:" + String.valueOf(seekBar.getProgress()));
-                }
-            }
-        });
-
-        mediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
-            @Override
-            public void onSeekComplete(MediaPlayer arg0) {
-                Log.d("seekbar","completado");
-                mediaPlayer.start();
-            }
-        });*/
+            actualizarSeekBar();
+        }
     }
 
-    private void bajarCaratulaCancion(final int id) {
+    private void descargarUltimoPodcast() {
+        final RequestQueue rq = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
+        String urlGet = URL_API + "/podcast/getByName?name=";
+
+        // Creating a JSON Object request
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, urlGet, null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        ArrayList<Podcast> podcastsEncontrados = new ArrayList<Podcast>();
+                        for (int i = 0; i < response.length(); i++) {
+                            try {
+                                Gson gson = new Gson();
+                                Podcast obj = gson.fromJson(response.getJSONObject(i).toString(), Podcast.class);
+                                podcastsEncontrados.add(obj);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        for (Podcast podcast : podcastsEncontrados) {
+                            //TODO: if (cancion.getId() == usuarioLog.getId_ultima_reproduccion()) {
+                            if (podcast.getId() == 73) {
+                                indiceReproduccion = 0;
+                                podcasts.add(podcast);
+                                reproducirPodcasts(indiceReproduccion);
+                            }
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        informar("Error desconocido al obtener la ultima canción");
+                    }
+                });
+        // Adding the string request to the queue
+        rq.add(jsonArrayRequest);
+    }
+
+    private void descargarUltimaCancion() {
+        final RequestQueue rq = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
+        String urlGet = URL_API + "/song/getByName?name=";
+
+        // Creating a JSON Object request
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, urlGet, null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        ArrayList<Cancion> cancionesEncontradas = new ArrayList<Cancion>();
+                        for (int i = 0; i < response.length(); i++) {
+                            try {
+                                Gson gson = new Gson();
+                                Cancion obj = gson.fromJson(response.getJSONObject(i).toString(), Cancion.class);
+                                cancionesEncontradas.add(obj);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        for (Cancion cancion : cancionesEncontradas) {
+                            //TODO: if (cancion.getId() == usuarioLog.getId_ultima_reproduccion()) {
+                            if (cancion.getId() == 113) {
+                                indiceReproduccion = 0;
+                                canciones.add(cancion);
+                                bajarCaratulaCancion(indiceReproduccion,true);
+                            }
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        informar("Error desconocido al obtener la ultima canción");
+                    }
+                });
+        // Adding the string request to the queue
+        rq.add(jsonArrayRequest);
+    }
+
+    private void bajarCaratulaCancion(final int id, final boolean reproducir) {
         final RequestQueue rq = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
         String urlGet = URL_API + "/album/getByTitulo?titulo=" + canciones.get(id).getAlbum();
 
@@ -181,7 +264,9 @@ public class ReproductorFragment extends Fragment {
                                 Album obj = gson.fromJson(response.getJSONObject(i).toString(), Album.class);
                                 Glide.with(getContext()).load(URL_API + obj.getCaratula()).
                                         into(caratula);
-                                reproducirCanciones(id);
+                                if (reproducir) {
+                                    reproducirCanciones(id);
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -220,10 +305,12 @@ public class ReproductorFragment extends Fragment {
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
+                    estabaSonando = true;
                     play_pause.setImageResource(R.drawable.pause);
                     mediaPlayer.start();
                     int duracionPodcast = podcasts.get(indiceReproduccion).getDuracion(); //en segundos
                     seekBar.setMax(duracionPodcast * 1000);
+                    establecerUltimoPodcast();
                     actualizarSeekBar();
                 }
             });
@@ -242,10 +329,12 @@ public class ReproductorFragment extends Fragment {
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
+                    estabaSonando = true;
                     play_pause.setImageResource(R.drawable.pause);
                     mediaPlayer.start();
                     int duracionCancion = canciones.get(indiceReproduccion).getDuracion(); //en segundos
                     seekBar.setMax(duracionCancion * 1000);
+                    establecerUltimaCancion();
                     actualizarSeekBar();
                 }
             });
@@ -253,6 +342,46 @@ public class ReproductorFragment extends Fragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void establecerUltimoPodcast() {
+    }
+
+    private void establecerUltimaCancion() {
+        final RequestQueue rq = Volley.newRequestQueue(getActivity().getApplicationContext());
+        String peticion = URL_API +"/user/modifyLastPlay/" + usuarioLog.getId();
+        final String stringParams = canciones.get(indiceReproduccion).getId() + "\n" +
+                mediaPlayer.getCurrentPosition()/1000 + "\n" +
+                "0";
+        final JSONObject params = new JSONObject();
+        try {
+            params.put("id_play", canciones.get(indiceReproduccion).getId());
+            params.put("minuto_play", mediaPlayer.getCurrentPosition()/1000);
+            params.put("tipo_play",0);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        // Creating a JSON Object request
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PATCH, peticion, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Reproductor","Guardada ultima cancion");
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) { Log.d("Reproductor",error.toString()); }
+                }) {
+            @Override
+            public byte[] getBody() {
+                return stringParams.getBytes();
+            }
+        };
+
+        // Adding the string request to the queue
+        rq.add(jsonObjectRequest);
     }
 
     //Actualiza la barra cada segundo
@@ -288,6 +417,12 @@ public class ReproductorFragment extends Fragment {
         autor = vista.findViewById(R.id.autor);
         corazonFavorito = vista.findViewById(R.id.corazonFavorito);
 
+        if (mediaPlayer.isPlaying()) {
+            play_pause.setImageResource(R.drawable.pause);
+        } else {
+            play_pause.setImageResource(R.drawable.play);
+        }
+
         play_pause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -317,11 +452,9 @@ public class ReproductorFragment extends Fragment {
     }
 
     private void actualizarDatosVista () {
-        //TODO: no se por que el tiempoTotal y titulo lo coge como null y no puede poner texto en ellos
-        //Poner caratula (hacer busqueda del album con el nombre de la cancion), podcast siempre tiene la misma
-
 
         if (tipo == TIPO_CANCION) {
+            bajarCaratulaCancion(indiceReproduccion,false);
             Cancion cancion = canciones.get(indiceReproduccion);
             tiempoTotal.setText(cancion.getDuracionMMSS());
             titulo.setText(cancion.getName());
@@ -333,6 +466,7 @@ public class ReproductorFragment extends Fragment {
             }
             autor.setText(autorString);
         } else if (tipo == TIPO_PODCAST) {
+            caratula.setImageResource(R.drawable.podcast1);
             Podcast podcast = podcasts.get(indiceReproduccion);
             tiempoTotal.setText(podcast.getDuracionMMSS());
             titulo.setText(podcast.getName());
@@ -447,7 +581,7 @@ public class ReproductorFragment extends Fragment {
             if (indiceReproduccion > 0) {
 
                 indiceReproduccion--;
-                bajarCaratulaCancion(indiceReproduccion);
+                bajarCaratulaCancion(indiceReproduccion,true);
             } else {
                 informar("Esta es la primera canción de la lista de reproducción");
             }
@@ -465,7 +599,7 @@ public class ReproductorFragment extends Fragment {
         if (tipo == TIPO_CANCION) {
             if (indiceReproduccion < canciones.size() - 1) {
                 indiceReproduccion++;
-                bajarCaratulaCancion(indiceReproduccion);
+                bajarCaratulaCancion(indiceReproduccion,true);
             } else {
                 informar("No hay más canciones en la lista de reproducción");
             }
