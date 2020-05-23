@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:padding="8dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/carol_shaw_color">
 
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="328dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="vertical"
@@ -29,13 +31,23 @@
             android:textSize="15sp"
             android:textStyle="italic"
             tools:text="@tools:sample/lorem[4]" />
+
         <TextView
             android:id="@+id/duracionCancion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="15sp"
             tools:text="99:99" />
-
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/btnBorrarCancion"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_gravity="center"
+        android:clickable="true"
+        android:visibility="visible"
+        app:srcCompat="@drawable/trash"
+        tools:visibility="visible" />
 
 </LinearLayout>

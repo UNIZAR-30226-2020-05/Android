@@ -27,6 +27,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.carolshaw.adapters.CancionesListaAdapter;
 import com.example.carolshaw.adapters.ListaCancionesAdapter;
 import com.example.carolshaw.adapters.ResultadoCancionesBusquedaAdapter;
 import com.example.carolshaw.objetos.Cancion;
@@ -47,7 +48,7 @@ public class CancionesListaActivity extends AppCompatActivity {
     private ImageView botonPlay;
     private TextView copiarLista;
     private RecyclerView recycler;
-    private ResultadoCancionesBusquedaAdapter adapter;
+    private CancionesListaAdapter adapter;
     private String URL_API;
     private int idLista;
     private int indiceLista;
@@ -73,7 +74,7 @@ public class CancionesListaActivity extends AppCompatActivity {
             idLista = b.getInt("idLista");
             copiarLista.setText(String.valueOf(idLista));
             tituloVista.setText(nombreLista);
-            adapter = new ResultadoCancionesBusquedaAdapter(canciones);
+            adapter = new CancionesListaAdapter(canciones);
             recycler.setLayoutManager(new LinearLayoutManager(CancionesListaActivity.this,
                     LinearLayoutManager.VERTICAL,false));
             recycler.setAdapter(adapter);

@@ -14,27 +14,27 @@ import com.example.carolshaw.objetos.Cancion;
 
 import java.util.ArrayList;
 
-public class ResultadoCancionesBusquedaAdapter extends RecyclerView.Adapter<ResultadoCancionesBusquedaAdapter.Datos>
+public class CancionesListaAdapter extends RecyclerView.Adapter<CancionesListaAdapter.Datos>
         implements View.OnClickListener{
 
     ArrayList<Cancion> array;
     private View.OnClickListener listener;
 
-    public ResultadoCancionesBusquedaAdapter(ArrayList<Cancion> array) {
+    public CancionesListaAdapter(ArrayList<Cancion> array) {
         this.array = array;
     }
 
     @NonNull
     @Override
-    public ResultadoCancionesBusquedaAdapter.Datos onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CancionesListaAdapter.Datos onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recycler_view_item_cancion,null,false);
         view.setOnClickListener(this);
-        return new ResultadoCancionesBusquedaAdapter.Datos(view);
+        return new CancionesListaAdapter.Datos(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ResultadoCancionesBusquedaAdapter.Datos holder, int position) {
+    public void onBindViewHolder(@NonNull CancionesListaAdapter.Datos holder, int position) {
         holder.establecer(array.get(position));
     }
 
@@ -73,7 +73,6 @@ public class ResultadoCancionesBusquedaAdapter extends RecyclerView.Adapter<Resu
             nombre.setText(cancion.getName());
             album.setText(cancion.getAlbum());
             duracion.setText(cancion.getDuracionMMSS());
-            btnBorrar.setVisibility(View.GONE);
         }
     }
 }
