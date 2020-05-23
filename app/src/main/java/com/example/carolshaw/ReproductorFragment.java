@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.wifi.WifiManager;
@@ -44,6 +45,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import static android.media.AudioAttributes.CONTENT_TYPE_MUSIC;
 import static android.media.MediaPlayer.SEEK_CLOSEST_SYNC;
 import static android.media.MediaPlayer.create;
 
@@ -80,7 +82,10 @@ public class ReproductorFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mediaPlayer.setAudioAttributes(new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_MEDIA)
+                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                .build());
         mediaPlayer.setWakeMode(getContext(), PowerManager.PARTIAL_WAKE_LOCK); //Evita que el CPU se apague por ahorro de energía
         WifiManager.WifiLock wifiLock = ((WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE))
                 .createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock"); //Evita que el wifi se apague por ahorro de energía
@@ -105,6 +110,23 @@ public class ReproductorFragment extends Fragment {
         } else {
             informar("hay que poner la ultima cancion del userlog global");
         }
+
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                Log.d("Reproductor","cancion terminada");
+                if (tipo == TIPO_CANCION) {
+                    if (indiceReproduccion < canciones.size() - 1) {
+                        bajarCaratulaCancion(indiceReproduccion);
+                    }
+                } else if (tipo == TIPO_PODCAST) {
+                    if (indiceReproduccion < podcasts.size() - 1) {
+                        reproducirPodcasts(indiceReproduccion);
+                    }
+                }
+            }
+
+        });
 
         /*seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int position = 0;
@@ -177,6 +199,7 @@ public class ReproductorFragment extends Fragment {
     }
 
     private void reproducirPodcasts ( final int id){
+        reiniciarMediaPlayer();
         try {
             mediaPlayer.setDataSource(URL_API + "/podcast/play/" + podcasts.get(id).getName());
             mediaPlayer.setWakeMode(getContext(), PowerManager.PARTIAL_WAKE_LOCK); //Evita que el CPU se apague por ahorro de energía
@@ -203,6 +226,7 @@ public class ReproductorFragment extends Fragment {
     }
 
     private void reproducirCanciones(final int id) {
+        reiniciarMediaPlayer();
         try {
             mediaPlayer.setDataSource(URL_API + "/song/play/" + canciones.get(id).getName());
 
@@ -239,7 +263,6 @@ public class ReproductorFragment extends Fragment {
             Handler handler = new Handler();
             handler.postDelayed(runnable, 1000);
         }
-        Log.d("seekbar","runnable");
     }
 
     @Override
@@ -305,7 +328,7 @@ public class ReproductorFragment extends Fragment {
     private void previo () {
         if (tipo == TIPO_CANCION) {
             if (indiceReproduccion > 0) {
-                reiniciarMediaPlayer();
+
                 indiceReproduccion--;
                 bajarCaratulaCancion(indiceReproduccion);
             } else {
@@ -313,7 +336,6 @@ public class ReproductorFragment extends Fragment {
             }
         } else if (tipo == TIPO_PODCAST) {
             if (indiceReproduccion > 0) {
-                reiniciarMediaPlayer();
                 indiceReproduccion--;
                 reproducirPodcasts(indiceReproduccion);
             } else {
@@ -325,7 +347,6 @@ public class ReproductorFragment extends Fragment {
     private void siguiente () {
         if (tipo == TIPO_CANCION) {
             if (indiceReproduccion < canciones.size() - 1) {
-                reiniciarMediaPlayer();
                 indiceReproduccion++;
                 bajarCaratulaCancion(indiceReproduccion);
             } else {
@@ -333,7 +354,6 @@ public class ReproductorFragment extends Fragment {
             }
         } else if (tipo == TIPO_PODCAST) {
             if (indiceReproduccion < podcasts.size() - 1) {
-                reiniciarMediaPlayer();
                 indiceReproduccion++;
                 reproducirPodcasts(indiceReproduccion);
             } else {
