@@ -646,7 +646,7 @@ public class ReproductorFragment extends Fragment {
     /* informa mediante un TOAST
      */
     private void informar (String mensaje){
-        Toast toast = Toast.makeText(getActivity().getApplicationContext(),
+        Toast toast = Toast.makeText(context,
                 mensaje, Toast.LENGTH_SHORT);
         View view = toast.getView();
 
