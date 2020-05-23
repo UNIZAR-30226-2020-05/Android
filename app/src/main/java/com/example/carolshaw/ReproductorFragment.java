@@ -29,16 +29,21 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.carolshaw.objetos.Album;
 import com.example.carolshaw.objetos.Cancion;
+import com.example.carolshaw.objetos.ListaCancion;
+import com.example.carolshaw.objetos.ListaPodcast;
 import com.example.carolshaw.objetos.Podcast;
+import com.example.carolshaw.objetos.UsuarioDto;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
@@ -66,12 +71,14 @@ public class ReproductorFragment extends Fragment {
     private TextView tiempoActual;
     private TextView titulo;
     private TextView autor;
+    private ImageView corazonFavorito;
 
     private Runnable runnable;
     private int indiceReproduccion; //indice del vector
 
     ArrayList<Cancion> canciones = new ArrayList<Cancion>();
     ArrayList<Podcast> podcasts = new ArrayList<Podcast>();
+    UsuarioDto usuarioLog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,6 +89,7 @@ public class ReproductorFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        usuarioLog = (UsuarioDto) getActivity().getApplicationContext();
         mediaPlayer.setAudioAttributes(new AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_MEDIA)
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
@@ -278,6 +286,7 @@ public class ReproductorFragment extends Fragment {
         tiempoTotal = vista.findViewById(R.id.duracionTotal);
         titulo = vista.findViewById(R.id.nombre);
         autor = vista.findViewById(R.id.autor);
+        corazonFavorito = vista.findViewById(R.id.corazonFavorito);
 
         play_pause.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -295,6 +304,12 @@ public class ReproductorFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 previo();
+            }
+        });
+        corazonFavorito.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                anadirFavorito();
             }
         });
 
@@ -323,6 +338,108 @@ public class ReproductorFragment extends Fragment {
             titulo.setText(podcast.getName());
             autor.setText(podcast.getArtista());
         }
+    }
+
+    private void anadirFavorito() {
+        if (tipo == TIPO_CANCION) {
+            buscarFavoritosCancion();
+        } else if (tipo == TIPO_PODCAST) {
+            buscarFavoritosPodcast();
+        }
+    }
+
+    private void buscarFavoritosPodcast() {
+        ArrayList<ListaPodcast> listasUsuario = usuarioLog.getLista_podcast();
+        boolean encontrado = false;
+        for (int i = 0; i < listasUsuario.size(); i++) {
+            if (listasUsuario.get(i).getNombre().equals("Favoritos")) {
+                anadirPodcastFavorito(listasUsuario.get(i).getId(), i);
+                i = listasUsuario.size(); //Garantiza terminar el bucle
+                encontrado = true;
+            }
+        }
+        if (!encontrado) {
+            informar("Lista de Favoritos no encontrada");
+        }
+    }
+
+    private void buscarFavoritosCancion() {
+
+        ArrayList<ListaCancion> listasUsuario = usuarioLog.getLista_cancion();
+        boolean encontrado = false;
+        for (int i = 0; i < listasUsuario.size(); i++) {
+            if (listasUsuario.get(i).getNombre().equals("Favoritos")) {
+                anadirCancionFavorita(listasUsuario.get(i).getId(),i);
+                i = listasUsuario.size(); //Garantiza terminar el bucle
+                encontrado = true;
+            }
+        }
+        if (!encontrado) {
+            informar("Lista de Favoritos no encontrada");
+        }
+    }
+
+    private void anadirPodcastFavorito(final int idLista, final int indiceLista) {
+        final RequestQueue rq = Volley.newRequestQueue(getActivity().getApplicationContext());
+        String url = URL_API + "/listaPodcast/add/" + idLista;
+        // Creating a JSON Object request
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PATCH, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Gson gson = new Gson();
+                        ListaPodcast obj = gson.fromJson(response.toString(), ListaPodcast.class);
+                        usuarioLog.deleteLista_podcast(indiceLista);
+                        usuarioLog.addLista_podcast(obj);
+                        informar("Podcast añadido a favoritos");
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        informar("Error al añadir el podcast a favoritos");
+                    }
+                }) {
+            @Override
+            public byte[] getBody() {
+                return String.valueOf(podcasts.get(indiceReproduccion).getId()).getBytes();
+            }
+        };
+
+        // Adding the string request to the queue
+        rq.add(jsonObjectRequest);
+    }
+
+    private void anadirCancionFavorita(final int idLista, final int indiceLista) {
+        final RequestQueue rq = Volley.newRequestQueue(getActivity().getApplicationContext());
+
+        String url = URL_API + "/listaCancion/add/" + idLista;
+        // Creating a JSON Object request
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PATCH, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Gson gson = new Gson();
+                        ListaCancion obj = gson.fromJson(response.toString(), ListaCancion.class);
+                        usuarioLog.deleteLista_cancion(indiceLista);
+                        usuarioLog.addLista_cancion(obj);
+                        informar("Canción añadida a favoritos");
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        informar("Error al añadir la canción a favoritos");
+                    }
+                }) {
+            @Override
+            public byte[] getBody() {
+                return String.valueOf(canciones.get(indiceReproduccion).getId()).getBytes();
+            }
+        };
+
+        // Adding the string request to the queue
+        rq.add(jsonObjectRequest);
     }
 
     private void previo () {
