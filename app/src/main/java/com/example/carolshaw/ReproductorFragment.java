@@ -350,19 +350,11 @@ public class ReproductorFragment extends Fragment {
     private void establecerUltimaCancion() {
         final RequestQueue rq = Volley.newRequestQueue(getActivity().getApplicationContext());
         String peticion = URL_API +"/user/modifyLastPlay/" + usuarioLog.getId();
-        final String stringParams = canciones.get(indiceReproduccion).getId() + "\n" +
-                mediaPlayer.getCurrentPosition()/1000 + "\n" +
-                "0";
-        final JSONObject params = new JSONObject();
-        try {
-            params.put("id_play", canciones.get(indiceReproduccion).getId());
-            params.put("minuto_play", mediaPlayer.getCurrentPosition()/1000);
-            params.put("tipo_play",0);
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        // Creating a JSON Object request
+        final String params = "id_play: " + canciones.get(indiceReproduccion).getId() + "\n" +
+            "minuto_play: " + mediaPlayer.getCurrentPosition()/1000 + "\n" +
+            "tipo_play: 0";
+
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PATCH, peticion, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -376,7 +368,7 @@ public class ReproductorFragment extends Fragment {
                 }) {
             @Override
             public byte[] getBody() {
-                return stringParams.getBytes();
+                return params.getBytes();
             }
         };
 
@@ -386,9 +378,13 @@ public class ReproductorFragment extends Fragment {
 
     //Actualiza la barra cada segundo
     private void actualizarSeekBar () {
+        int tiempoTotal = seekBar.getMax()/1000;
         seekBar.setProgress(mediaPlayer.getCurrentPosition());
         int tiempo = mediaPlayer.getCurrentPosition() / 1000;
         tiempoActual.setText(String.format("%02d:%02d", tiempo / 60, tiempo % 60));
+        if (tiempoTotal == tiempo) {
+            siguiente();
+        }
         if (mediaPlayer.isPlaying()) {
             runnable = new Runnable() {
                 @Override
