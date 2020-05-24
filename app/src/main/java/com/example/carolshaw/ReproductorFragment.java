@@ -485,6 +485,11 @@ public class ReproductorFragment extends Fragment {
 
             public void onStopTrackingTouch(SeekBar seekBar) {
                 mediaPlayer.seekTo(seekBar.getProgress());
+                if (tipo == TIPO_CANCION) {
+                    establecerUltimaCancion();
+                } else if (tipo == TIPO_PODCAST) {
+                    establecerUltimoPodcast();
+                }
             }
         });
 
