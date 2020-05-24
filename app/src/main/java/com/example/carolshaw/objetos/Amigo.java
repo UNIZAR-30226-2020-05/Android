@@ -1,6 +1,8 @@
 package com.example.carolshaw.objetos;
 
-public class Amigo {
+import java.io.Serializable;
+
+public class Amigo implements Serializable {
 
 
 

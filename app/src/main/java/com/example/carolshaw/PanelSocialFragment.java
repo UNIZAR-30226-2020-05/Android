@@ -47,7 +47,6 @@ public class PanelSocialFragment extends Fragment {
     private ImageView borrarAmigo;
 
     public PanelSocialFragment() {
-        // Required empty public constructor
     }
 
 
@@ -56,19 +55,6 @@ public class PanelSocialFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         amigo= getView().findViewById(R.id.btnAmigo);
         URL_API = getString(R.string.API);
-        //borrarAmigo = recycler.findViewById(R.id.btnBorrarAmigo);
-       /* borrarAmigo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    Log.d("ASD","WEEEEE");
-                    eliminarAmigo(listAmigos.get(0).getId());
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });*/
         amigo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,14 +102,6 @@ public class PanelSocialFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View vista = inflater.inflate(R.layout.fragment_social, container, false);
-       // listAmigos = new ArrayList<Amigo>();
-      //  a.setNick("Nick objeto amigo");
-      //  a.setNombre("Nombre"); a.setApellidos("Apellidos");
-        //Log.d("ASDF", String.valueOf(listAmigos.size())+listAmigos.get(0).getNick()+"---"+listAmigos.get(0).getNombre());
-
-        Log.d("AAAAAAA", String.valueOf(listAmigos.size()));
-
-        //Picasso.get().load("http://i.imgur.com/DvpvklR.png").into(R.id.fotoPerfil);
         return vista;
     }
 
@@ -132,10 +110,8 @@ public class PanelSocialFragment extends Fragment {
         adapter.setOnItemClickListener(new PanelSocialAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                // Que pasa cuando se toca encima del amigo
-               Toast.makeText(getContext(),"Tratar amigo elegido: " +
-                       listAmigos.get(position).getNick(),
-                       Toast.LENGTH_LONG).show();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new PerfilAmigoFragment().newInstance(listAmigos.get(position))).commit();
             }
 
             @Override
@@ -179,9 +155,6 @@ public class PanelSocialFragment extends Fragment {
         // Terminar transición.
         fragmentTransaction.commit();
 
-       /* getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new PanelSocialBusqFragment().newInstance(userLogeado.getId())).commit();
-                // LLamar al Fragment secundario pasandole el id de usuario logeado.*/
     }
 
     public void eliminarAmigo(final Integer id) throws JSONException {
