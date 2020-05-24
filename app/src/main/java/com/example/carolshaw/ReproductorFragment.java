@@ -75,6 +75,7 @@ public class ReproductorFragment extends Fragment {
     private boolean nuevo = false;
     private static int tempUltimaReproduccion = 0;
     private static Context context;
+    private boolean ultimaReproduccion = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -124,6 +125,7 @@ public class ReproductorFragment extends Fragment {
                     reproducirPodcasts(indiceReproduccion);
                 }
             } else {
+                ultimaReproduccion = true;
                 if (usuarioLog.getTipo_ultima_reproduccion() == TIPO_CANCION) {
                     descargarUltimaCancion();
                 } else if (usuarioLog.getTipo_ultima_reproduccion() == TIPO_PODCAST) {
@@ -280,7 +282,7 @@ public class ReproductorFragment extends Fragment {
     private void reproducirPodcasts ( final int id){
         reiniciarMediaPlayer();
         try {
-            mediaPlayer.setDataSource(URL_API + "/podcast/play/" + podcasts.get(id).getName());
+            mediaPlayer.setDataSource(URL_API + "/podcast/" + podcasts.get(id).getName() + ".mp3");
             mediaPlayer.setWakeMode(getContext(), PowerManager.PARTIAL_WAKE_LOCK); //Evita que el CPU se apague por ahorro de energía
             WifiManager.WifiLock wifiLock = ((WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE))
                     .createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock"); //Evita que el wifi se apague por ahorro de energía
@@ -296,6 +298,10 @@ public class ReproductorFragment extends Fragment {
                     mediaPlayer.start();
                     int duracionPodcast = podcasts.get(indiceReproduccion).getDuracion(); //en segundos
                     seekBar.setMax(duracionPodcast * 1000);
+                    if (ultimaReproduccion) {
+                        ultimaReproduccion = false;
+                        mediaPlayer.seekTo(usuarioLog.getMinuto_ultima_reproduccion()*1000);
+                    }
                     establecerUltimoPodcast();
                     actualizarSeekBar();
                 }
@@ -309,7 +315,7 @@ public class ReproductorFragment extends Fragment {
     private void reproducirCanciones(final int id) {
         reiniciarMediaPlayer();
         try {
-            mediaPlayer.setDataSource(URL_API + "/song/play/" + canciones.get(id).getName());
+            mediaPlayer.setDataSource(URL_API + "/music/" + canciones.get(id).getName() + ".mp3");
 
             mediaPlayer.prepareAsync();
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -321,6 +327,10 @@ public class ReproductorFragment extends Fragment {
                     int duracionCancion = canciones.get(indiceReproduccion).getDuracion(); //en segundos
                     seekBar.setMax(duracionCancion * 1000);
                     establecerUltimaCancion();
+                    if (ultimaReproduccion) {
+                        ultimaReproduccion = false;
+                        mediaPlayer.seekTo(usuarioLog.getMinuto_ultima_reproduccion()*1000);
+                    }
                     actualizarSeekBar();
                 }
             });
@@ -463,6 +473,18 @@ public class ReproductorFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 anadirFavorito();
+            }
+        });
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            }
+
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                mediaPlayer.seekTo(seekBar.getProgress());
             }
         });
 
@@ -632,7 +654,7 @@ public class ReproductorFragment extends Fragment {
     }
 
 
-    public void playPause () {
+    private void playPause () {
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
             play_pause.setImageResource(R.drawable.play);
