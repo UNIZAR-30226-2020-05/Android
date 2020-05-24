@@ -1,5 +1,6 @@
 package com.example.carolshaw;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.android.volley.Request;
@@ -41,13 +43,16 @@ public class PerfilAmigoFragment extends Fragment {
     private RecyclerView recyclerInfoAmigo;
     private RecyclerView recyclerListasCancionesAmigo;
     private RecyclerView recyclerListasPodcastsAmigo;
-    private ImageView btnCancionesPodcast;
+    private ImageButton btnCancionesPodcast;
     private final int tipoCancion = ReproductorFragment.TIPO_CANCION;
     private final int tipoPodcast = ReproductorFragment.TIPO_PODCAST;
     private int tipo;
 
     private ArrayList<ListaCancion> listasCanciones;
     private ArrayList<ListaPodcast> listasPodcasts;
+    private ListaCancionesAdapter adapterListasCanciones;
+    private ListaPodcastsAdapter adapterListasPodcasts;
+    UsuarioDto amigoDto;
 
     public PerfilAmigoFragment() {
         // Required empty public constructor
@@ -83,10 +88,12 @@ public class PerfilAmigoFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (tipo == tipoCancion) {
+                    btnCancionesPodcast.setImageResource(R.drawable.nota_musica);
                     recyclerListasCancionesAmigo.setVisibility(View.GONE);
                     recyclerListasPodcastsAmigo.setVisibility(View.VISIBLE);
                     tipo = tipoPodcast;
                 } else if (tipo == tipoPodcast) {
+                    btnCancionesPodcast.setImageResource(R.drawable.auriculares_podcast);
                     recyclerListasPodcastsAmigo.setVisibility(View.GONE);
                     recyclerListasCancionesAmigo.setVisibility(View.VISIBLE);
                     tipo = tipoCancion;
@@ -107,9 +114,9 @@ public class PerfilAmigoFragment extends Fragment {
                     public void onResponse(JSONObject response) {
                         //Cuando llega la respuesta de objeto usuario
                         Gson gson = new Gson();
-                        UsuarioDto obj = gson.fromJson(response.toString(), UsuarioDto.class);
-                        listasCanciones = obj.getLista_cancion();
-                        listasPodcasts = obj.getLista_podcast();
+                        amigoDto = gson.fromJson(response.toString(), UsuarioDto.class);
+                        listasCanciones = amigoDto.getLista_cancion();
+                        listasPodcasts = amigoDto.getLista_podcast();
                         cargarListas();
                     }
                 },
@@ -124,12 +131,49 @@ public class PerfilAmigoFragment extends Fragment {
 
     private void cargarListas() {
         if (tipo == tipoCancion) {
-            ListaCancionesAdapter adapterListas = new ListaCancionesAdapter(listasCanciones);
-            recyclerListasCancionesAmigo.setAdapter(adapterListas);
+            adapterListasCanciones = new ListaCancionesAdapter(listasCanciones);
+            recyclerListasCancionesAmigo.setAdapter(adapterListasCanciones);
+
+            adapterListasCanciones.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), CancionesListaActivity.class);
+                    Bundle b = new Bundle();
+                    b.putString("nombre", amigoDto.getLista_cancion().get(
+                            recyclerListasCancionesAmigo.getChildAdapterPosition(v)).getNombre());
+                    b.putInt("idLista", amigoDto.getLista_cancion().get(
+                            recyclerListasCancionesAmigo.getChildAdapterPosition(v)).getId());
+                    b.putSerializable("canciones", amigoDto.getLista_cancion().get(
+                            recyclerListasCancionesAmigo.getChildAdapterPosition(v)).getCanciones());
+
+                    intent.putExtras(b);
+                    startActivity(intent);
+                }
+            });
         } else if (tipo == tipoPodcast) {
-            ListaPodcastsAdapter adapterListas = new ListaPodcastsAdapter(listasPodcasts);
-            recyclerListasPodcastsAmigo.setAdapter(adapterListas);
+            adapterListasPodcasts = new ListaPodcastsAdapter(listasPodcasts);
+            recyclerListasPodcastsAmigo.setAdapter(adapterListasPodcasts);
+
+            adapterListasPodcasts.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), PodcastListaActivity.class);
+                    Bundle b = new Bundle();
+                    b.putString("nombre", amigoDto.getLista_podcast().get(
+                            recyclerListasPodcastsAmigo.getChildAdapterPosition(v)).getNombre());
+                    b.putInt("idLista", amigoDto.getLista_podcast().get(
+                            recyclerListasPodcastsAmigo.getChildAdapterPosition(v)).getId());
+                    b.putInt("indiceLista", recyclerListasPodcastsAmigo.getChildAdapterPosition(v));
+                    b.putSerializable("podcasts", amigoDto.getLista_podcast().get(
+                            recyclerListasPodcastsAmigo.getChildAdapterPosition(v)).getPodcasts());
+
+                    intent.putExtras(b);
+                    startActivity(intent);
+                }
+            });
         }
+
+
     }
 
     @Override
