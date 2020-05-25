@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/carol_shaw_color"
+    android:backgroundTint="@color/carol_shaw_color"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/fotoPerfil"
+        android:layout_width="99dp"
+        android:layout_height="106dp"
+        android:visibility="visible"
+        app:srcCompat="@drawable/perfil1"
+        tools:src="@drawable/perfil1"
+        tools:srcCompat="@drawable/perfil1"
+        tools:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="13dp"
+        android:layout_height="70dp"
+        android:layout_gravity="bottom"
+        android:layout_weight="1"
+        app:srcCompat="@android:drawable/ic_media_play" />
+
+    <LinearLayout
+        android:layout_width="250dp"
+        android:layout_height="104dp"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <TextView
+            android:id="@+id/nickAmigo"
+            android:layout_width="215dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            tools:text="@tools:sample/lorem[3]" />
+
+        <TextView
+            android:id="@+id/nombreAmigo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            tools:text="@tools:sample/lorem[4]" />
+
+        <TextView
+            android:id="@+id/ultimaReproduccion"
+            android:layout_width="238dp"
+            android:layout_height="47dp"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="italic"
+            tools:text="@tools:sample/lorem[3]" />
+
+    </LinearLayout>
+
+</LinearLayout>
