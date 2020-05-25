@@ -149,9 +149,6 @@ public class UsuarioDto extends Application {
     public void deleteLista_cancion(int indice) {
         this.lista_cancion.remove(indice);
     }
-     public  void deleteCancino_lista(int indice){
-
-     }
 
     public void addLista_cancion(ListaCancion lista_cancion) {
         this.lista_cancion.add(lista_cancion);
