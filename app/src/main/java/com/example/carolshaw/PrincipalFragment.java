@@ -31,6 +31,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
 
 
@@ -119,11 +120,13 @@ public class PrincipalFragment extends Fragment {
                                 Gson gson = new Gson();
                                 Album obj = gson.fromJson(response.getJSONObject(i).toString(), Album.class);
                                 albumes.add(obj);
-                                mostrarAlbumes();
+
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                         }
+                        Collections.shuffle(albumes);
+                        mostrarAlbumes();
                     }
                 },
                 new Response.ErrorListener() {
@@ -161,13 +164,17 @@ public class PrincipalFragment extends Fragment {
                         Gson gson = new Gson();
                         Podcast obj;
                         try {
-                            for (int i = 0; i < 4; i++) {
+                            for (int i = 0; i < response.length(); i++) {
                                 obj = gson.fromJson(response.getJSONObject(i).toString(), Podcast.class);
                                 podcasts.add(obj);
-                                tituloPodcast.get(i).setText(obj.getName());
+
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
+                        }
+                        Collections.shuffle(podcasts);
+                        for (int i = 0; i < 4; i++) {
+                            tituloPodcast.get(i).setText(podcasts.get(i).getName());
                         }
                     }
                 },

@@ -3,6 +3,7 @@ package com.example.carolshaw.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -58,18 +59,21 @@ public class CancionesAlbumAdapter extends RecyclerView.Adapter<CancionesAlbumAd
         TextView tituloCancion;
         TextView albumCancion;
         TextView duracionCancion;
+        ImageView btnBorrar;
 
         public Datos(@NonNull View itemView) {
             super(itemView);
             tituloCancion = itemView.findViewById(R.id.tituloCancion);
             albumCancion = itemView.findViewById(R.id.albumCancion);
             duracionCancion = itemView.findViewById(R.id.duracionCancion);
+            btnBorrar = itemView.findViewById(R.id.btnBorrarCancion);
         }
 
         public void establecer(Cancion cancion) {
             tituloCancion.setText(cancion.getName());
             albumCancion.setText(cancion.getAlbum());
             duracionCancion.setText(cancion.getDuracionMMSS());
+            btnBorrar.setVisibility(View.GONE);
         }
     }
 }

@@ -62,7 +62,7 @@ public class CancionesAlbumFragment extends Fragment {
 
         anadirALista.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { // Que pasa cuando se toca encima del amigo
+            public void onClick(View v) {
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new AnadirCancionesALista().newInstance(album.getId(), AnadirCancionesALista.TIPO_ALBUM)).commit();
             }
@@ -70,7 +70,7 @@ public class CancionesAlbumFragment extends Fragment {
 
         reproducirAlbum.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { // Que pasa cuando se toca encima del amigo
+            public void onClick(View v) {
                 Intent intent = new Intent(getContext(), MainLogged.class);
                 Bundle b = new Bundle();
                 ArrayList<Cancion> cancionesReproductor = new ArrayList<Cancion>(album.getCanciones()); //Añade la cancion correspondiente
