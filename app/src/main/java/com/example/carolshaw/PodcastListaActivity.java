@@ -25,12 +25,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.carolshaw.adapters.ResultadoCancionesBusquedaAdapter;
+import com.example.carolshaw.adapters.CancionesListaAdapter;
 import com.example.carolshaw.adapters.ResultadoPodcastsBusquedaAdapter;
-import com.example.carolshaw.objetos.Cancion;
 import com.example.carolshaw.objetos.Podcast;
 import com.example.carolshaw.objetos.UsuarioDto;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -48,8 +48,8 @@ public class PodcastListaActivity extends AppCompatActivity {
     private String URL_API;
     private int idLista;
     private UsuarioDto usuarioLog;
-    private int indiceLista;
-    private boolean perteneceUsuario;
+    private int indiceInternoLista;
+    private boolean perteneceUsuario = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,21 +71,29 @@ public class PodcastListaActivity extends AppCompatActivity {
             idLista = b.getInt("idLista");
             copiarLista.setText(String.valueOf(idLista));
             tituloVista.setText(nombreLista);
-            adapter = new ResultadoPodcastsBusquedaAdapter(podcasts);
-            recycler.setLayoutManager(new LinearLayoutManager(PodcastListaActivity.this,
-                    LinearLayoutManager.VERTICAL,false));
-            recycler.setAdapter(adapter);
             for (int i = 0; i < usuarioLog.getLista_podcast().size(); i++) {
                 if(usuarioLog.getLista_podcast().get(i).getId() == idLista){
                     perteneceUsuario = true;
-                    indiceLista = i;
+                    indiceInternoLista = i;
                 }
             }
+            adapter = new ResultadoPodcastsBusquedaAdapter(podcasts, perteneceUsuario);
+            recycler.setLayoutManager(new LinearLayoutManager(PodcastListaActivity.this,
+                    LinearLayoutManager.VERTICAL,false));
+            recycler.setAdapter(adapter);
+
+            adapter.setOnItemClickListener(new ResultadoPodcastsBusquedaAdapter.OnItemClickListener() {
+                @Override
+                public void onDeleteClick(int position) {
+                    confirmarBorrarCancion(podcasts.get(position).getId(), position);
+                }
+            });
         }
 
         if(perteneceUsuario){
             //Evita que se borre si es el de favoritos
             if (nombreLista.equals("Favoritos")) {
+                copiarLista.setVisibility(View.GONE);
                 botonBorrar.setVisibility(View.GONE);
             }
 
@@ -150,14 +158,14 @@ public class PodcastListaActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        usuarioLog.deleteLista_podcast(indiceLista);
+                        usuarioLog.deleteLista_podcast(indiceInternoLista);
                         finish();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        usuarioLog.deleteLista_podcast(indiceLista);
+                        usuarioLog.deleteLista_podcast(indiceInternoLista);
                         finish();
                         //startActivity(new Intent(CancionesListaActivity.this, ListaCancionesActivity.class));
                     }
@@ -185,6 +193,67 @@ public class PodcastListaActivity extends AppCompatActivity {
             }
         });
         builder.show();
+    }
+
+    private void confirmarBorrarCancion(final int id, final int indicePodcast) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("¿Seguro que desea eliminar el podcast?");
+
+        // Set up the buttons
+        builder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                borrarCancion(id,indicePodcast);
+            }
+        });
+        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
+    }
+
+    private void borrarCancion(final int id, final int indicePodcast){
+        final RequestQueue rq = Volley.newRequestQueue(getApplicationContext());
+        JSONObject params = new JSONObject();
+        try {
+            params.put("id", id);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String url = URL_API + "/listaPodcast/deletePodcast/" + idLista;
+
+        // Creating a JSON Object request
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PATCH, url,params,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        informar(podcasts.get(indicePodcast).getName() + " eliminado de la lista");
+                        adapter.notifyItemRemoved(indicePodcast);
+                        podcasts.remove(indicePodcast);
+
+                        //Elimina la cancion de la lista correspondiente del propio usuario para que no vuelva a aparecer
+                        usuarioLog.getLista_podcast().get(indiceInternoLista).getPodcasts().remove(indicePodcast);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        informar("Error al borrar el podcast de la lista");
+                        Log.d("CancionesListaActivity","error: " + error.toString());
+                    }
+                }) {
+            @Override
+            public byte[] getBody() {
+                return String.valueOf(podcasts.get(indicePodcast).getId()).getBytes();
+            }
+        };
+
+        // Adding the string request to the queue
+        rq.add(jsonObjectRequest);
     }
 
     /* informa mediante un TOAST

@@ -43,7 +43,6 @@ public class CancionesListaActivity extends AppCompatActivity {
     private TextView tituloVista;
     private ImageView botonBorrar;
     private ImageView botonPlay;
-    private ImageView botonBorrarCancion;
     private TextView copiarLista;
     private RecyclerView recycler;
     private CancionesListaAdapter adapter;
@@ -72,16 +71,18 @@ public class CancionesListaActivity extends AppCompatActivity {
             idLista = b.getInt("idLista");
             copiarLista.setText(String.valueOf(idLista));
             tituloVista.setText(nombreLista);
-            adapter = new CancionesListaAdapter(canciones);
-            recycler.setLayoutManager(new LinearLayoutManager(CancionesListaActivity.this,
-                    LinearLayoutManager.VERTICAL,false));
-            recycler.setAdapter(adapter);
             for (int i = 0; i < usuarioLog.getLista_cancion().size(); i++) {
                 if(usuarioLog.getLista_cancion().get(i).getId() == idLista){
                     perteneceUsuario = true;
                     indiceInternoLista = i;
                 }
             }
+
+            adapter = new CancionesListaAdapter(canciones,perteneceUsuario);
+            recycler.setLayoutManager(new LinearLayoutManager(CancionesListaActivity.this,
+                    LinearLayoutManager.VERTICAL,false));
+            recycler.setAdapter(adapter);
+
             adapter.setOnItemClickListener(new CancionesListaAdapter.OnItemClickListener() {
                 @Override
                 public void onDeleteClick(int position) {
@@ -105,7 +106,6 @@ public class CancionesListaActivity extends AppCompatActivity {
 
         } else {
             botonBorrar.setVisibility(View.GONE);
-            botonBorrarCancion.setVisibility(View.GONE);
         }
 
 
@@ -202,16 +202,6 @@ public class CancionesListaActivity extends AppCompatActivity {
         rq.add(jsonObjectRequest);
     }
 
-    /* informa mediante un TOAST
-     */
-    private void informar(String mensaje) {
-        Toast toast = Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_SHORT);
-        View view = toast.getView();
-
-        //Cambiar color del fonto
-        view.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN);
-        toast.show();
-    }
     private void confirmarBorrarCancion(final int id, final int indiceCancion) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("¿Seguro que desea eliminar la canción?");
@@ -271,5 +261,16 @@ public class CancionesListaActivity extends AppCompatActivity {
 
         // Adding the string request to the queue
         rq.add(jsonObjectRequest);
+    }
+
+    /* informa mediante un TOAST
+     */
+    private void informar(String mensaje) {
+        Toast toast = Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_SHORT);
+        View view = toast.getView();
+
+        //Cambiar color del fonto
+        view.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN);
+        toast.show();
     }
 }

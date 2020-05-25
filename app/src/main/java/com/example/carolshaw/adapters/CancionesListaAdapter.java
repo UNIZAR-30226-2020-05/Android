@@ -22,8 +22,11 @@ public class CancionesListaAdapter extends RecyclerView.Adapter<CancionesListaAd
     private View.OnClickListener listener;
     private OnItemClickListener mListener;
     int position;
-    public CancionesListaAdapter(ArrayList<Cancion> array) {
+    boolean perteneceUsuario;
+
+    public CancionesListaAdapter(ArrayList<Cancion> array, boolean perteneceUsuario) {
         this.array = array;
+        this.perteneceUsuario = perteneceUsuario;
     }
 
     @NonNull
@@ -110,6 +113,9 @@ public class CancionesListaAdapter extends RecyclerView.Adapter<CancionesListaAd
             nombre.setText(cancion.getName());
             album.setText(cancion.getAlbum());
             duracion.setText(cancion.getDuracionMMSS());
+            if (!perteneceUsuario) {
+                btnBorrar.setVisibility(View.GONE);
+            }
         }
     }
 }

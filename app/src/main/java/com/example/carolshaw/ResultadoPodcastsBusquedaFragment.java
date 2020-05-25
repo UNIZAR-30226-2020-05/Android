@@ -77,7 +77,7 @@ public class ResultadoPodcastsBusquedaFragment extends Fragment {
         recycler = vista.findViewById(R.id.recyclerViewPodcasts);
         recycler.setLayoutManager(new LinearLayoutManager(getContext(),
                 LinearLayoutManager.VERTICAL,false));
-        adapter = new ResultadoPodcastsBusquedaAdapter(PodcastsArray);
+        adapter = new ResultadoPodcastsBusquedaAdapter(PodcastsArray,false);
         recycler.setAdapter(adapter);
         return vista;
     }
