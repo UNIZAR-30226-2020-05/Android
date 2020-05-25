@@ -34,6 +34,7 @@ import com.example.carolshaw.objetos.Cancion;
 import com.example.carolshaw.objetos.ListaCancion;
 import com.example.carolshaw.objetos.UsuarioDto;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -46,6 +47,7 @@ public class CancionesListaActivity extends AppCompatActivity {
     private TextView tituloVista;
     private ImageView botonBorrar;
     private ImageView botonPlay;
+    private ImageView botonBorrarCancion;
     private TextView copiarLista;
     private RecyclerView recycler;
     private CancionesListaAdapter adapter;
@@ -84,6 +86,16 @@ public class CancionesListaActivity extends AppCompatActivity {
                     indiceLista = i;
                 }
             }
+            adapter.setOnItemClickListener(new CancionesListaAdapter.OnItemClickListener() {
+                @Override
+                public void onDeleteClick(int position) {
+                    Toast.makeText(getApplicationContext(), canciones.get(position).getName() +
+                            " eliminado de lista", Toast.LENGTH_LONG).show();
+                    confirmarBorrarCancion(canciones.get(position).getId());
+                    canciones.remove(position);
+                    adapter.notifyItemRemoved(position);
+                }
+            });
         }
         if(perteneceUsuario){
             //Evita que se borre y copie si es el de favoritos
@@ -98,8 +110,10 @@ public class CancionesListaActivity extends AppCompatActivity {
                     confirmarBorrado();
                 }
             });
+
         } else {
             botonBorrar.setVisibility(View.GONE);
+            botonBorrarCancion.setVisibility(View.GONE);
         }
 
 
@@ -111,6 +125,7 @@ public class CancionesListaActivity extends AppCompatActivity {
                 clipboard.setPrimaryClip(clip);
                 informar("Código copiado");
             }
+
         });
 
         adapter.setOnClickListener(new View.OnClickListener() {
@@ -202,5 +217,59 @@ public class CancionesListaActivity extends AppCompatActivity {
         //Cambiar color del fonto
         view.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN);
         toast.show();
+    }
+    private void confirmarBorrarCancion(final int id) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("¿Seguro que dese eliminar la cancion?");
+
+        // Set up the buttons
+        builder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                borrarCancion(id);
+            }
+        });
+        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
+    }
+
+    private void borrarCancion(int id){
+        final RequestQueue rq = Volley.newRequestQueue(getApplicationContext());
+        JSONObject params = new JSONObject();
+        try {
+            params.put("id", id);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String url = URL_API + "/listaCancion/deleteSong/" + idLista;
+
+        // Creating a JSON Object request
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PATCH, url,params,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("CancionesListaActivity",response.toString());
+                       //usuarioLog.deleteLista_cancion(indiceLista);
+                        finish();
+                        //startActivity(new Intent(CancionesListaActivity.this, ListaCancionesActivity.class));
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("CancionesListaActivity","error: " + error.toString());
+                       // usuarioLog.deleteLista_cancion(indiceLista);
+                        finish();
+                        //startActivity(new Intent(CancionesListaActivity.this, ListaCancionesActivity.class));
+                    }
+                });
+
+        // Adding the string request to the queue
+        rq.add(jsonObjectRequest);
     }
 }

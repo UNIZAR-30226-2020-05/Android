@@ -49,7 +49,11 @@
         android:layout_height="35dp"
         android:layout_gravity="center"
         android:clickable="true"
+        android:onClick="co"
         android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/tituloCancion"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tituloCancion"
         app:srcCompat="@drawable/trash"
         tools:visibility="visible" />
 
