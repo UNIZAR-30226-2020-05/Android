@@ -117,36 +117,37 @@ public class PodcastListaActivity extends AppCompatActivity {
             }
         });
 
-        adapter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(PodcastListaActivity.this, MainLogged.class);
-                Bundle b = new Bundle();
-                ArrayList<Podcast> podcastsReproductor = new ArrayList<Podcast>();
-                podcastsReproductor.add(podcasts.get(recycler.getChildAdapterPosition(v))); //Añade la cancion correspondiente
-                b.putSerializable("podcasts", podcastsReproductor);
-                b.putInt("tipo",ReproductorFragment.TIPO_PODCAST);
-                b.putBoolean("nuevo",true);
-                intent.putExtras(b);
-                finish();
-                startActivity(intent);
-            }
-        });
+        if (podcasts.size() > 0) {
+            adapter.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(PodcastListaActivity.this, MainLogged.class);
+                    Bundle b = new Bundle();
+                    ArrayList<Podcast> podcastsReproductor = new ArrayList<Podcast>();
+                    podcastsReproductor.add(podcasts.get(recycler.getChildAdapterPosition(v))); //Añade la cancion correspondiente
+                    b.putSerializable("podcasts", podcastsReproductor);
+                    b.putInt("tipo",ReproductorFragment.TIPO_PODCAST);
+                    b.putBoolean("nuevo",true);
+                    intent.putExtras(b);
+                    finish();
+                    startActivity(intent);
+                }
+            });
 
-        botonPlay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(PodcastListaActivity.this, MainLogged.class);
-                Bundle b = new Bundle();
-                b.putSerializable("podcasts", podcasts);
-                b.putInt("tipo",ReproductorFragment.TIPO_PODCAST);
-                b.putBoolean("nuevo",true);
-                intent.putExtras(b);
-                finish();
-                startActivity(intent);
-            }
-        });
-
+            botonPlay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(PodcastListaActivity.this, MainLogged.class);
+                    Bundle b = new Bundle();
+                    b.putSerializable("podcasts", podcasts);
+                    b.putInt("tipo",ReproductorFragment.TIPO_PODCAST);
+                    b.putBoolean("nuevo",true);
+                    intent.putExtras(b);
+                    finish();
+                    startActivity(intent);
+                }
+            });
+        }
     }
 
     private void borrarLista() {
